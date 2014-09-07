@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.9.2
-Created-By: 1.8.0_20-b26 (Oracle Corporation)
-X-COMMENT: Main-Class will be added automatically by build
-Class-Path: res/ lib/commons-collections-3.2.1.jar lib/commons-lang-2.
- 4.jar lib/h2-1.4.181.jar lib/mybatis-3.2.7.jar lib/velocity-1.7.jar l
- ib/velocity-tools-generic-2.0.jar
-
