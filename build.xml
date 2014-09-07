@@ -75,4 +75,26 @@
             <fileset dir="." includes="res/**"/>
         </copy>
     </target>
+
+    <target name="exe" depends="clean,jar,exewdir,exewodir"/>
+
+    <target name="exewdir" if="launch4j.dir">
+        <taskdef name="launch4j"
+                 classname="net.sf.launch4j.ant.Launch4jTask">
+            <classpath>
+                <pathelement location="${launch4j.dir}/launch4j.jar"/>
+                <pathelement location="${launch4j.dir}/lib/xstream.jar"/>
+            </classpath>
+        </taskdef>
+        <launch4j configFile="launch4j.xml" />
+    </target>
+
+    <target name="exewodir" unless="launch4j.dir">
+        <echo level="error">
+    Cannot build EXE file: missing property launch4j.dir.
+    Please install launch4j from http://launch4j.sourceforge.net/ and set the
+    launch4j.dir property in nbproject/private/private.properties or in
+    ${user.properties.file}
+        </echo>
+    </target>
 </project>

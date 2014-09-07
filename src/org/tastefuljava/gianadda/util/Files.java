@@ -162,8 +162,12 @@ public class Files {
 
     public static File getProgramDir() {
         try {
-            File file = new File(Files.class.getProtectionDomain()
-                    .getCodeSource().getLocation().toURI().g‌​etPath());
+            String path = System.getProperty("program-dir");
+            if (path == null) {
+                path = Files.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI().g‌​etPath();
+            }
+            File file = new File(path);
             if (file.isDirectory()) {
                 if (!file.getName().equals("classes")) {
                     return file;
