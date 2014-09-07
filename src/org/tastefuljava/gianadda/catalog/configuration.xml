@@ -7,7 +7,7 @@
     </settings>
 
     <typeAliases>
-        <package name="org.tastefuljava.gallerygen.domain"/>
+        <package name="org.tastefuljava.gianadda.domain"/>
     </typeAliases>
  
     <environments default="production">
@@ -23,6 +23,6 @@
     </environments>
 
     <mappers>
-        <mapper resource="org/tastefuljava/gallerygen/catalog/mapping.xml"/>
+        <mapper resource="org/tastefuljava/gianadda/catalog/mapping.xml"/>
     </mappers>
 </configuration>

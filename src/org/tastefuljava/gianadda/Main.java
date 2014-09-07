@@ -31,9 +31,7 @@ public class Main {
 
     private void usage() {
         System.out.println(
-                "Usage: java -jar gallerygen.jar"
-                + " [-create <template>]"
-                + " <directory>");
+                "Usage: gianadda [-create <template>] <directory>");
     }
 
     private boolean processArgs(String[] args) {
