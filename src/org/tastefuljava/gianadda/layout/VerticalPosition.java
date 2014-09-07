@@ -24,7 +24,7 @@ public enum VerticalPosition {
         }
     };
 
-    private String title;
+    private final String title;
 
     private VerticalPosition(String title) {
         this.title = title;

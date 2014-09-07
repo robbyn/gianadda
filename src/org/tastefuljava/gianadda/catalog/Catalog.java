@@ -3,13 +3,10 @@ package org.tastefuljava.gianadda.catalog;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Logger;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.tastefuljava.gianadda.util.Configuration;
 
 public class Catalog implements Closeable {
-    private static final Logger LOG = Logger.getLogger(Catalog.class.getName());
-
     private final File dir;
     private final SqlSessionFactory factory;
     private final Configuration conf;

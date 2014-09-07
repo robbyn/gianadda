@@ -215,11 +215,8 @@ public class Files {
         ZipEntry entry = new ZipEntry(path);
         entry.setTime(file.lastModified());
         zip.putNextEntry(entry);
-        InputStream in = new FileInputStream(file);
-        try {
+        try (InputStream in = new FileInputStream(file)) {
             copy(in, zip);
-        } finally {
-            in.close();
         }
     }
 

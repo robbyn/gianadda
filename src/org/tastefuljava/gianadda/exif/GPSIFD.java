@@ -1,6 +1,5 @@
 package org.tastefuljava.gianadda.exif;
 
-import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.Map;
 import static org.tastefuljava.gianadda.exif.IFD.buildTagMap;

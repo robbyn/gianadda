@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Logger;
 import org.tastefuljava.gianadda.util.Util;
 
 public class Folder {
-    private static final Logger LOG = Logger.getLogger(Folder.class.getName());
-
     private int id;
     private Folder parent;
     private String name;

@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.tastefuljava.gianadda.catalog.Catalog;
-import org.tastefuljava.gianadda.catalog.CatalogSession;
-import org.tastefuljava.gianadda.domain.CurrentMapper;
-import org.tastefuljava.gianadda.domain.Mapper;
 import org.tastefuljava.gianadda.site.SiteBuilder;
 
 public class Main {
@@ -15,7 +11,7 @@ public class Main {
 
     private boolean sync = false;
     private File dir = null;
-    private String template = null;
+    private String theme = null;
     private boolean forceHtml = false;
 
     public static void main(String[] args) {
@@ -32,7 +28,7 @@ public class Main {
 
     private void usage() {
         System.out.println(
-                "Usage: gianadda [-create <template>] <directory>");
+                "Usage: gianadda [-create <theme>] <directory>");
     }
 
     private boolean processArgs(String[] args) {
@@ -57,7 +53,7 @@ public class Main {
                     }
                     break;
                 case 1:
-                    template = arg;
+                    theme = arg;
                     st = 0;
                     break;
             }
@@ -71,13 +67,13 @@ public class Main {
 
     private void process() throws IOException {
         try (SiteBuilder builder = new SiteBuilder(dir)) {
-            if (template == null) {
+            if (theme == null) {
                 builder.open();
                 if (sync) {
                     builder.synchronize(forceHtml);
                 }
             } else {
-                builder.create(template);
+                builder.create(theme);
                 builder.synchronize(true);
             }
         }

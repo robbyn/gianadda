@@ -76,12 +76,15 @@ public class Exif {
             throw new IOException("Invalid exif id code " + s);
         }
         s = getAscii(buf, 2);
-        if (s.equals(LITTLE_ENDIAN)) {
-            byteOrder = ByteOrder.LITTLE_ENDIAN;
-        } else if (s.equals(BIG_ENDIAN)) {
-            byteOrder = ByteOrder.BIG_ENDIAN;
-        } else {
-            throw new IOException("Invalid byte order " + s);
+        switch (s) {
+            case LITTLE_ENDIAN:
+                byteOrder = ByteOrder.LITTLE_ENDIAN;
+                break;
+            case BIG_ENDIAN:
+                byteOrder = ByteOrder.BIG_ENDIAN;
+                break;
+            default:
+                throw new IOException("Invalid byte order " + s);
         }
         buf.order(byteOrder);
         if (buf.getShort() != 0x002A) {

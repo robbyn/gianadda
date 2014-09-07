@@ -38,11 +38,11 @@ public class Synchronizer {
     private static final String DEFAULT_TEMPLNAME_RE
             = "^[^.].*[.](html|js|css)$";
 
-    private static final Map<String,Dimension> DEFAULT_SIZE
-            = new HashMap<String,Dimension>() {{
-        put("preview", new Dimension(800,600));
-        put("thumb", new Dimension(200,133));        
-    }};
+    private static final Map<String,Dimension> DEFAULT_SIZE = new HashMap<>();
+    static {
+        DEFAULT_SIZE.put("preview", new Dimension(800,600));
+        DEFAULT_SIZE.put("thumb", new Dimension(200,133));        
+    }
 
     private final Configuration conf;
     private final CatalogSession sess;
@@ -56,7 +56,7 @@ public class Synchronizer {
         this.sess = sess;
         this.dirs = dirs;
         this.engine = new TemplateEngine(
-                dirs.getTemplateDir(), createSiteParams());
+                dirs.getThemeDir(), createSiteParams());
         String re = conf.getString(
                 "template-name-pattern", DEFAULT_TEMPLNAME_RE);
         this.templateNamePattern = Pattern.compile(
@@ -216,7 +216,7 @@ public class Synchronizer {
     }
 
     private void generatePreviewHtml(Picture pic) throws IOException {
-        File template = new File(dirs.getTemplateDir(), "preview.html");
+        File template = new File(dirs.getThemeDir(), "preview.html");
         if (template.exists()) {
             File dir = folderSiteFile(pic.getFolder(), "preview");
             File outFile = new File(dir, pic.getName() + ".html");
@@ -240,7 +240,7 @@ public class Synchronizer {
 
     private void applyTemplates(String path, File dest, Map<String,?> parms)
             throws IOException {
-        File source = new File(dirs.getTemplateDir(), path);
+        File source = new File(dirs.getThemeDir(), path);
         applyTemplates(path, source, dest, parms);
     }
 

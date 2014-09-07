@@ -17,8 +17,8 @@ public class GalleryDirs {
         return new File(baseDir, "_catalog");
     }
 
-    public File getTemplateDir() {
-        return new File(baseDir, "_template");
+    public File getThemeDir() {
+        return new File(baseDir, "_theme");
     }
 
     public File getSiteDir() {

@@ -1,20 +1,15 @@
 package org.tastefuljava.gianadda.site;
 
-import java.awt.Dimension;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import org.tastefuljava.gianadda.catalog.Catalog;
 import org.tastefuljava.gianadda.catalog.CatalogSession;
 import org.tastefuljava.gianadda.domain.CurrentMapper;
 import org.tastefuljava.gianadda.domain.Mapper;
-import org.tastefuljava.gianadda.template.TemplateEngine;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
 
@@ -28,7 +23,6 @@ public class SiteBuilder implements Closeable {
     private Catalog catalog;
     private CatalogSession sess;
     private Configuration conf;
-    private Pattern templateNamePattern;
 
     public SiteBuilder(File dir) {
         this.dirs = new GalleryDirs(dir);
@@ -67,12 +61,12 @@ public class SiteBuilder implements Closeable {
         }
     }
 
-    public void create(String template) throws IOException {
+    public void create(String theme) throws IOException {
         Files.mkdirs(dirs.getBaseDir());
         Files.deleteIfExists(dirs.getCatalogDir());
-        Files.deleteIfExists(dirs.getTemplateDir());
+        Files.deleteIfExists(dirs.getThemeDir());
         Files.deleteIfExists(dirs.getSiteDir());
-        initTemplate(template);
+        SiteBuilder.this.initTheme(theme);
         initSite();
         open();
     }
@@ -124,24 +118,24 @@ public class SiteBuilder implements Closeable {
         }
     }
 
-    private void initTemplate(String template) throws IOException {
-        File dir = new File(getResourceDir(), "template");
+    private void initTheme(String theme) throws IOException {
+        File dir = new File(getResourceDir(), "themes");
         if (!dir.isDirectory()) {
-            throw new IOException("Invalid template dir " + dir);
+            throw new IOException("Invalid theme dir " + dir);
         }
-        boolean ok = initTemplate(new File(dir, template))
-                || initTemplate(new File(dir, template + ".jar"))
-                || initTemplate(new File(dir, template + ".zip"));
+        boolean ok = initTheme(new File(dir, theme))
+                || initTheme(new File(dir, theme + ".jar"))
+                || initTheme(new File(dir, theme + ".zip"));
         if (!ok) {
-            throw new IOException("Template does not exist " + template);
+            throw new IOException("Theme does not exist " + theme);
         }
     }
 
-    private boolean initTemplate(File source) throws IOException {
+    private boolean initTheme(File source) throws IOException {
         if (source.isDirectory()) {
-            Files.copy(source, dirs.getTemplateDir());
+            Files.copy(source, dirs.getThemeDir());
         } else if (source.isFile()) {
-            Files.unzip(source, dirs.getTemplateDir(), null);
+            Files.unzip(source, dirs.getThemeDir(), null);
         } else {
             return false;
         }
@@ -149,7 +143,7 @@ public class SiteBuilder implements Closeable {
     }
 
     private void initSite() throws IOException {
-        File source = new File(dirs.getTemplateDir(), CONF_FILENAME);
+        File source = new File(dirs.getThemeDir(), CONF_FILENAME);
         if (source.isFile()) {
             File dest = new File(dirs.getSiteDir(), CONF_FILENAME);
             Files.copy(source, dest);

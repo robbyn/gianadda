@@ -111,7 +111,7 @@ public enum StretchMode {
         }
     };
 
-    private String title;
+    private final String title;
 
     private StretchMode(String title) {
         this.title = title;
