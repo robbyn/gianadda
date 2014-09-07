@@ -3,7 +3,7 @@
 #set( $previewSize = $conf.dims['preview-size'] )
 #set( $subfolders = $folder.subfolders )
 #set( $pictures = $folder.pictures )
-<html>
+<html class="index">
     <head>
         <title>$esc.html($folder.title)</title>
         <meta charset="UTF-8">
@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="${base}css/normalize.css">
         <link rel="stylesheet" href="${base}css/style.css">
     </head>
-    <body class="index">
+    <body>
         <h1>$esc.html($folder.title)</h1>
         <div>
             #if( !$subfolders.empty )

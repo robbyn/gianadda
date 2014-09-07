@@ -8,6 +8,9 @@ html {
 h1 {
     display: none;
 }
+.index body {
+    background: #999999;
+}
 .folders ul {
     display: block;
     margin: 0;
@@ -29,7 +32,6 @@ h1 {
 .thumbs {
     text-align: justify;
     display: block;
-    background: #999999;
     margin: 0;
     padding: 0 .5em .5em .5em;
 }
