@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,11 +34,9 @@ public class Synchronizer {
 
     public static final String PROP_FORCE_HTML = "force-html";
 
-    private static final String CONF_FILENAME = "conf.properties";
+    private static final String CONF_FILENAME = "setting.properties";
     private static final String THEME_CONF_PATH
             = GalleryDirs.THEME_PATH + "/" + CONF_FILENAME;
-    private static final String SITE_CONF_PATH
-            = GalleryDirs.SITE_PATH + "/" + CONF_FILENAME;
     private static final String PREVIEW_FILENAME = "preview.html";
     private static final String PREVIEW_PATH
             = GalleryDirs.THEME_PATH + "/" + PREVIEW_FILENAME;
@@ -49,12 +48,22 @@ public class Synchronizer {
     private static final String DEFAULT_TEMPLNAME_RE
             = "^[^.].*[.](html|js|css)$";
 
-    private static final String PREVIEW = "preview";
-    private static final String THUMB = "thumb";
-    private static final Map<String,Dimension> DEFAULT_SIZE = new HashMap<>();
-    static {
-        DEFAULT_SIZE.put(PREVIEW, new Dimension(800,600));
-        DEFAULT_SIZE.put(THUMB, new Dimension(200,133));        
+    static enum ImageType {
+        PREVIEW, THUMB;
+
+        public Dimension getSizeFrom(Configuration conf) {
+            return conf.getDimension(
+                this + "-size", null);
+        }
+
+        public File directory(File baseDir) {
+            return new File(baseDir, toString());
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
     private final Configuration conf;
@@ -169,19 +178,15 @@ public class Synchronizer {
         return new File(dirs.getSiteDir(), folder.getPath());
     }
 
-    private File folderSiteFile(Folder folder, String name) {
-        return new File(folderSiteDir(folder), name);
-    }
-
-    private File imageFile(Picture pic, String type) {
-        File dir = folderSiteFile(pic.getFolder(), type);
+    private File imageFile(Picture pic, ImageType type) {
+        File folderDir = folderSiteDir(pic.getFolder());
+        File dir = type.directory(folderDir);
         return new File(dir, pic.getName());
     }
 
     private BufferedImage generateImage(Picture pic, BufferedImage img,
-            int angle, String type) throws IOException {
-        Dimension dim = conf.getDimension(
-                type + "-size", DEFAULT_SIZE.get(type));
+            int angle, ImageType type) throws IOException {
+        Dimension dim = type.getSizeFrom(conf);
         img = ImageUtil.rotateAndResize(img, angle, dim.width, dim.height);
         File file = imageFile(pic, type);
         Files.mkdirs(file.getParentFile());
@@ -225,13 +230,14 @@ public class Synchronizer {
             pic.setAltitude(gps.getAltitude());
         }
         int angle = getAngle(root);
-        img = generateImage(pic, img, angle, PREVIEW);        
-        generateImage(pic, img, 0, THUMB);
+        img = generateImage(pic, img, angle, ImageType.PREVIEW);        
+        generateImage(pic, img, 0, ImageType.THUMB);
     }
 
     private void generatePreviewHtml(Picture pic) throws IOException {
         if (new File(dirs.getBaseDir(), PREVIEW_PATH).exists()) {
-            File dir = folderSiteFile(pic.getFolder(), PREVIEW);
+            File folderDir = folderSiteDir(pic.getFolder());
+            File dir = ImageType.PREVIEW.directory(folderDir);
             Files.mkdirs(dir);
             File outFile = new File(dir, pic.getName() + ".html");
             applyTemplate(PREVIEW_PATH, outFile, createPictureParams(pic, 1));
@@ -316,18 +322,17 @@ public class Synchronizer {
 
     private static Configuration buildConf(TemplateEngine engine, 
             GalleryDirs dirs, Configuration conf) throws IOException {
+        Properties props = new Properties();
+        try (InputStream in = SiteBuilder.class.getResourceAsStream(
+                "default-" + CONF_FILENAME)) {
+            if (in != null) {
+                props.load(in);
+            }
+        }
         if (new File(dirs.getBaseDir(), THEME_CONF_PATH).isFile()) {
             String text = engine.process(THEME_CONF_PATH, createParams(conf));
-            Properties props = new Properties();
             props.load(new StringReader(text));
-            conf = new Configuration(props, conf);
         }
-        if (new File(dirs.getBaseDir(), SITE_CONF_PATH).isFile()) {
-            String text = engine.process(SITE_CONF_PATH, createParams(conf));
-            Properties props = new Properties();
-            props.load(new StringReader(text));
-            conf = new Configuration(props, conf);
-        }
-        return conf;
+        return new Configuration(props, conf);
     }
 }
