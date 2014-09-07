@@ -41,3 +41,22 @@ h1 {
 .thumbs figure img {
     display: block;
 }
+
+.preview {
+    width: 100%;
+    background: #999999;
+    text-align: center;
+    padding: .5em;
+}
+.preview figure {
+    display: inline-block;
+    margin: 0 auto;
+    padding: .5em;
+    background: white;
+    max-width: 100%;
+}
+.preview figure img {
+    display: block;
+    max-height: $math.round($previewSize.height)px;
+    max-width: 100%;
+}

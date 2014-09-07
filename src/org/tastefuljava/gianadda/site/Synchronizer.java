@@ -95,7 +95,7 @@ public class Synchronizer {
         boolean changed = syncDir(rootFolder, dirs.getBaseDir());
         if (changed || getForceHtml()) {
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
-                    createFolderParams(rootFolder));
+                    createFolderParams(rootFolder, 0));
         }
     }
 
@@ -107,7 +107,7 @@ public class Synchronizer {
         boolean changed = syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
         if (changed || getForceHtml()) {
-            Map<String,Object> parms = createFolderParams(folder);
+            Map<String,Object> parms = createFolderParams(folder, 0);
             applyTemplates("_theme/folder", folderSiteDir(folder), parms);
         }
         return changed;
@@ -234,7 +234,7 @@ public class Synchronizer {
             File dir = folderSiteFile(pic.getFolder(), PREVIEW);
             Files.mkdirs(dir);
             File outFile = new File(dir, pic.getName() + ".html");
-            applyTemplate(PREVIEW_PATH, outFile, createPictureParams(pic));
+            applyTemplate(PREVIEW_PATH, outFile, createPictureParams(pic, 1));
         }
     }
 
@@ -296,8 +296,8 @@ public class Synchronizer {
         return createParams(conf);
     }
 
-    private Map<String,Object> createFolderParams(Folder folder) {
-        int level = folder.getLevel();
+    private Map<String,Object> createFolderParams(Folder folder, int depth) {
+        int level = folder.getLevel() + depth;
         String base = "";
         for (int i = 0; i < level; ++i) {
             base += "../";
@@ -308,8 +308,8 @@ public class Synchronizer {
         return parms;
     }
 
-    private Map<String,Object> createPictureParams(Picture pic) {
-        Map<String,Object> parms = createFolderParams(pic.getFolder());
+    private Map<String,Object> createPictureParams(Picture pic, int depth) {
+        Map<String,Object> parms = createFolderParams(pic.getFolder(), depth);
         parms.put("pic", pic);
         return parms;
     }
