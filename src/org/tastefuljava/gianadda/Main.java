@@ -9,9 +9,10 @@ import org.tastefuljava.gianadda.site.SiteBuilder;
 public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
-    private boolean sync = false;
     private File dir = null;
-    private String theme = null;
+    private String createTheme = null;
+    private String changeTheme = null;
+    private boolean sync = false;
     private boolean forceHtml = false;
 
     public static void main(String[] args) {
@@ -37,15 +38,22 @@ public class Main {
             switch (st) {
                 case 0:
                     switch (arg) {
-                        case "-create":
+                        case "-c":
+                        case "--create":
                             st = 1;
                             break;
-                        case "-sync":
+                        case "-s":
+                        case "--sync":
                             sync = true;
                             break;
+                        case "-f":
                         case "-force-html":
                             forceHtml = true;
                             sync = true;
+                            break;
+                        case "-t":
+                        case "--change-theme":
+                            st = 2;
                             break;
                         default:
                             dir = new File(arg);
@@ -53,7 +61,11 @@ public class Main {
                     }
                     break;
                 case 1:
-                    theme = arg;
+                    createTheme = arg;
+                    st = 0;
+                    break;
+                case 2:
+                    changeTheme = arg;
                     st = 0;
                     break;
             }
@@ -67,13 +79,17 @@ public class Main {
 
     private void process() throws IOException {
         try (SiteBuilder builder = new SiteBuilder(dir)) {
-            if (theme == null) {
+            if (createTheme != null) {
+                builder.create(createTheme);
+                builder.synchronize(true);
+            } else {
                 builder.open();
                 if (sync) {
                     builder.synchronize(forceHtml);
                 }
-            } else {
-                builder.create(theme);
+            }
+            if (changeTheme != null) {
+                builder.changeTheme(changeTheme);
                 builder.synchronize(true);
             }
         }

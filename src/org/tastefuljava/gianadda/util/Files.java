@@ -1,12 +1,18 @@
 package org.tastefuljava.gianadda.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -91,6 +97,13 @@ public class Files {
         }
     }
 
+    public static void rename(File source, File dest) throws IOException {
+        if (!source.renameTo(dest)) {
+            throw new IOException(
+                    "Could not rename " + source + " into " + dest);
+        }
+    }
+
     public static void mkdirs(File dir) throws IOException {
         if (!dir.isDirectory() && !dir.mkdirs()) {
             throw new IOException(
@@ -158,6 +171,40 @@ public class Files {
         } else {
             copyFile(source, dest);
         }
+    }
+
+    public static void copyText(BufferedReader in, PrintWriter out)
+            throws IOException {
+        for (String s = in.readLine(); s != null; s = in.readLine()) {
+            out.println(s);
+        }
+    }
+
+    public static void copyText(Reader reader, Writer writer)
+            throws IOException {
+        copyText(bufferedReader(reader), printWriter(writer));
+    }
+
+
+    public static void copyText(InputStream in, String inenc, OutputStream out,
+            String outenc) throws IOException {
+        copyText(new InputStreamReader(in, inenc),
+                new OutputStreamWriter(out, outenc));
+    }
+
+    public static void copyText(InputStream in, OutputStream out, String enc)
+            throws IOException {
+        copyText(in, enc, out, enc);
+    }
+
+    public static BufferedReader bufferedReader(Reader reader) {
+        return reader instanceof BufferedReader
+                ? (BufferedReader)reader : new BufferedReader(reader);
+    }
+
+    public static PrintWriter printWriter(Writer writer) {
+        return writer instanceof PrintWriter
+                ? (PrintWriter)writer : new PrintWriter(writer);
     }
 
     public static File getProgramDir() {

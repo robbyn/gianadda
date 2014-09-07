@@ -66,13 +66,36 @@ public class SiteBuilder implements Closeable {
         Files.deleteIfExists(dirs.getCatalogDir());
         Files.deleteIfExists(dirs.getThemeDir());
         Files.deleteIfExists(dirs.getSiteDir());
-        SiteBuilder.this.initTheme(theme);
+        initTheme(theme);
         initSite();
         open();
     }
 
     public Configuration getConf() {
         return conf;
+    }
+
+    public void changeTheme(String theme) throws IOException {
+        boolean ok = false;
+        File themeDir = getThemeDir();
+        File backupDir = new File(
+                themeDir.getParentFile(), themeDir.getName() + ".backup");
+        Files.deleteIfExists(backupDir);
+        if (themeDir.exists()) {
+            Files.rename(themeDir, backupDir);
+        }
+        try {
+            initTheme(theme);
+            ok = true;
+        } finally {
+            if (!ok) {
+                // restore backup
+                Files.deleteIfExists(themeDir);
+                if (backupDir.exists()) {
+                    Files.rename(backupDir, themeDir);
+                }
+            }
+        }
     }
 
     public void synchronize(boolean forceHtml) throws IOException {
@@ -148,5 +171,9 @@ public class SiteBuilder implements Closeable {
             File dest = new File(dirs.getSiteDir(), CONF_FILENAME);
             Files.copy(source, dest);
         }
+    }
+
+    private File getThemeDir() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
