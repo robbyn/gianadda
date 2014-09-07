@@ -1,0 +1,28 @@
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="useGeneratedKeys" value="false"/>
+    </settings>
+
+    <typeAliases>
+        <package name="org.tastefuljava.gallerygen.domain"/>
+    </typeAliases>
+ 
+    <environments default="production">
+        <environment id="production">
+            <transactionManager type="JDBC"/>
+            <dataSource type="UNPOOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="org/tastefuljava/gallerygen/catalog/mapping.xml"/>
+    </mappers>
+</configuration>

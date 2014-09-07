@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+#set( $subfolders = $folder.subfolders )
+#set( $pictures = $folder.pictures )
+<html>
+    <head>
+        <title>$esc.html($folder.title)</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="${base}css/style.css">
+    </head>
+    <body class="index">
+        <h1>$esc.html($folder.title)</h1>
+        <div>
+            #if( !$subfolders.empty )
+            <nav class="folders">
+                <ul>
+                #foreach( $sub in $subfolders )
+                <li><a href="$esc.url($sub.name)/index.html">$esc.html($sub.title)</a></li>
+                #end
+                </ul>
+            </nav>
+            #end
+            #if( !$pictures.empty )
+            <nav class="thumbs">
+                #foreach( $pic in $pictures )
+                <figure>
+                    <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)"></a>
+                    <figcaption>$esc.html($pic.name)</figcaption>
+                </figure>
+                #end
+            </nav>
+            #end
+        </div>
+    </body>
+</html>
