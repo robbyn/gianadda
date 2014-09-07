@@ -2,18 +2,26 @@ package org.tastefuljava.gianadda;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tastefuljava.gianadda.site.SiteBuilder;
+import org.tastefuljava.gianadda.util.Files;
 
 public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
+    enum Flag {
+        SYNCHRONIZE, FORCE_HTML;
+    }
+
     private File dir = null;
     private String createTheme = null;
     private String changeTheme = null;
-    private boolean sync = false;
-    private boolean forceHtml = false;
+    private final Set<Flag> flags = EnumSet.noneOf(Flag.class);
 
     public static void main(String[] args) {
         try {
@@ -28,8 +36,12 @@ public class Main {
     }
 
     private void usage() {
-        System.out.println(
-                "Usage: gianadda [-create <theme>] <directory>");
+        try (InputStream in = Main.class.getResourceAsStream("usage.txt")) {
+            Files.copyText(in, "UTF-8", System.err,
+                    Charset.defaultCharset().name());
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
     }
 
     private boolean processArgs(String[] args) {
@@ -42,18 +54,18 @@ public class Main {
                         case "--create":
                             st = 1;
                             break;
-                        case "-s":
-                        case "--sync":
-                            sync = true;
-                            break;
-                        case "-f":
-                        case "-force-html":
-                            forceHtml = true;
-                            sync = true;
-                            break;
                         case "-t":
                         case "--change-theme":
                             st = 2;
+                            break;
+                        case "-s":
+                        case "--sync":
+                            flags.add(Flag.SYNCHRONIZE);
+                            break;
+                        case "-f":
+                        case "--force-html":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.FORCE_HTML);
                             break;
                         default:
                             dir = new File(arg);
@@ -61,12 +73,16 @@ public class Main {
                     }
                     break;
                 case 1:
-                    createTheme = arg;
                     st = 0;
+                    createTheme = arg;
+                    flags.add(Flag.SYNCHRONIZE);
+                    flags.add(Flag.FORCE_HTML);
                     break;
                 case 2:
-                    changeTheme = arg;
                     st = 0;
+                    changeTheme = arg;
+                    flags.add(Flag.SYNCHRONIZE);
+                    flags.add(Flag.FORCE_HTML);
                     break;
             }
         }
@@ -81,16 +97,14 @@ public class Main {
         try (SiteBuilder builder = new SiteBuilder(dir)) {
             if (createTheme != null) {
                 builder.create(createTheme);
-                builder.synchronize(true);
             } else {
                 builder.open();
-                if (sync) {
-                    builder.synchronize(forceHtml);
-                }
             }
             if (changeTheme != null) {
                 builder.changeTheme(changeTheme);
-                builder.synchronize(true);
+            }
+            if (flags.contains(Flag.SYNCHRONIZE)) {
+                builder.synchronize(flags.contains(Flag.FORCE_HTML));
             }
         }
     }

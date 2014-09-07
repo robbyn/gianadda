@@ -50,9 +50,9 @@ public class Synchronizer {
     private final Pattern templateNamePattern;
     private final TemplateEngine engine;
 
-    public Synchronizer(Configuration link, CatalogSession sess,
+    Synchronizer(Configuration conf, CatalogSession sess,
             GalleryDirs dirs) {
-        this.conf = link;
+        this.conf = conf;
         this.sess = sess;
         this.dirs = dirs;
         this.engine = new TemplateEngine(

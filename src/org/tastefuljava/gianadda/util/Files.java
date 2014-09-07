@@ -187,15 +187,18 @@ public class Files {
     }
 
 
-    public static void copyText(InputStream in, String inenc, OutputStream out,
-            String outenc) throws IOException {
-        copyText(new InputStreamReader(in, inenc),
-                new OutputStreamWriter(out, outenc));
+    public static void copyText(InputStream in, String ienc, OutputStream out,
+            String oenc) throws IOException {
+        copyText(new InputStreamReader(in, ienc),
+                new OutputStreamWriter(out, oenc));
     }
 
-    public static void copyText(InputStream in, OutputStream out, String enc)
-            throws IOException {
-        copyText(in, enc, out, enc);
+    public static void copyText(File source, String senc, File dest,
+            String denc) throws IOException {
+        try (InputStream in = new FileInputStream(source);
+                OutputStream out = new FileOutputStream(dest)) {
+            copyText(in, senc, out, denc);
+        }
     }
 
     public static BufferedReader bufferedReader(Reader reader) {
