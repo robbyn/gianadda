@@ -113,16 +113,17 @@ public class Synchronizer {
                 pic = new Picture();
                 pic.setFolder(folder);
                 pic.setName(name);
+                processPic(pic, file);
                 pic.insert();
                 sess.commit();
                 picChanged = true;
             } else if (!timeStamp.equals(pic.getDateTime())) {
                 pic.update();
+                processPic(pic, file);
                 sess.commit();
                 picChanged = true;
             }
             if (picChanged) {
-                processPic(pic, file);
                 changed = true;
             }
             if (picChanged || getForceHtml()) {
