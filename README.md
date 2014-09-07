@@ -1,2 +1,4 @@
-gianadda
+Gianadda
 ========
+
+Yet another gallery generator.
