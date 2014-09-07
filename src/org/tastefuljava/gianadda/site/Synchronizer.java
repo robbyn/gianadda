@@ -4,9 +4,11 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -31,6 +33,15 @@ public class Synchronizer {
 
     public static final String PROP_FORCE_HTML = "force-html";
 
+    private static final String CONF_FILENAME = "conf.properties";
+    private static final String THEME_CONF_PATH
+            = GalleryDirs.THEME_PATH + "/" + CONF_FILENAME;
+    private static final String SITE_CONF_PATH
+            = GalleryDirs.SITE_PATH + "/" + CONF_FILENAME;
+    private static final String PREVIEW_FILENAME = "preview.html";
+    private static final String PREVIEW_PATH
+            = GalleryDirs.THEME_PATH + "/" + PREVIEW_FILENAME;
+
     private static final Pattern PIC_NAME_PATTERN = Pattern.compile(
             "^[^.].*[.](jpg|jpeg)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern DIR_NAME_PATTERN = Pattern.compile(
@@ -38,10 +49,12 @@ public class Synchronizer {
     private static final String DEFAULT_TEMPLNAME_RE
             = "^[^.].*[.](html|js|css)$";
 
+    private static final String PREVIEW = "preview";
+    private static final String THUMB = "thumb";
     private static final Map<String,Dimension> DEFAULT_SIZE = new HashMap<>();
     static {
-        DEFAULT_SIZE.put("preview", new Dimension(800,600));
-        DEFAULT_SIZE.put("thumb", new Dimension(200,133));        
+        DEFAULT_SIZE.put(PREVIEW, new Dimension(800,600));
+        DEFAULT_SIZE.put(THUMB, new Dimension(200,133));        
     }
 
     private final Configuration conf;
@@ -51,12 +64,12 @@ public class Synchronizer {
     private final TemplateEngine engine;
 
     Synchronizer(Configuration conf, CatalogSession sess,
-            GalleryDirs dirs) {
-        this.conf = conf;
+            GalleryDirs dirs) throws IOException {
+        this.engine = new TemplateEngine(
+                dirs.getBaseDir(), createParams(conf));
+        this.conf = buildConf(engine, dirs, conf);
         this.sess = sess;
         this.dirs = dirs;
-        this.engine = new TemplateEngine(
-                dirs.getThemeDir(), createSiteParams());
         String re = conf.getString(
                 "template-name-pattern", DEFAULT_TEMPLNAME_RE);
         this.templateNamePattern = Pattern.compile(
@@ -81,7 +94,7 @@ public class Synchronizer {
         }
         boolean changed = syncDir(rootFolder, dirs.getBaseDir());
         if (changed || getForceHtml()) {
-            applyTemplates("site", dirs.getSiteDir(),
+            applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
                     createFolderParams(rootFolder));
         }
     }
@@ -95,7 +108,7 @@ public class Synchronizer {
         changed |= synSubdirs(folder, dir);
         if (changed || getForceHtml()) {
             Map<String,Object> parms = createFolderParams(folder);
-            applyTemplates("folder", folderSiteDir(folder), parms);
+            applyTemplates("_theme/folder", folderSiteDir(folder), parms);
         }
         return changed;
     }
@@ -212,16 +225,16 @@ public class Synchronizer {
             pic.setAltitude(gps.getAltitude());
         }
         int angle = getAngle(root);
-        img = generateImage(pic, img, angle, "preview");        
-        generateImage(pic, img, 0, "thumb");
+        img = generateImage(pic, img, angle, PREVIEW);        
+        generateImage(pic, img, 0, THUMB);
     }
 
     private void generatePreviewHtml(Picture pic) throws IOException {
-        File template = new File(dirs.getThemeDir(), "preview.html");
-        if (template.exists()) {
-            File dir = folderSiteFile(pic.getFolder(), "preview");
+        if (new File(dirs.getBaseDir(), PREVIEW_PATH).exists()) {
+            File dir = folderSiteFile(pic.getFolder(), PREVIEW);
+            Files.mkdirs(dir);
             File outFile = new File(dir, pic.getName() + ".html");
-            applyTemplate("preview.html", outFile, createPictureParams(pic));
+            applyTemplate(PREVIEW_PATH, outFile, createPictureParams(pic));
         }
     }
 
@@ -241,7 +254,7 @@ public class Synchronizer {
 
     private void applyTemplates(String path, File dest, Map<String,?> parms)
             throws IOException {
-        File source = new File(dirs.getThemeDir(), path);
+        File source = new File(dirs.getBaseDir(), path);
         applyTemplates(path, source, dest, parms);
     }
 
@@ -273,10 +286,14 @@ public class Synchronizer {
         engine.process(path, parms, dest);
     }
 
-    private Map<String,Object> createSiteParams() {
+    private static Map<String,Object> createParams(Configuration conf) {
         Map<String,Object> parms = new HashMap<>();
-        parms.put("builder", this);
+        parms.put("conf", new ConfigurationTool(conf));
         return parms;
+    }
+
+    private Map<String,Object> createSiteParams() {
+        return createParams(conf);
     }
 
     private Map<String,Object> createFolderParams(Folder folder) {
@@ -285,8 +302,7 @@ public class Synchronizer {
         for (int i = 0; i < level; ++i) {
             base += "../";
         }
-        Map<String,Object> parms = new HashMap<>();
-        parms.put("builder", this);
+        Map<String,Object> parms = createSiteParams();
         parms.put("folder", folder);
         parms.put("base", base);
         return parms;
@@ -296,5 +312,22 @@ public class Synchronizer {
         Map<String,Object> parms = createFolderParams(pic.getFolder());
         parms.put("pic", pic);
         return parms;
+    }
+
+    private static Configuration buildConf(TemplateEngine engine, 
+            GalleryDirs dirs, Configuration conf) throws IOException {
+        if (new File(dirs.getBaseDir(), THEME_CONF_PATH).isFile()) {
+            String text = engine.process(THEME_CONF_PATH, createParams(conf));
+            Properties props = new Properties();
+            props.load(new StringReader(text));
+            conf = new Configuration(props, conf);
+        }
+        if (new File(dirs.getBaseDir(), SITE_CONF_PATH).isFile()) {
+            String text = engine.process(SITE_CONF_PATH, createParams(conf));
+            Properties props = new Properties();
+            props.load(new StringReader(text));
+            conf = new Configuration(props, conf);
+        }
+        return conf;
     }
 }

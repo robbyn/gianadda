@@ -17,8 +17,6 @@ public class SiteBuilder implements Closeable {
     private static final Logger LOG
             = Logger.getLogger(SiteBuilder.class.getName());
 
-    private static final String CONF_FILENAME = "site.properties";
-
     private final GalleryDirs dirs;
     private Catalog catalog;
     private CatalogSession sess;
@@ -42,8 +40,6 @@ public class SiteBuilder implements Closeable {
         boolean ok = false;
         catalog = Catalog.open(dirs.getCatalogDir(), null);
         try {
-            File file = new File(dirs.getSiteDir(), CONF_FILENAME);
-            conf = Configuration.load(file, catalog.getConf());
             sess = catalog.openSession();
             try {
                 Mapper map = sess.getMapper(Mapper.class);
@@ -67,7 +63,6 @@ public class SiteBuilder implements Closeable {
         Files.deleteIfExists(dirs.getThemeDir());
         Files.deleteIfExists(dirs.getSiteDir());
         initTheme(theme);
-        initSite();
         open();
     }
 
@@ -163,13 +158,5 @@ public class SiteBuilder implements Closeable {
             return false;
         }
         return true;
-    }
-
-    private void initSite() throws IOException {
-        File source = new File(dirs.getThemeDir(), CONF_FILENAME);
-        if (source.isFile()) {
-            File dest = new File(dirs.getSiteDir(), CONF_FILENAME);
-            Files.copy(source, dest);
-        }
     }
 }

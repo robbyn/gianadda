@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 import org.apache.velocity.VelocityContext;
@@ -44,6 +45,12 @@ public class TemplateEngine {
     public void process(String template, Map<String,?> params, Writer out) {
         VelocityContext context = createContext(params, engineContext);
         engine.mergeTemplate(template, "UTF-8", context, out);
+    }
+
+    public String process(String template, Map<String,?> params) {
+        StringWriter out = new StringWriter();
+        process(template, params, out);
+        return out.toString();
     }
 
     private static VelocityContext createContext(Map<String,?> params,

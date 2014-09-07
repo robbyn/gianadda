@@ -3,11 +3,7 @@
     <description>Builds, tests, and runs the project gianadda.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <target name="-post-jar">
-        <copy todir="dist">
-            <fileset dir="." includes="res/**"/>
-        </copy>
-    </target>
+    <property name="version" value="0.1.0"/>
 
     <target name="exe" depends="clean,jar,exewdir,exewodir"/>
 
@@ -29,5 +25,9 @@
     launch4j.dir property in nbproject/private/private.properties or in
     ${user.properties.file}
         </echo>
+    </target>
+
+    <target name="win-bundle" depends="exe">
+        <mkdir dir="dist/bundles"/>
     </target>
 </project>
