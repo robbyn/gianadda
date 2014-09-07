@@ -77,7 +77,7 @@ public class SiteBuilder implements Closeable {
 
     public void changeTheme(String theme) throws IOException {
         boolean ok = false;
-        File themeDir = getThemeDir();
+        File themeDir = dirs.getThemeDir();
         File backupDir = new File(
                 themeDir.getParentFile(), themeDir.getName() + ".backup");
         Files.deleteIfExists(backupDir);
@@ -171,9 +171,5 @@ public class SiteBuilder implements Closeable {
             File dest = new File(dirs.getSiteDir(), CONF_FILENAME);
             Files.copy(source, dest);
         }
-    }
-
-    private File getThemeDir() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
