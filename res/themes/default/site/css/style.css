@@ -47,9 +47,12 @@ h1 {
     display: block;
 }
 
-.preview {
-    width: 100%;
+.preview body {
     background: #999999;
+}
+.preview body div {
+    box-sizing: border-box;
+    width: 100%;
     text-align: center;
     padding: .5em;
 }

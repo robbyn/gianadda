@@ -34,7 +34,7 @@ public class Synchronizer {
 
     public static final String PROP_FORCE_HTML = "force-html";
 
-    private static final String CONF_FILENAME = "setting.properties";
+    private static final String CONF_FILENAME = "settings.properties";
     private static final String THEME_CONF_PATH
             = GalleryDirs.THEME_PATH + "/" + CONF_FILENAME;
     private static final String PREVIEW_FILENAME = "preview.html";
@@ -323,7 +323,7 @@ public class Synchronizer {
     private static Configuration buildConf(TemplateEngine engine, 
             GalleryDirs dirs, Configuration conf) throws IOException {
         Properties props = new Properties();
-        try (InputStream in = SiteBuilder.class.getResourceAsStream(
+        try (InputStream in = Synchronizer.class.getResourceAsStream(
                 "default-" + CONF_FILENAME)) {
             if (in != null) {
                 props.load(in);
