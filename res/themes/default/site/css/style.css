@@ -21,6 +21,10 @@ h1 {
     padding: 0;
     text-indent: 0;
 }
+.folders ul li a {
+    text-decoration: none;
+    color: white;
+}
 .thumbs {
     text-align: justify;
     display: block;
