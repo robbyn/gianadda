@@ -178,6 +178,7 @@ public class Files {
         for (String s = in.readLine(); s != null; s = in.readLine()) {
             out.println(s);
         }
+        out.flush();
     }
 
     public static void copyText(Reader reader, Writer writer)

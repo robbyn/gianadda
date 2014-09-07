@@ -6,6 +6,7 @@
         <title>$esc.html($folder.title)</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="${base}css/normalize.css">
         <link rel="stylesheet" href="${base}css/style.css">
     </head>
     <body class="index">
@@ -23,7 +24,7 @@
             #if( !$pictures.empty )
             <nav class="thumbs">
                 #foreach( $pic in $pictures )
-                <figure>
+                <figure id="pic$pic.id">
                     <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)"></a>
                     <figcaption>$esc.html($pic.name)</figcaption>
                 </figure>
