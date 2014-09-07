@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="gallerygen" default="default" basedir=".">
-    <description>Builds, tests, and runs the project gallerygen.</description>
+<project name="gianadda" default="default" basedir=".">
+    <description>Builds, tests, and runs the project gianadda.</description>
     <import file="nbproject/build-impl.xml"/>
 
     <target name="-post-jar">
