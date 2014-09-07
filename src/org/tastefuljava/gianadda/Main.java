@@ -46,8 +46,12 @@ public class Main {
 
     private boolean processArgs(String[] args) {
         int st = 0;
+        loop: 
         for (String arg: args) {
             switch (st) {
+                case -1:
+                    st = 9999;
+                    break loop;
                 case 0:
                     switch (arg) {
                         case "-c":
@@ -69,6 +73,7 @@ public class Main {
                             break;
                         default:
                             dir = new File(arg);
+                            st = -1;
                             break;
                     }
                     break;
@@ -84,9 +89,11 @@ public class Main {
                     flags.add(Flag.SYNCHRONIZE);
                     flags.add(Flag.FORCE_HTML);
                     break;
+                default:
+                    break loop;
             }
         }
-        if (st != 0 || dir == null) {
+        if (st != -1 || dir == null) {
             usage();
             return false;
         }
