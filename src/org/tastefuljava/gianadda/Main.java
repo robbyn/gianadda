@@ -16,6 +16,7 @@ public class Main {
     private boolean sync = false;
     private File dir = null;
     private String template = null;
+    private boolean forceHtml = false;
 
     public static void main(String[] args) {
         try {
@@ -46,6 +47,10 @@ public class Main {
                         case "-sync":
                             sync = true;
                             break;
+                        case "-force-html":
+                            forceHtml = true;
+                            sync = true;
+                            break;
                         default:
                             dir = new File(arg);
                             break;
@@ -69,11 +74,11 @@ public class Main {
             if (template == null) {
                 builder.open();
                 if (sync) {
-                    builder.synchronize();
+                    builder.synchronize(forceHtml);
                 }
             } else {
                 builder.create(template);
-                builder.synchronize();
+                builder.synchronize(true);
             }
         }
     }

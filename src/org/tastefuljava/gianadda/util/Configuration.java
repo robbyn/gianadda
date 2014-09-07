@@ -57,6 +57,11 @@ public class Configuration {
         return Util.isBlank(s) ? def : Integer.parseInt(s);
     }
 
+    public boolean getBoolean(String name, boolean def) {
+        String s = getString(name, null);
+        return Util.isBlank(s) ? def : Boolean.parseBoolean(s);
+    }
+
     public Dimension getDimension(String name, Dimension def) {
         String s = getString(name, null);
         return Util.isBlank(s) ? def : Util.parseDimension(s);
