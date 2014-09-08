@@ -13,48 +13,21 @@ import org.tastefuljava.gianadda.domain.Mapper;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
 
-public class SiteBuilder implements Closeable {
+public class SiteService implements Closeable {
     private static final Logger LOG
-            = Logger.getLogger(SiteBuilder.class.getName());
+            = Logger.getLogger(SiteService.class.getName());
 
     private final GalleryDirs dirs;
     private Catalog catalog;
-    private CatalogSession sess;
     private Configuration conf;
 
-    public SiteBuilder(File dir) {
+    public SiteService(File dir) {
         this.dirs = new GalleryDirs(dir);
-    }
-
-    @Override
-    public void close() {
-        try {
-            CurrentMapper.set(null);
-            closeSession();
-        } finally {
-            closeCatalog();
-        }
     }
 
     public void open() throws IOException {
         boolean ok = false;
         catalog = Catalog.open(dirs.getCatalogDir(), null);
-        try {
-            sess = catalog.openSession();
-            try {
-                Mapper map = sess.getMapper(Mapper.class);
-                CurrentMapper.set(map);
-                ok = true;
-            } finally {
-                if (!ok) {
-                    closeSession();
-                }
-            }
-        } finally {
-            if (!ok) {
-                closeCatalog();
-            }
-        }
     }
 
     public void create(String theme) throws IOException {
@@ -64,6 +37,17 @@ public class SiteBuilder implements Closeable {
         Files.deleteIfExists(dirs.getSiteDir());
         initTheme(theme);
         open();
+    }
+
+    @Override
+    public void close() {
+        if (catalog != null) {
+            try {
+                catalog.close();
+            } finally {
+                catalog = null;
+            }
+        }
     }
 
     public Configuration getConf() {
@@ -94,11 +78,16 @@ public class SiteBuilder implements Closeable {
     }
 
     public void synchronize(boolean forceHtml) throws IOException {
-        Properties props = new Properties();
-        props.put(Synchronizer.PROP_FORCE_HTML, Boolean.toString(forceHtml));
-        Configuration cfg = new Configuration(props, conf);
-        Synchronizer syn = new Synchronizer(cfg, sess, dirs);
-        syn.synchronize();
+        CatalogSession sess = openSession();
+        try {
+            Properties props = new Properties();
+            props.put(Synchronizer.PROP_FORCE_HTML, Boolean.toString(forceHtml));
+            Configuration cfg = new Configuration(props, conf);
+            Synchronizer syn = new Synchronizer(cfg, sess, dirs);
+            syn.synchronize();
+        } finally {
+            closeSession(sess);
+        }
     }
 
     private File getResourceDir() {
@@ -116,25 +105,26 @@ public class SiteBuilder implements Closeable {
         return dir;
     }
 
-    private void closeSession() {
-        if (sess != null) {
-            try {
-                sess.close();
-            } finally {
-                sess = null;
+    private CatalogSession openSession() {
+        boolean ok = false;
+        CatalogSession sess = catalog.openSession();
+        try {
+            Mapper map = sess.getMapper(Mapper.class);
+            CurrentMapper.set(map);
+            ok = true;
+        } finally {
+            if (!ok) {
+                closeSession(sess);
             }
         }
+        return sess;
     }
 
-    private void closeCatalog() {
-        if (catalog != null) {
-            try {
-                catalog.close();
-            } finally {
-                catalog = null;
-            }
-        }
+    private void closeSession(CatalogSession sess) {
+        CurrentMapper.set(null);
+        sess.close();
     }
+
 
     private void initTheme(String theme) throws IOException {
         File dir = new File(getResourceDir(), "themes");

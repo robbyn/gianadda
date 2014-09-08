@@ -108,6 +108,42 @@ public class Synchronizer {
         }
     }
 
+    private static Map<String,Object> createParams(Configuration conf) {
+        Map<String,Object> parms = new HashMap<>();
+        parms.put("conf", new ConfigurationTool(conf));
+        return parms;
+    }
+
+    private static Configuration buildConf(TemplateEngine engine, 
+            GalleryDirs dirs, Configuration conf) throws IOException {
+        Properties props = new Properties();
+        try (InputStream in = Synchronizer.class.getResourceAsStream(
+                "default-" + CONF_FILENAME)) {
+            if (in != null) {
+                props.load(in);
+            }
+        }
+        if (new File(dirs.getBaseDir(), THEME_CONF_PATH).isFile()) {
+            String text = engine.process(THEME_CONF_PATH, createParams(conf));
+            props.load(new StringReader(text));
+        }
+        return new Configuration(props, conf);
+    }
+
+    private static int getAngle(RootIFD root) {
+        int orientation = root.getInt(RootIFD.Tag.Orientation, 0);
+        switch (orientation) {
+            case 3:
+                return 180;
+            case 6:
+                return 90;
+            case 8:
+                return 270;
+            default:
+                return 0;
+        }
+    }
+
     private boolean getForceHtml() {
         return conf.getBoolean(PROP_FORCE_HTML, false);
     }
@@ -244,20 +280,6 @@ public class Synchronizer {
         }
     }
 
-    private static int getAngle(RootIFD root) {
-        int orientation = root.getInt(RootIFD.Tag.Orientation, 0);
-        switch (orientation) {
-            case 3:
-                return 180;
-            case 6:
-                return 90;
-            case 8:
-                return 270;
-            default:
-                return 0;
-        }
-    }
-
     private void applyTemplates(String path, File dest, Map<String,?> parms)
             throws IOException {
         File source = new File(dirs.getBaseDir(), path);
@@ -292,12 +314,6 @@ public class Synchronizer {
         engine.process(path, parms, dest);
     }
 
-    private static Map<String,Object> createParams(Configuration conf) {
-        Map<String,Object> parms = new HashMap<>();
-        parms.put("conf", new ConfigurationTool(conf));
-        return parms;
-    }
-
     private Map<String,Object> createSiteParams() {
         return createParams(conf);
     }
@@ -318,21 +334,5 @@ public class Synchronizer {
         Map<String,Object> parms = createFolderParams(pic.getFolder(), depth);
         parms.put("pic", pic);
         return parms;
-    }
-
-    private static Configuration buildConf(TemplateEngine engine, 
-            GalleryDirs dirs, Configuration conf) throws IOException {
-        Properties props = new Properties();
-        try (InputStream in = Synchronizer.class.getResourceAsStream(
-                "default-" + CONF_FILENAME)) {
-            if (in != null) {
-                props.load(in);
-            }
-        }
-        if (new File(dirs.getBaseDir(), THEME_CONF_PATH).isFile()) {
-            String text = engine.process(THEME_CONF_PATH, createParams(conf));
-            props.load(new StringReader(text));
-        }
-        return new Configuration(props, conf);
     }
 }

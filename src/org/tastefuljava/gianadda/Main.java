@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.tastefuljava.gianadda.site.SiteBuilder;
+import org.tastefuljava.gianadda.site.SiteService;
 import org.tastefuljava.gianadda.util.Files;
 
 public class Main {
@@ -101,7 +101,7 @@ public class Main {
     }
 
     private void process() throws IOException {
-        try (SiteBuilder builder = new SiteBuilder(dir)) {
+        try (SiteService builder = new SiteService(dir)) {
             if (createTheme != null) {
                 builder.create(createTheme);
             } else {
