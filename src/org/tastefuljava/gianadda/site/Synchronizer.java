@@ -28,9 +28,6 @@ import org.tastefuljava.gianadda.util.Files;
 import org.tastefuljava.gianadda.util.ImageUtil;
 
 public class Synchronizer {
-    private static final Logger LOG
-            = Logger.getLogger(Synchronizer.class.getName());
-
     public static final String PROP_FORCE_HTML = "force-html";
 
     private static final String CONF_FILENAME = "settings.properties";
@@ -39,13 +36,6 @@ public class Synchronizer {
     private static final String PREVIEW_FILENAME = "preview.html";
     private static final String PREVIEW_PATH
             = GalleryDirs.THEME_PATH + "/" + PREVIEW_FILENAME;
-
-    private static final Pattern PIC_NAME_PATTERN = Pattern.compile(
-            "^[^.].*[.](jpg|jpeg)$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern DIR_NAME_PATTERN = Pattern.compile(
-            "^[^._].*$");
-    private static final String DEFAULT_TEMPLNAME_RE
-            = "^[^.].*[.](html|js|css)$";
 
     static enum ImageType {
         PREVIEW, THUMB;
@@ -71,6 +61,8 @@ public class Synchronizer {
     private final Pattern templateNamePattern;
     private final TemplateEngine engine;
     private final Folder rootFolder;
+    private final Pattern picNamePattern;
+    private final Pattern dirNamePattern;
 
     Synchronizer(Configuration conf, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
@@ -80,10 +72,10 @@ public class Synchronizer {
         this.conf = buildConf(engine, dirs, conf);
         this.sess = sess;
         this.dirs = dirs;
-        String re = conf.getString(
-                "template-name-pattern", DEFAULT_TEMPLNAME_RE);
-        this.templateNamePattern = Pattern.compile(
-                re, Pattern.CASE_INSENSITIVE);
+        this.picNamePattern = getConfPattern("pic-name-pattern", false);
+        this.dirNamePattern = getConfPattern("dir-name-pattern", false);
+        this.templateNamePattern = getConfPattern(
+                "template-name-pattern", false);
     }
 
     public void synchronize() throws IOException {
@@ -147,6 +139,15 @@ public class Synchronizer {
         return conf.getBoolean(PROP_FORCE_HTML, false);
     }
 
+    private Pattern getConfPattern(String name, boolean cs) {
+        String s = conf.getString(name, null);
+        if (s == null) {
+            return null;
+        }
+        int flags = cs ? 0 : Pattern.CASE_INSENSITIVE;
+        return Pattern.compile(s, flags);
+    }
+
     private boolean syncDir(Folder folder, File dir) throws IOException {
         boolean changed = syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
@@ -160,7 +161,7 @@ public class Synchronizer {
     private boolean syncPics(Folder folder,
             File dir) throws IOException {
         boolean changed = false;
-        String[] picNames = Files.listFiles(dir, PIC_NAME_PATTERN);
+        String[] picNames = Files.listFiles(dir, picNamePattern);
         for (String name: picNames) {
             boolean picChanged = false;
             File file = new File(dir, name);
@@ -192,7 +193,7 @@ public class Synchronizer {
 
     private boolean synSubdirs(Folder folder, File dir) throws IOException {
         boolean changed = false;
-        String[] dirNames = Files.listDirs(dir, DIR_NAME_PATTERN);
+        String[] dirNames = Files.listDirs(dir, dirNamePattern);
         for (String name: dirNames) {
             Folder sub = folder.getSubfolder(name);
             if (sub == null) {
