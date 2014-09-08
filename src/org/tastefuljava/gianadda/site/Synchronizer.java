@@ -71,9 +71,11 @@ public class Synchronizer {
     private final GalleryDirs dirs;
     private final Pattern templateNamePattern;
     private final TemplateEngine engine;
+    private final Folder rootFolder;
 
     Synchronizer(Configuration conf, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
+        this.rootFolder = getRootFolder(sess);
         this.engine = new TemplateEngine(
                 dirs.getBaseDir(), createParams(conf));
         this.conf = buildConf(engine, dirs, conf);
@@ -86,26 +88,24 @@ public class Synchronizer {
     }
 
     public void synchronize() throws IOException {
-        Folder rootFolder = Folder.getRoot("/");
-        if (rootFolder == null) {
-            rootFolder = new Folder();
-            rootFolder.setName("/");
-            rootFolder.setTitle("Root");
-            rootFolder.setDescription("Root folder");
-            rootFolder.insert();
-            sess.commit();
-        } else {
-            LOG.log(Level.INFO, "Listing pictures of {0}",
-                    rootFolder.getName());
-            for (Picture pic: rootFolder.getPictures()) {
-                LOG.log(Level.INFO, "Picture {0}", pic.getPath());
-            }
-        }
         boolean changed = syncDir(rootFolder, dirs.getBaseDir());
         if (changed || getForceHtml()) {
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
                     createFolderParams(rootFolder, 0));
         }
+    }
+
+    private static Folder getRootFolder(CatalogSession sess) {
+        Folder folder = Folder.getRoot("/");
+        if (folder == null) {
+            folder = new Folder();
+            folder.setName("/");
+            folder.setTitle("Root");
+            folder.setDescription("Root folder");
+            folder.insert();
+            sess.commit();
+        }
+        return folder;
     }
 
     private static Map<String,Object> createParams(Configuration conf) {

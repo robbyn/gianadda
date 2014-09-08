@@ -26,7 +26,6 @@ public class SiteService implements Closeable {
     }
 
     public void open() throws IOException {
-        boolean ok = false;
         catalog = Catalog.open(dirs.getCatalogDir(), null);
     }
 
