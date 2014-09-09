@@ -21,6 +21,11 @@ public class Main {
 
     enum Flag {
         SYNCHRONIZE, FORCE_HTML, VERBOSE, QUIET, DEBUG, TEST;
+
+        @Override
+        public String toString() {
+            return "--" + name().toLowerCase().replace('_', '-');
+        }
     }
 
     private File dir = null;
@@ -120,6 +125,14 @@ public class Main {
 
     private void process() throws IOException {
         initLogging();
+        LOG.log(Level.INFO, "Gallery: {0}", dir);
+        if (createTheme != null) {
+            LOG.log(Level.INFO, "Create gallery using theme {0}", createTheme);
+        }
+        if (changeTheme != null) {
+            LOG.log(Level.INFO, "Change theme to {0}", changeTheme);
+        }
+        LOG.log(Level.INFO, "Option flags: {0}", flags);
         try (SiteService builder = new SiteService(dir)) {
             if (createTheme != null) {
                 builder.create(createTheme);
