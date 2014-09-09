@@ -5,11 +5,14 @@ Yet another gallery generator.
 
 Usage:
 ------
+
 ```sh
 gianadda [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
     [-s|--sync] [-f|--force-html] <gallery-directory>
 ```
+
 Options:
+
     `-c`|`--create` <theme-name>
         Create a new gallery using the given theme, in the given directory.
         When used, -s and -f are implied.
