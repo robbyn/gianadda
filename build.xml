@@ -3,7 +3,7 @@
     <description>Builds, tests, and runs the project gianadda.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <property name="version" value="0.1.1"/>
+    <property name="version" value="0.1.2"/>
 
     <target name="-pre-jar">
         <echo level="info">Building default theme</echo>
@@ -52,6 +52,9 @@
             <zipfileset dir="dist" prefix="gianadda">
                 <include name="gianadda.jar"/>
                 <include name="lib/**"/>
+            </zipfileset>
+            <zipfileset dir="res/bundles/all" prefix="gianadda">
+                <include name="gianadda.sh"/>
             </zipfileset>
         </zip>
     </target>

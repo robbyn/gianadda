@@ -248,7 +248,13 @@ public class Synchronizer {
         ImageInputStream in = new FileImageInputStream(file);
         try {
             in.mark();
-            exif = Exif.fromJPEG(in);
+            try {
+                exif = Exif.fromJPEG(in);
+            } catch (IOException e) {
+                LOG.log(Level.WARNING,
+                        "Faild to load EXIF info from {0}", file);
+                exif = null;
+            }
             in.reset();
             img = ImageIO.read(in);
             ok = true;
@@ -257,29 +263,33 @@ public class Synchronizer {
                 in.close();
             }
         }
-        RootIFD root = exif.getRootIFD();
-        ExifIFD ifd = root.getExifIFD();
-        Date timestamp = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
-        if (timestamp == null) {
-            timestamp = new Date(file.lastModified());
-        } else {
-            file.setLastModified(timestamp.getTime());
+        Date timestamp = new Date(file.lastModified());
+        int angle = 0;
+        if (exif != null) {
+            RootIFD root = exif.getRootIFD();
+            ExifIFD ifd = root.getExifIFD();
+            Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
+            if (ts != null) {
+                timestamp = ts;
+            } else {
+                file.setLastModified(timestamp.getTime());
+            }
+            GPSIFD gps = root.getGPSIFD();
+            if (gps != null) {
+                LOG.log(Level.FINE, "GPS data found in {0}", pic.getPath());
+                GpsData data = new GpsData();
+                data.setLatitude(gps.getLatitude());
+                data.setLongitude(gps.getLongitude());
+                data.setAltitude(gps.getAltitude());
+                pic.setGpsData(data);
+            }
+            angle = getAngle(root);
         }
         pic.setDateTime(timestamp);
         int width = img.getWidth();
         int height = img.getHeight();
         pic.setWidth(width);
         pic.setHeight(height);
-        GPSIFD gps = root.getGPSIFD();
-        if (gps != null) {
-            LOG.log(Level.FINE, "GPS data found in {0}", pic.getPath());
-            GpsData data = new GpsData();
-            data.setLatitude(gps.getLatitude());
-            data.setLongitude(gps.getLongitude());
-            data.setAltitude(gps.getAltitude());
-            pic.setGpsData(data);
-        }
-        int angle = getAngle(root);
         img = generateImage(pic, img, angle, ImageType.PREVIEW);        
         generateImage(pic, img, 0, ImageType.THUMB);
     }
