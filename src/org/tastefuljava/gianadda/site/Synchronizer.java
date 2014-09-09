@@ -266,8 +266,8 @@ public class Synchronizer {
             try {
                 exif = Exif.fromJPEG(in);
             } catch (IOException e) {
-                LOG.log(Level.WARNING, "Faild to load EXIF info from " + file,
-                        e);
+                LOG.log(Level.WARNING,
+                        "Faild to process picture " + file + " - skipping", e);
                 exif = null;
             }
             in.reset();
