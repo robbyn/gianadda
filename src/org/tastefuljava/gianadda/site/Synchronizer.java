@@ -67,12 +67,12 @@ public class Synchronizer {
     private final Pattern dirNamePattern;
     private final String previewPath;
 
-    Synchronizer(Configuration conf, CatalogSession sess,
+    Synchronizer(Configuration link, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
         this.rootFolder = getRootFolder(sess);
         this.engine = new TemplateEngine(
-                dirs.getBaseDir(), createParams(conf));
-        this.conf = buildConf(engine, dirs, conf);
+                dirs.getBaseDir(), createParams(link));
+        this.conf = buildConf(engine, dirs, link);
         this.sess = sess;
         this.dirs = dirs;
         this.picNamePattern = getConfPattern("pic-name-pattern", false);
@@ -80,7 +80,7 @@ public class Synchronizer {
         this.templateNamePattern = getConfPattern(
                 "template-name-pattern", false);
         this.previewPath = GalleryDirs.THEME_PATH
-                + conf.getString("preview-path", null);
+                + "/" + conf.getString("preview-template", null);
     }
 
     public void synchronize() throws IOException {

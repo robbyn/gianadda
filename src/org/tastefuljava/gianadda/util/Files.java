@@ -134,7 +134,7 @@ public class Files {
                 File file = new File(dir, path);
                 String name = file.getName();
                 if (matches(name, pattern)) {
-                    LOG.log(Level.INFO, "extracting {0} to {1}",
+                    LOG.log(Level.FINE, "extracting {0} to {1}",
                             new Object[]{entry.getName(), file});
                     if (entry.isDirectory()) {
                         mkdirs(file);

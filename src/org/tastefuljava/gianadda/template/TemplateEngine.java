@@ -66,9 +66,9 @@ public class TemplateEngine {
 
     private static VelocityContext createBaseContext() {
         VelocityContext context = new VelocityContext();
-        context.put("math", new MathTool());
         context.put("esc", new EscapeTool());
         context.put("date", new ComparisonDateTool());
+        context.put("math", new MathTool());
         return context;
     }
 }
