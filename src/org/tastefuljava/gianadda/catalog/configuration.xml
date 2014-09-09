@@ -4,6 +4,8 @@
 <configuration>
     <settings>
         <setting name="useGeneratedKeys" value="false"/>
+        <setting name="callSettersOnNulls" value="true"/>
+        <setting name="logImpl" value="JDK_LOGGING"/>
     </settings>
 
     <typeAliases>

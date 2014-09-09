@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import org.tastefuljava.gianadda.catalog.CatalogSession;
 import org.tastefuljava.gianadda.domain.Folder;
@@ -19,7 +20,7 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     enum Flag {
-        SYNCHRONIZE, FORCE_HTML, TEST;
+        SYNCHRONIZE, FORCE_HTML, VERBOSE, QUIET, DEBUG, TEST;
     }
 
     private File dir = null;
@@ -75,6 +76,16 @@ public class Main {
                             flags.add(Flag.SYNCHRONIZE);
                             flags.add(Flag.FORCE_HTML);
                             break;
+                        case "-v":
+                        case "--verbose":
+                            flags.add(Flag.VERBOSE);
+                            break;
+                        case "--quiet":
+                            flags.add(Flag.QUIET);
+                            break;
+                        case "--debug":
+                            flags.add(Flag.DEBUG);
+                            break;
                         case "---test":
                             flags.add(Flag.TEST);
                             break;
@@ -108,6 +119,7 @@ public class Main {
     }
 
     private void process() throws IOException {
+        initLogging();
         try (SiteService builder = new SiteService(dir)) {
             if (createTheme != null) {
                 builder.create(createTheme);
@@ -151,6 +163,32 @@ public class Main {
         }
         for (Folder child: folder.getSubfolders()) {
             test(child);
+        }
+    }
+
+    private void initLogging() {
+        if (System.getProperty("java.util.logging.config.file") == null) {
+            // Use default logging configuration
+            try (InputStream inputStream = Main.class.getResourceAsStream(
+                    "default-logging.properties")) {
+                LogManager.getLogManager().readConfiguration(inputStream);
+            } catch (final IOException e) {
+                LOG.severe(e.getMessage());
+            }
+        }
+        Logger log = LogManager.getLogManager().getLogger("");
+        if (log != null) {
+            Level level = Level.WARNING;
+            if (flags.contains(Flag.QUIET)) {
+                level = Level.SEVERE;
+            }
+            if (flags.contains(Flag.VERBOSE)) {
+                level = Level.INFO;
+            }
+            if (flags.contains(Flag.DEBUG)) {
+                level = Level.FINEST;
+            }
+            log.setLevel(level);
         }
     }
 }
