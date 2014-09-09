@@ -13,15 +13,18 @@ gianadda [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
 
 Options:
 
-`-c`|`--create` <theme-name>
+`-c`|`--create` &lt;theme-name&gt;
+
     Create a new gallery using the given theme, in the given directory.
     When used, -s and -f are implied.
 
-`-t`|`--change-theme` <theme-name>
+`-t`|`--change-theme` &lt;theme-name&gt;
+
     Change the theme of the gallery in the given directory.
     When used, -s and -f are implied.
 
 `-s`|`--sync`
+
     Synchronize the given gallery to reflect changes in the content of the
     gallery directory:
         .   create new folder when new directories are found
@@ -34,15 +37,19 @@ Options:
         structure are kept in the catalog.
 
 `-f`|`--force-html`
+
     Force the generation of the html (and css, js, ...) files of the web
     site, whether there was a change or not. When used, -s is implied.
 
 `-v`|`--verbose`
+
     Display information messages. Without this flag, only warnings and
     errors are displayed.
 
 `-q`|`--quiet`
+
     Don't display warning messages (only error messages)
 
 `--debug`
-    Display ALL messages, including debug messages.
+
+    Display ALL messages, including debug messages. There can be quiet a lot.
