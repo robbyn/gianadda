@@ -38,9 +38,6 @@ public class Synchronizer {
     private static final String CONF_FILENAME = "settings.properties";
     private static final String THEME_CONF_PATH
             = GalleryDirs.THEME_PATH + "/" + CONF_FILENAME;
-    private static final String PREVIEW_FILENAME = "preview.html";
-    private static final String PREVIEW_PATH
-            = GalleryDirs.THEME_PATH + "/" + PREVIEW_FILENAME;
 
     static enum ImageType {
         PREVIEW, THUMB;
@@ -68,6 +65,7 @@ public class Synchronizer {
     private final Folder rootFolder;
     private final Pattern picNamePattern;
     private final Pattern dirNamePattern;
+    private final String previewPath;
 
     Synchronizer(Configuration conf, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
@@ -81,6 +79,8 @@ public class Synchronizer {
         this.dirNamePattern = getConfPattern("dir-name-pattern", false);
         this.templateNamePattern = getConfPattern(
                 "template-name-pattern", false);
+        this.previewPath = GalleryDirs.THEME_PATH
+                + conf.getString("preview-path", null);
     }
 
     public void synchronize() throws IOException {
@@ -285,13 +285,13 @@ public class Synchronizer {
     }
 
     private void generatePreviewHtml(Picture pic) throws IOException {
-        if (new File(dirs.getBaseDir(), PREVIEW_PATH).exists()) {
+        if (new File(dirs.getBaseDir(), previewPath).exists()) {
             LOG.log(Level.FINE, "Generate preview page for {0}", pic.getPath());
             File folderDir = folderSiteDir(pic.getFolder());
             File dir = ImageType.PREVIEW.directory(folderDir);
             Files.mkdirs(dir);
             File outFile = new File(dir, pic.getName() + ".html");
-            applyTemplate(PREVIEW_PATH, outFile, createPictureParams(pic, 1));
+            applyTemplate(previewPath, outFile, createPictureParams(pic, 1));
         }
     }
 
