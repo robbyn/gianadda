@@ -263,13 +263,7 @@ public class Synchronizer {
         ImageInputStream in = new FileImageInputStream(file);
         try {
             in.mark();
-            try {
-                exif = Exif.fromJPEG(in);
-            } catch (IOException e) {
-                LOG.log(Level.WARNING,
-                        "Faild to process picture " + file + " - skipping", e);
-                exif = null;
-            }
+            exif = Exif.fromJPEG(in);
             in.reset();
             img = ImageIO.read(in);
             ok = true;
@@ -282,35 +276,33 @@ public class Synchronizer {
         int angle = 0;
         if (exif != null) {
             RootIFD root = exif.getRootIFD();
-            if (root != null) {
-                ExifIFD ifd = root.getExifIFD();
-                if (ifd != null) {
-                    Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
-                    if (ts != null) {
-                        timestamp = ts;
-                        file.setLastModified(ts.getTime());
-                    }
-                }
-                GPSIFD gps = root.getGPSIFD();
-                if (gps != null) {
-                    Double latitude = gps.getLatitude();
-                    Double longitude = gps.getLongitude();
-                    if (latitude == null && longitude == null) {
-                        LOG.log(Level.WARNING,
-                                "latitude/longitude missing in {0}",
-                                pic.getPath());
-                    } else {
-                        LOG.log(Level.FINE,
-                                "GPS data found in {0}", pic.getPath());
-                        GpsData data = new GpsData();
-                        data.setLatitude(latitude);
-                        data.setLongitude(longitude);
-                        data.setAltitude(gps.getAltitude());
-                        pic.setGpsData(data);
-                    }
-                }
-                angle = getAngle(root);
+            ExifIFD ifd = root.getExifIFD();
+            if (ifd == null) {
+                throw new IOException("Not ExifIFD found in " + pic.getPath());
             }
+            Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
+            if (ts != null) {
+                timestamp = ts;
+                file.setLastModified(ts.getTime());
+            }
+            GPSIFD gps = root.getGPSIFD();
+            if (gps != null) {
+                Double latitude = gps.getLatitude();
+                Double longitude = gps.getLongitude();
+                if (latitude == null && longitude == null) {
+                    LOG.log(Level.WARNING,
+                            "latitude/longitude missing in {0}", pic.getPath());
+                } else {
+                    LOG.log(Level.FINE,
+                            "GPS data found in {0}", pic.getPath());
+                    GpsData data = new GpsData();
+                    data.setLatitude(latitude);
+                    data.setLongitude(longitude);
+                    data.setAltitude(gps.getAltitude());
+                    pic.setGpsData(data);
+                }
+            }
+            angle = getAngle(root);
         }
         pic.setDateTime(timestamp);
         int width = img.getWidth();
