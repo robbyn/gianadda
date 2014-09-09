@@ -181,13 +181,17 @@ public class Synchronizer {
                 pic.setFolder(folder);
                 pic.setName(name);
                 LOG.log(Level.INFO, "New picture found: {0}", pic.getPath());
-                processPic(pic, file);
+                if (!tryProcessPic(pic, file)) {
+                    continue;
+                }
                 pic.insert();
                 sess.commit();
                 picChanged = true;
             } else if (!timeStamp.equals(pic.getDateTime())) {
                 LOG.log(Level.INFO, "Picture has changed: {0}", pic.getPath());
-                processPic(pic, file);
+                if (!tryProcessPic(pic, file)) {
+                    continue;
+                }
                 pic.update();
                 sess.commit();
                 picChanged = true;
@@ -241,6 +245,17 @@ public class Synchronizer {
         return img;
     }
 
+    private boolean tryProcessPic(Picture pic, File file) {
+        try {
+            processPic(pic, file);
+            return true;
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Faild to load EXIF info from " + file,
+                    e);
+            return false;
+        }
+    }
+
     private void processPic(Picture pic, File file) throws IOException {
         Exif exif;
         BufferedImage img;
@@ -251,8 +266,8 @@ public class Synchronizer {
             try {
                 exif = Exif.fromJPEG(in);
             } catch (IOException e) {
-                LOG.log(Level.WARNING,
-                        "Faild to load EXIF info from {0}", file);
+                LOG.log(Level.WARNING, "Faild to load EXIF info from " + file,
+                        e);
                 exif = null;
             }
             in.reset();
