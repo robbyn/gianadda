@@ -25,3 +25,13 @@ Options:
     -f|--force-html
         Force the generation of the html (and css, js, ...) files of the web
         site, whether there was a change or not. When used, -s is implied.
+
+    -v|--verbose
+        Display information messages. Without this flag, only warnings and
+        errors are displayed.
+
+    -q|--quiet
+        Don't display warning messages (only error messages)
+
+    --debug
+        Display ALL messages, including debug messages.
