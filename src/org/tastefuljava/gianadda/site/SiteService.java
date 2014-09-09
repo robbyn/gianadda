@@ -120,7 +120,7 @@ public class SiteService implements Closeable {
         if (s != null) {
             dir = new File(s);
         } else {
-            dir = new File(Files.getProgramDir(), "res");
+            dir = Files.getProgramDir();
         }
         if (!dir.isDirectory()) {
             LOG.log(Level.SEVERE, "Invalid resource dir {0}", dir);
@@ -136,6 +136,7 @@ public class SiteService implements Closeable {
             throw new IOException("Invalid theme dir " + dir);
         }
         boolean ok = initTheme(new File(dir, theme))
+                || initTheme(new File(dir, theme + ".ggt"))
                 || initTheme(new File(dir, theme + ".jar"))
                 || initTheme(new File(dir, theme + ".zip"));
         if (!ok) {
