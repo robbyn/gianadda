@@ -5,6 +5,13 @@
 
     <property name="version" value="0.1.0"/>
 
+    <target name="-pre-jar">
+        <echo level="info">Building default theme</echo>
+        <zip destfile="build/classes/default.ggt">
+            <fileset dir="res/themes/default"/>
+        </zip>
+    </target>
+
     <target name="exe" depends="clean,jar,exewdir,exewodir"/>
 
     <target name="exewdir" if="launch4j.dir">

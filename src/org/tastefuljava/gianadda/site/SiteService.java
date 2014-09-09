@@ -3,6 +3,7 @@ package org.tastefuljava.gianadda.site;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +17,9 @@ import org.tastefuljava.gianadda.util.Files;
 public class SiteService implements Closeable {
     private static final Logger LOG
             = Logger.getLogger(SiteService.class.getName());
+
+    private static final String[] THEME_EXTENSIONS
+            = {"", ".ggt", ".jar", ".zip"};
 
     private final GalleryDirs dirs;
     private Catalog catalog;
@@ -131,17 +135,49 @@ public class SiteService implements Closeable {
 
 
     private void initTheme(String theme) throws IOException {
+        boolean ok = false;
         File dir = new File(getResourceDir(), "themes");
-        if (!dir.isDirectory()) {
-            throw new IOException("Invalid theme dir " + dir);
+        if (dir.isDirectory()) {
+            for (String ext: THEME_EXTENSIONS) {
+                ok = initTheme(new File(dir, theme + ext));
+                if (ok) {
+                    break;
+                }
+            }
         }
-        boolean ok = initTheme(new File(dir, theme))
-                || initTheme(new File(dir, theme + ".ggt"))
-                || initTheme(new File(dir, theme + ".jar"))
-                || initTheme(new File(dir, theme + ".zip"));
         if (!ok) {
-            throw new IOException("Theme does not exist " + theme);
+            // Try in the resources
+            for (String ext: THEME_EXTENSIONS) {
+                ok = initResourceTheme(theme + ext);
+                if (ok) {
+                    break;
+                }
+            }
+            if (!ok) {
+                throw new IOException("Theme not found: " + theme);
+            }
         }
+    }
+
+    private boolean initResourceTheme(String name) throws IOException {
+        File temp = extractResource("/" + name, "dgt", ".ggt");
+        if (temp != null && initTheme(temp)) {
+            Files.delete(temp);
+            return true;
+        }
+        return false;
+    }
+
+    private File extractResource(String name, String pfx, String sfx)
+            throws IOException {
+        try (InputStream in = SiteService.class.getResourceAsStream(name)) {
+            if (in != null) {
+                File temp = File.createTempFile(pfx, sfx);
+                Files.save(in, temp);
+                return temp;
+            }
+        }
+        return null;
     }
 
     private boolean initTheme(File source) throws IOException {
