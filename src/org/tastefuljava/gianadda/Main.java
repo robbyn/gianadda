@@ -166,11 +166,8 @@ public class Main {
                 builder.synchronize(flags.contains(Flag.FORCE_HTML));
             }
             if (flags.contains(Flag.TEST)) {
-                CatalogSession sess = builder.openSession();
-                try {
+                try (CatalogSession sess = builder.openSession()) {
                     test(sess);
-                } finally {
-                    builder.closeSession(sess);
                 }
             }
         }

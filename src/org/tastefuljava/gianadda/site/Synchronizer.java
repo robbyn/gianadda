@@ -276,12 +276,19 @@ public class Synchronizer {
             }
             GPSIFD gps = root.getGPSIFD();
             if (gps != null) {
-                LOG.log(Level.FINE, "GPS data found in {0}", pic.getPath());
-                GpsData data = new GpsData();
-                data.setLatitude(gps.getLatitude());
-                data.setLongitude(gps.getLongitude());
-                data.setAltitude(gps.getAltitude());
-                pic.setGpsData(data);
+                Double latitude = gps.getLatitude();
+                Double longitude = gps.getLongitude();
+                if (latitude == null && longitude == null) {
+                    LOG.log(Level.WARNING, "latitude/longitude missing in {0}",
+                            pic.getPath());
+                } else {
+                    LOG.log(Level.FINE, "GPS data found in {0}", pic.getPath());
+                    GpsData data = new GpsData();
+                    data.setLatitude(latitude);
+                    data.setLongitude(longitude);
+                    data.setAltitude(gps.getAltitude());
+                    pic.setGpsData(data);
+                }
             }
             angle = getAngle(root);
         }

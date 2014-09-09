@@ -86,36 +86,17 @@ public class SiteService implements Closeable {
 
     public void synchronize(boolean forceHtml) throws IOException {
         LOG.log(Level.INFO, "Synchronize gallery {0}", dirs.getBaseDir());
-        CatalogSession sess = openSession();
-        try {
+        try (CatalogSession sess = openSession()) {
             Properties props = new Properties();
             props.put(Synchronizer.PROP_FORCE_HTML, Boolean.toString(forceHtml));
             Configuration cfg = new Configuration(props, conf);
             Synchronizer syn = new Synchronizer(cfg, sess, dirs);
             syn.synchronize();
-        } finally {
-            closeSession(sess);
         }
     }
 
     public CatalogSession openSession() {
-        boolean ok = false;
-        CatalogSession sess = catalog.openSession();
-        try {
-            Mapper map = sess.getMapper(Mapper.class);
-            CurrentMapper.set(map);
-            ok = true;
-        } finally {
-            if (!ok) {
-                closeSession(sess);
-            }
-        }
-        return sess;
-    }
-
-    public void closeSession(CatalogSession sess) {
-        CurrentMapper.set(null);
-        sess.close();
+        return catalog.openSession();
     }
 
     private File getResourceDir() {
