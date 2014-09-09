@@ -13,18 +13,19 @@ gianadda [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
 
 Options:
 
-`-c`|`--create` &lt;theme-name&gt;
+<dl>
+<dt>-c|--create &lt;theme-name&gt;</dt>
 
     Create a new gallery using the given theme, in the given directory.
     When used, -s and -f are implied.
 
-`-t`|`--change-theme` &lt;theme-name&gt;
-
+<dt>-t|--change-theme &lt;theme-name&gt;</dt>
+<dd>
     Change the theme of the gallery in the given directory.
     When used, -s and -f are implied.
-
-`-s`|`--sync`
-
+</dd>
+<dt>-s|--sync</dt>
+<dd>
     Synchronize the given gallery to reflect changes in the content of the
     gallery directory:
         .   create new folder when new directories are found
@@ -36,20 +37,23 @@ Options:
         The folders and pictures that no longer exist in the directory
         structure are kept in the catalog.
 
-`-f`|`--force-html`
-
+</dd>
+<dt>-f|--force-html</dt>
+<dd>
     Force the generation of the html (and css, js, ...) files of the web
     site, whether there was a change or not. When used, -s is implied.
-
-`-v`|`--verbose`
-
+</dd>
+<dt>-v|--verbose</dt>
+<dd>
     Display information messages. Without this flag, only warnings and
     errors are displayed.
-
-`-q`|`--quiet`
-
+</dd>
+<dt>-q|--quiet</dt>
+<dd>
     Don't display warning messages (only error messages)
-
-`--debug`
-
+</dd>
+<dt>--debug</dt>
+<dd>
     Display ALL messages, including debug messages. There can be quiet a lot.
+</dd>
+</dl>
