@@ -271,8 +271,7 @@ public class Synchronizer {
             Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
             if (ts != null) {
                 timestamp = ts;
-            } else {
-                file.setLastModified(timestamp.getTime());
+                file.setLastModified(ts.getTime());
             }
             GPSIFD gps = root.getGPSIFD();
             if (gps != null) {
