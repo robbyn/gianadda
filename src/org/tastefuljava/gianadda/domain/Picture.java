@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.domain;
 
+import java.awt.Dimension;
 import java.util.Date;
 
 public class Picture {
@@ -53,6 +54,10 @@ public class Picture {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public Dimension getSize() {
+        return new Dimension(width, height);
     }
 
     public GpsData getGpsData() {
