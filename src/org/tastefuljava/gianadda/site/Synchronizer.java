@@ -250,7 +250,7 @@ public class Synchronizer {
             processPic(pic, file);
             return true;
         } catch (IOException e) {
-            LOG.log(Level.WARNING,
+            LOG.log(Level.WARNING, 
                     "Error while processing " + file + " - skipping", e);
             return false;
         }
