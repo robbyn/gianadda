@@ -3,7 +3,7 @@
     <description>Builds, tests, and runs the project gianadda.</description>
     <import file="nbproject/build-impl.xml"/>
 
-    <property name="version" value="0.1.0"/>
+    <property name="version" value="0.1.1"/>
 
     <target name="-pre-jar">
         <echo level="info">Building default theme</echo>
