@@ -73,17 +73,23 @@ public class Folder {
         CurrentMapper.get().deleteFolder(id);
     }
 
+    public boolean isRoot() {
+        return parent == null;
+    }
+
     public int getLevel() {
         return parent == null ? 0 : parent.getLevel()+1;
     }
 
     public String getPath() {
-        return parent == null ? name : parent.getPath() + "/" + name;
+        return parent == null || parent.isRoot()
+                ? name : parent.getPath() + "/" + name;
     }
 
     public String getUrlPath() {
         String esc = Util.urlEncode(name);
-        return parent == null ? esc : parent.getUrlPath() + "/" + esc;
+        return parent == null || parent.isRoot()
+                ? esc : parent.getUrlPath() + "/" + esc;
     }
 
     public Picture getPicture(String name) {

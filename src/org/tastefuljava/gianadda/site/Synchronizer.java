@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
@@ -28,6 +30,9 @@ import org.tastefuljava.gianadda.util.Files;
 import org.tastefuljava.gianadda.util.ImageUtil;
 
 public class Synchronizer {
+    private static final Logger LOG
+            = Logger.getLogger(Synchronizer.class.getName());
+
     public static final String PROP_FORCE_HTML = "force-html";
 
     private static final String CONF_FILENAME = "settings.properties";
@@ -81,6 +86,7 @@ public class Synchronizer {
     public void synchronize() throws IOException {
         boolean changed = syncDir(rootFolder, dirs.getBaseDir());
         if (changed || getForceHtml()) {
+            LOG.log(Level.INFO, "Applying site-level theme");
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
                     createFolderParams(rootFolder, 0));
         }
@@ -149,9 +155,12 @@ public class Synchronizer {
     }
 
     private boolean syncDir(Folder folder, File dir) throws IOException {
+        LOG.log(Level.INFO, "Synchronizing folder {0}", folder.getPath());
         boolean changed = syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
         if (changed || getForceHtml()) {
+            LOG.log(Level.INFO, "Applying folder-level theme to {0}",
+                    folder.getPath());
             Map<String,Object> parms = createFolderParams(folder, 0);
             applyTemplates("_theme/folder", folderSiteDir(folder), parms);
         }
@@ -171,13 +180,15 @@ public class Synchronizer {
                 pic = new Picture();
                 pic.setFolder(folder);
                 pic.setName(name);
+                LOG.log(Level.INFO, "New picture found: {0}", pic.getPath());
                 processPic(pic, file);
                 pic.insert();
                 sess.commit();
                 picChanged = true;
             } else if (!timeStamp.equals(pic.getDateTime())) {
-                pic.update();
+                LOG.log(Level.INFO, "Picture has changed: {0}", pic.getPath());
                 processPic(pic, file);
+                pic.update();
                 sess.commit();
                 picChanged = true;
             }
@@ -261,6 +272,7 @@ public class Synchronizer {
         pic.setHeight(height);
         GPSIFD gps = root.getGPSIFD();
         if (gps != null) {
+            LOG.log(Level.FINE, "GPS data found in {0}", pic.getPath());
             GpsData data = new GpsData();
             data.setLatitude(gps.getLatitude());
             data.setLongitude(gps.getLongitude());
@@ -274,6 +286,7 @@ public class Synchronizer {
 
     private void generatePreviewHtml(Picture pic) throws IOException {
         if (new File(dirs.getBaseDir(), PREVIEW_PATH).exists()) {
+            LOG.log(Level.FINE, "Generate preview page for {0}", pic.getPath());
             File folderDir = folderSiteDir(pic.getFolder());
             File dir = ImageType.PREVIEW.directory(folderDir);
             Files.mkdirs(dir);

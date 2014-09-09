@@ -26,10 +26,12 @@ public class SiteService implements Closeable {
     }
 
     public void open() throws IOException {
+        LOG.log(Level.INFO, "Open gallery {0}", dirs.getBaseDir());
         catalog = Catalog.open(dirs.getCatalogDir(), null);
     }
 
     public void create(String theme) throws IOException {
+        LOG.log(Level.INFO, "Create gallery {0}", dirs.getBaseDir());
         Files.mkdirs(dirs.getBaseDir());
         Files.deleteIfExists(dirs.getCatalogDir());
         Files.deleteIfExists(dirs.getThemeDir());
@@ -54,6 +56,8 @@ public class SiteService implements Closeable {
     }
 
     public void changeTheme(String theme) throws IOException {
+        LOG.log(Level.INFO, "Change theme of gallery {0} to {1}",
+                new Object[] {dirs.getBaseDir(), theme});
         boolean ok = false;
         File themeDir = dirs.getThemeDir();
         File backupDir = new File(
@@ -77,6 +81,7 @@ public class SiteService implements Closeable {
     }
 
     public void synchronize(boolean forceHtml) throws IOException {
+        LOG.log(Level.INFO, "Synchronize gallery {0}", dirs.getBaseDir());
         CatalogSession sess = openSession();
         try {
             Properties props = new Properties();

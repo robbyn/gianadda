@@ -64,7 +64,8 @@ public class Picture {
     }
 
     public String getPath() {
-        return folder == null ? name : folder.getPath() + "/" + name;
+        return folder == null || folder.isRoot()
+                ? name : folder.getPath() + "/" + name;
     }
 
     public void insert() {
