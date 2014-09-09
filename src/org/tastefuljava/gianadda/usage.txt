@@ -1,7 +1,12 @@
-Usage: gianadda [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
-    [-s|--sync] [-f|--force-html] <gallery-directory>
+Usage: gianadda [-?|-h|--help] [-v|--verbose] [-q|--quiet] [--debug] [-s|--sync]
+    [-f|--force-html]
+    [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
+    <gallery-directory>
 
 Options:
+    -?|-h|--help
+        Display this help text.
+
     -c|--create <theme-name>
         Create a new gallery using the given theme, in the given directory.
         When used, -s and -f are implied.

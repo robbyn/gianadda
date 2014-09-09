@@ -26,7 +26,7 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     enum Flag {
-        SYNCHRONIZE, FORCE_HTML, VERBOSE, QUIET, DEBUG, TEST;
+        SYNCHRONIZE, FORCE_HTML, VERBOSE, QUIET, DEBUG, HELP, TEST;
 
         @Override
         public String toString() {
@@ -78,6 +78,11 @@ public class Main {
                         case "--change-theme":
                             st = 2;
                             break;
+                        case "-?":
+                        case "-h":
+                        case "--help":
+                            flags.add(Flag.HELP);
+                            break;
                         case "-s":
                         case "--sync":
                             flags.add(Flag.SYNCHRONIZE);
@@ -122,14 +127,23 @@ public class Main {
                     break loop;
             }
         }
-        if (st != -1 || dir == null) {
+        if (!isTerminalState(st)) {
             usage();
             return false;
+        } else if (flags.contains(Flag.HELP)) {
+            usage();
         }
         return true;
     }
 
+    private boolean isTerminalState(int st) {
+        return st == -1 || st == 0 && flags.contains(Flag.HELP);
+    }
+
     private void process() throws IOException {
+        if (dir == null) {
+            return;
+        }
         initLogging();
         LOG.log(Level.INFO, "Gallery: {0}", dir);
         if (createTheme != null) {

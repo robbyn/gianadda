@@ -55,4 +55,14 @@
             </zipfileset>
         </zip>
     </target>
+
+    <target name="src-bundle" depends="exe">
+        <mkdir dir="dist/bundles"/>
+        <zip destfile="dist/bundles/gianadda-src-${version}.zip">
+            <zipfileset dir="." prefix="gianadda">
+                <include name="src"/>
+                <include name="lib/**"/>
+            </zipfileset>
+        </zip>
+    </target>
 </project>
