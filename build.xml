@@ -34,7 +34,7 @@
         </echo>
     </target>
 
-    <target name="bundles" depends="win-bundle,all-bundle,src-bundle"/>
+    <target name="bundles" depends="win-bundle,all-bundle"/>
 
     <target name="win-bundle" depends="exe">
         <mkdir dir="dist/bundles"/>
@@ -52,18 +52,6 @@
             <zipfileset dir="dist" prefix="gianadda">
                 <include name="gianadda.jar"/>
                 <include name="lib/**"/>
-            </zipfileset>
-        </zip>
-    </target>
-
-    <target name="src-bundle">
-        <mkdir dir="dist/bundles"/>
-        <zip destfile="dist/bundles/gianadda-src-${version}.zip">
-            <zipfileset dir="." prefix="gianadda">
-                <exclude name="build/**"/>
-                <exclude name="dist/**"/>
-                <exclude name="private/**"/>
-                <exclude name="nbproject/private/**"/>
             </zipfileset>
         </zip>
     </target>
