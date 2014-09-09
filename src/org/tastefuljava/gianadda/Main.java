@@ -19,7 +19,7 @@ import org.tastefuljava.gianadda.util.Files;
 public class Main {
     static {
         // This is especially useful on Mac OS to avoid the default app to be
-        // Launched and appear in the doc and in the menu bar
+        // Launched and appear in the dock and in the menu bar
         System.setProperty("java.awt.headless", "true");
     }
 
