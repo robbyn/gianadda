@@ -3,17 +3,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.tastefuljava.gianadda.domain.Mapper">
     <!-- Pictures -->
+    <resultMap id="gpsResultMap" type="GpsData">
+        <result property="latitude" column="LATITUDE"/>
+        <result property="longitude" column="LONGITUDE"/>
+        <result property="altitude" column="ALTITUDE"/>
+    </resultMap>
     <resultMap id="pictureResultMap" type="Picture">
         <id property="id" column="ID" />
         <result property="name" column="NAME"/>
         <result property="dateTime" column="DATETIME"/>
         <result property="width" column="WIDTH"/>
         <result property="height" column="HEIGHT"/>
-        <result property="latitude" column="LATITUDE"/>
-        <result property="longitude" column="LONGITUDE"/>
-        <result property="altitude" column="ALTITUDE"/>
         <association property="folder" column="FOLDER_ID"
                      select="getFolderById"/>
+        <association property="gpsData" javaType="GpsData">
+            <result property="latitude" column="LATITUDE"/>
+            <result property="longitude" column="LONGITUDE"/>
+            <result property="altitude" column="ALTITUDE"/>
+        </association>
     </resultMap>
     <select id="getPictureById" resultMap="pictureResultMap">
         SELECT * FROM pictures
@@ -26,14 +33,14 @@
     <insert id="insertPicture" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,LATITUDE,
             LONGITUDE,ALTITUDE)
-        VALUES(#{folder.id},#{name},#{dateTime},#{width},#{height},#{latitude},
-            #{longitude},#{altitude});
+        VALUES(#{folder.id},#{name},#{dateTime},#{width},#{height},#{gpsData.latitude},
+            #{gpsData.longitude},#{gpsData.altitude});
     </insert>
     <update id="updatePicture">
         UPDATE pictures
         SET FOLDER_ID=#{folder.id},NAME=#{name},DATETIME=#{dateTime},
-            WIDTH=#{width},HEIGHT=#{height},LATITUDE=#{latitude},
-            LONGITUDE=#{longitude},ALTITUDE=#{altitude}
+            WIDTH=#{width},HEIGHT=#{height},LATITUDE=#{gpsData.latitude},
+            LONGITUDE=#{gpsData.longitude},ALTITUDE=#{gpsData.altitude}
         WHERE ID=#{id}
     </update>
     <delete id="deletePicture">

@@ -8,6 +8,10 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.tastefuljava.gianadda.catalog.CatalogSession;
+import org.tastefuljava.gianadda.domain.Folder;
+import org.tastefuljava.gianadda.domain.GpsData;
+import org.tastefuljava.gianadda.domain.Picture;
 import org.tastefuljava.gianadda.site.SiteService;
 import org.tastefuljava.gianadda.util.Files;
 
@@ -15,7 +19,7 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     enum Flag {
-        SYNCHRONIZE, FORCE_HTML;
+        SYNCHRONIZE, FORCE_HTML, TEST;
     }
 
     private File dir = null;
@@ -71,6 +75,9 @@ public class Main {
                             flags.add(Flag.SYNCHRONIZE);
                             flags.add(Flag.FORCE_HTML);
                             break;
+                        case "---test":
+                            flags.add(Flag.TEST);
+                            break;
                         default:
                             dir = new File(arg);
                             st = -1;
@@ -113,6 +120,37 @@ public class Main {
             if (flags.contains(Flag.SYNCHRONIZE)) {
                 builder.synchronize(flags.contains(Flag.FORCE_HTML));
             }
+            if (flags.contains(Flag.TEST)) {
+                CatalogSession sess = builder.openSession();
+                try {
+                    test(sess);
+                } finally {
+                    builder.closeSession(sess);
+                }
+            }
+        }
+    }
+
+    private void test(CatalogSession sess) {
+        LOG.info("Starting tests");
+        Folder root = Folder.getRoot("/");
+        test(root);
+    }
+
+    private void test(Folder folder) {
+        System.out.println();
+        System.out.println("Folder: " + folder.getPath());
+        for (Picture pic: folder.getPictures()) {
+            GpsData gps = pic.getGpsData();
+            if (gps == null) {
+                System.out.println(pic.getName() + " has no GPS data");
+            } else {
+                System.out.println(pic.getName() + " " + gps.getLatitude()
+                        + " " + gps.getLongitude() + " " + gps.getAltitude());
+            }
+        }
+        for (Folder child: folder.getSubfolders()) {
+            test(child);
         }
     }
 }

@@ -16,6 +16,7 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 import org.tastefuljava.gianadda.catalog.CatalogSession;
 import org.tastefuljava.gianadda.domain.Folder;
+import org.tastefuljava.gianadda.domain.GpsData;
 import org.tastefuljava.gianadda.domain.Picture;
 import org.tastefuljava.gianadda.exif.Exif;
 import org.tastefuljava.gianadda.exif.ExifIFD;
@@ -260,9 +261,11 @@ public class Synchronizer {
         pic.setHeight(height);
         GPSIFD gps = root.getGPSIFD();
         if (gps != null) {
-            pic.setLatitude(gps.getLatitude());
-            pic.setLongitude(gps.getLongitude());
-            pic.setAltitude(gps.getAltitude());
+            GpsData data = new GpsData();
+            data.setLatitude(gps.getLatitude());
+            data.setLongitude(gps.getLongitude());
+            data.setAltitude(gps.getAltitude());
+            pic.setGpsData(data);
         }
         int angle = getAngle(root);
         img = generateImage(pic, img, angle, ImageType.PREVIEW);        

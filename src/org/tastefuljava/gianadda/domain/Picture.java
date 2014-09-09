@@ -9,9 +9,7 @@ public class Picture {
     private Date dateTime;
     private int width;
     private int height;
-    private Double latitude;
-    private Double longitude;
-    private Double altitude;
+    private GpsData gpsData;
 
     public int getId() {
         return id;
@@ -57,28 +55,12 @@ public class Picture {
         this.height = height;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public GpsData getGpsData() {
+        return gpsData;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(Double altitude) {
-        this.altitude = altitude;
+    public void setGpsData(GpsData gpsData) {
+        this.gpsData = gpsData;
     }
 
     public String getPath() {

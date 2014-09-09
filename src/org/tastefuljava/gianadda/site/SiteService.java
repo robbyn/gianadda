@@ -89,22 +89,7 @@ public class SiteService implements Closeable {
         }
     }
 
-    private File getResourceDir() {
-        String s = System.getProperty("resource-base");
-        File dir;
-        if (s != null) {
-            dir = new File(s);
-        } else {
-            dir = new File(Files.getProgramDir(), "res");
-        }
-        if (!dir.isDirectory()) {
-            LOG.log(Level.SEVERE, "Invalid resource dir {0}", dir);
-            throw new RuntimeException("Invalid resource dir " + dir);
-        }
-        return dir;
-    }
-
-    private CatalogSession openSession() {
+    public CatalogSession openSession() {
         boolean ok = false;
         CatalogSession sess = catalog.openSession();
         try {
@@ -119,9 +104,24 @@ public class SiteService implements Closeable {
         return sess;
     }
 
-    private void closeSession(CatalogSession sess) {
+    public void closeSession(CatalogSession sess) {
         CurrentMapper.set(null);
         sess.close();
+    }
+
+    private File getResourceDir() {
+        String s = System.getProperty("resource-base");
+        File dir;
+        if (s != null) {
+            dir = new File(s);
+        } else {
+            dir = new File(Files.getProgramDir(), "res");
+        }
+        if (!dir.isDirectory()) {
+            LOG.log(Level.SEVERE, "Invalid resource dir {0}", dir);
+            throw new RuntimeException("Invalid resource dir " + dir);
+        }
+        return dir;
     }
 
 
