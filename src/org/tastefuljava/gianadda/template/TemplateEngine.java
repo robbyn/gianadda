@@ -14,6 +14,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.log.JdkLogChute;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.EscapeTool;
+import org.apache.velocity.tools.generic.LinkTool;
 import org.apache.velocity.tools.generic.MathTool;
 
 public class TemplateEngine {
@@ -58,7 +59,9 @@ public class TemplateEngine {
         VelocityContext context = new VelocityContext(base);
         if (params != null) {
             for (Map.Entry<String, ?> entry : params.entrySet()) {
-                context.put(entry.getKey(), entry.getValue());
+                String name = entry.getKey();
+                Object value = entry.getValue();
+                context.put(name, value);
             }
         }
         return context;
