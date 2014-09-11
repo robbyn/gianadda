@@ -70,3 +70,6 @@ h1 {
     max-height: $math.round($previewSize.height)px;
     max-width: 100%;
 }
+.artist {
+    font-weight: bold;
+}

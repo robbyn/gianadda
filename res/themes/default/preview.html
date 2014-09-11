@@ -12,7 +12,18 @@
         <div>
             <figure>
                 <img src="${pic.name}">
-                <figcaption>${pic.name}</figcaption>
+                <figcaption>
+                    <span class="name">${pic.name}</span>
+                    #if($pic.description)
+                    <span class="description">${pic.description}</span>
+                    #end
+                    #if($pic.artist)
+                    <span class="artist">${pic.artist}</span>
+                    #end
+                    #if($pic.copyright)
+                    <span class="copyright">${pic.copyright}</span>
+                    #end
+                </figcaption>
             </figure>
         </div>
     </body>
