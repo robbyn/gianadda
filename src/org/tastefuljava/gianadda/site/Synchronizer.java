@@ -213,7 +213,7 @@ public class Synchronizer {
             nameSet.addAll(Arrays.asList(picNames));
             for (Picture pic: folder.getPictures()) {
                 if (!nameSet.contains(pic.getName())) {
-                    pic.delete();
+                    deletePic(pic);
                     changed = true;
                 }
             }
@@ -252,13 +252,21 @@ public class Synchronizer {
         return changed;
     }
 
+    private void deletePic(Picture pic) {
+        LOG.log(Level.INFO, "Removing picture {0}", pic.getPath());
+        pic.delete();
+    }
+
     private void deleteFolder(Folder folder) {
         for (Folder child: folder.getSubfolders()) {
             deleteFolder(child);
         }
         for (Picture pic: folder.getPictures()) {
-            pic.delete();
+            deletePic(pic);
         }
+        LOG.log(Level.INFO, "removing folder {0}", folder.getPath());
+        folder.delete();
+        sess.commit();
     }
 
     private File folderSiteDir(Folder folder) {

@@ -123,27 +123,22 @@ public class Folder {
     }
 
     void pictureAdded(Picture pic) {
-        if (pictures != null) {
-            pictures.put(pic.getName(), pic);
-        }
+        requirePictures();
+        pictures.put(pic.getName(), pic);
     }
 
     void pictureRemoved(Picture pic) {
-        if (pictures != null) {
-            pictures.remove(pic.getName());
-        }
+        requirePictures();
+        pictures.remove(pic.getName());
     }
 
     void subfolderAdded(Folder folder) {
-        if (subfolders != null) {
-            subfolders.put(folder.getName(), folder);
-        }
+        requireSubfolders();
+        subfolders.put(folder.getName(), folder);
     }
 
     void subfolderRemoved(Folder folder) {
-        if (subfolders != null) {
-            subfolders.remove(folder.getName());
-        }
+        requireSubfolders();
     }
 
     private void requirePictures() {
