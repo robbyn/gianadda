@@ -11,6 +11,9 @@ public class Picture {
     private int width;
     private int height;
     private GpsData gpsData;
+    private String description;
+    private String artist;
+    private String copyright;
 
     public int getId() {
         return id;
@@ -66,6 +69,30 @@ public class Picture {
 
     public void setGpsData(GpsData gpsData) {
         this.gpsData = gpsData;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
     }
 
     public String getPath() {

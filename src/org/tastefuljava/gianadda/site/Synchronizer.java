@@ -276,6 +276,9 @@ public class Synchronizer {
         int angle = 0;
         if (exif != null) {
             RootIFD root = exif.getRootIFD();
+            pic.setDescription(root.getString(RootIFD.Tag.ImageDescription));
+            pic.setArtist(root.getString(RootIFD.Tag.Artist));
+            pic.setCopyright(root.getString(RootIFD.Tag.Copyright));
             ExifIFD ifd = root.getExifIFD();
             if (ifd == null) {
                 throw new IOException("Not ExifIFD found in " + pic.getPath());

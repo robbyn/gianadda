@@ -14,6 +14,9 @@
         <result property="dateTime" column="DATETIME"/>
         <result property="width" column="WIDTH"/>
         <result property="height" column="HEIGHT"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="artist" column="ARTIST"/>
+        <result property="copyright" column="COPYRIGHT"/>
         <association property="folder" column="FOLDER_ID"
                      select="getFolderById"/>
         <association property="gpsData" javaType="GpsData">
@@ -32,15 +35,17 @@
     </select>
     <insert id="insertPicture" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,LATITUDE,
-            LONGITUDE,ALTITUDE)
-        VALUES(#{folder.id},#{name},#{dateTime},#{width},#{height},#{gpsData.latitude},
-            #{gpsData.longitude},#{gpsData.altitude});
+            LONGITUDE,ALTITUDE,DESCRIPTION,ARTIST,COPYRIGHT)
+        VALUES(#{folder.id},#{name},#{dateTime},#{width},#{height},
+            #{gpsData.latitude},#{gpsData.longitude},#{gpsData.altitude},
+            #{description},#{artist},#{copyright});
     </insert>
     <update id="updatePicture">
         UPDATE pictures
         SET FOLDER_ID=#{folder.id},NAME=#{name},DATETIME=#{dateTime},
             WIDTH=#{width},HEIGHT=#{height},LATITUDE=#{gpsData.latitude},
-            LONGITUDE=#{gpsData.longitude},ALTITUDE=#{gpsData.altitude}
+            LONGITUDE=#{gpsData.longitude},ALTITUDE=#{gpsData.altitude},
+            DESCRIPTION=#{description},ARTIST=#{artist},COPYRIGHT=#{copyright}
         WHERE ID=#{id}
     </update>
     <delete id="deletePicture">
