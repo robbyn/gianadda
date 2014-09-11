@@ -26,7 +26,7 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     enum Flag {
-        SYNCHRONIZE, FORCE_HTML, VERBOSE, QUIET, DEBUG, HELP, TEST;
+        SYNCHRONIZE, FORCE_HTML, DELETE, VERBOSE, QUIET, DEBUG, HELP, TEST;
 
         @Override
         public String toString() {
@@ -91,6 +91,12 @@ public class Main {
                         case "--force-html":
                             flags.add(Flag.SYNCHRONIZE);
                             flags.add(Flag.FORCE_HTML);
+                            break;
+                        case "-d":
+                        case "--delete":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.FORCE_HTML);
+                            flags.add(Flag.DELETE);
                             break;
                         case "-v":
                         case "--verbose":
@@ -163,7 +169,9 @@ public class Main {
                 builder.changeTheme(changeTheme);
             }
             if (flags.contains(Flag.SYNCHRONIZE)) {
-                builder.synchronize(flags.contains(Flag.FORCE_HTML));
+                builder.synchronize(
+                        flags.contains(Flag.FORCE_HTML),
+                        flags.contains(Flag.DELETE));
             }
             if (flags.contains(Flag.TEST)) {
                 try (CatalogSession sess = builder.openSession()) {

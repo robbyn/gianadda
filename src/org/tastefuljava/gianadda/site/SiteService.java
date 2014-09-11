@@ -84,11 +84,13 @@ public class SiteService implements Closeable {
         }
     }
 
-    public void synchronize(boolean forceHtml) throws IOException {
+    public void synchronize(boolean forceHtml, boolean delete) throws IOException {
         LOG.log(Level.INFO, "Synchronize gallery {0}", dirs.getBaseDir());
         try (CatalogSession sess = openSession()) {
             Properties props = new Properties();
-            props.put(Synchronizer.PROP_FORCE_HTML, Boolean.toString(forceHtml));
+            props.put(
+                    Synchronizer.PROP_FORCE_HTML, Boolean.toString(forceHtml));
+            props.put(Synchronizer.PROP_DELETE, Boolean.toString(delete));
             Configuration cfg = new Configuration(props, conf);
             Synchronizer syn = new Synchronizer(cfg, sess, dirs);
             syn.synchronize();

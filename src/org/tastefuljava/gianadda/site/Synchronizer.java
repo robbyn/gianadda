@@ -6,10 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -34,6 +37,7 @@ public class Synchronizer {
             = Logger.getLogger(Synchronizer.class.getName());
 
     public static final String PROP_FORCE_HTML = "force-html";
+    public static final String PROP_DELETE = "delete";
 
     private static final String CONF_FILENAME = "settings.properties";
     private static final String THEME_CONF_PATH
@@ -66,6 +70,8 @@ public class Synchronizer {
     private final Pattern picNamePattern;
     private final Pattern dirNamePattern;
     private final String previewPath;
+    private final boolean forceHtml;
+    private final boolean delete;
 
     Synchronizer(Configuration link, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
@@ -81,11 +87,13 @@ public class Synchronizer {
                 "template-name-pattern", false);
         this.previewPath = GalleryDirs.THEME_PATH
                 + "/" + conf.getString("preview-template", null);
+        this.forceHtml = conf.getBoolean(PROP_FORCE_HTML, false);
+        this.delete = conf.getBoolean(PROP_DELETE, false);
     }
 
     public void synchronize() throws IOException {
         boolean changed = syncDir(rootFolder, dirs.getBaseDir());
-        if (changed || getForceHtml()) {
+        if (changed || forceHtml) {
             LOG.log(Level.INFO, "Applying site-level theme");
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
                     createFolderParams(rootFolder, 0));
@@ -141,9 +149,6 @@ public class Synchronizer {
         }
     }
 
-    private boolean getForceHtml() {
-        return conf.getBoolean(PROP_FORCE_HTML, false);
-    }
 
     private Pattern getConfPattern(String name, boolean cs) {
         String s = conf.getString(name, null);
@@ -158,7 +163,7 @@ public class Synchronizer {
         LOG.log(Level.INFO, "Synchronizing folder {0}", folder.getPath());
         boolean changed = syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
-        if (changed || getForceHtml()) {
+        if (changed || forceHtml) {
             LOG.log(Level.INFO, "Applying folder-level theme to {0}",
                     folder.getPath());
             Map<String,Object> parms = createFolderParams(folder, 0);
@@ -199,9 +204,20 @@ public class Synchronizer {
             if (picChanged) {
                 changed = true;
             }
-            if (picChanged || getForceHtml()) {
+            if (picChanged || forceHtml) {
                 generatePreviewHtml(pic);
             }
+        }
+        if (delete) {
+            Set<String> nameSet = new HashSet<>();
+            nameSet.addAll(Arrays.asList(picNames));
+            for (Picture pic: folder.getPictures()) {
+                if (!nameSet.contains(pic.getName())) {
+                    pic.delete();
+                    changed = true;
+                }
+            }
+            sess.commit();
         }
         return changed;
     }
@@ -222,7 +238,27 @@ public class Synchronizer {
             }
             changed |= syncDir(sub, new File(dir, name));
         }
+        if (delete) {
+            Set<String> nameSet = new HashSet<>();
+            nameSet.addAll(Arrays.asList(dirNames));
+            for (Folder child: folder.getSubfolders()) {
+                if (!nameSet.contains(child.getName())) {
+                    deleteFolder(child);
+                    changed = true;
+                }
+            }
+            sess.commit();
+        }
         return changed;
+    }
+
+    private void deleteFolder(Folder folder) {
+        for (Folder child: folder.getSubfolders()) {
+            deleteFolder(child);
+        }
+        for (Picture pic: folder.getPictures()) {
+            pic.delete();
+        }
     }
 
     private File folderSiteDir(Folder folder) {
