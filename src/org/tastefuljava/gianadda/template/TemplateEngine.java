@@ -14,7 +14,6 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.log.JdkLogChute;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.EscapeTool;
-import org.apache.velocity.tools.generic.LinkTool;
 import org.apache.velocity.tools.generic.MathTool;
 
 public class TemplateEngine {
