@@ -1,6 +1,5 @@
 package org.tastefuljava.gianadda.exif;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
