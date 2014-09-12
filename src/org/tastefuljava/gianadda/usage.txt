@@ -24,8 +24,12 @@ Options:
             .   update picture info in the catalog when image files are changed,
                 and regenerate thumbnails and preview files.
         NOTE:
-            The folders and pictures that no longer exist in the directory
-            structure are kept in the catalog.
+            Unless the --delete is used, he folders and pictures that no longer
+            exist in the directory structure are kept in the catalog.
+
+    -d|--delete
+        Also delete pictures and folders that no longer exist in the directore
+        structure.
 
     -f|--force-html
         Force the generation of the html (and css, js, ...) files of the web
