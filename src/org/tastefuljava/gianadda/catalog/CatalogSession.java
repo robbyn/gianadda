@@ -31,8 +31,4 @@ public class CatalogSession implements Closeable {
         CurrentMapper.set(null);
         session.close();
     }
-
-    public <T> T getMapper(Class<T> intf) {
-        return session.getMapper(intf);
-    }
 }

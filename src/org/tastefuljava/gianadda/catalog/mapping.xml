@@ -11,23 +11,22 @@
     <resultMap id="pictureResultMap" type="Picture">
         <id property="id" column="ID" />
         <result property="name" column="NAME"/>
+        <result property="folderId" column="FOLDER_ID"/>
         <result property="dateTime" column="DATETIME"/>
         <result property="width" column="WIDTH"/>
         <result property="height" column="HEIGHT"/>
         <result property="description" column="DESCRIPTION"/>
         <result property="artist" column="ARTIST"/>
         <result property="copyright" column="COPYRIGHT"/>
-        <association property="folder" column="FOLDER_ID"
-                     select="getFolderById"/>
-        <association property="gpsData" javaType="GpsData">
-            <result property="latitude" column="LATITUDE"/>
-            <result property="longitude" column="LONGITUDE"/>
-            <result property="altitude" column="ALTITUDE"/>
-        </association>
     </resultMap>
     <select id="getPictureById" resultMap="pictureResultMap">
         SELECT * FROM pictures
         WHERE ID=#{id}
+    </select>
+    <select id="getPictureByName" resultMap="pictureResultMap"
+            parameterType="map">
+        SELECT * FROM pictures
+        WHERE FOLDER_ID=#{folderId} AND NAME=#{name}
     </select>
     <select id="getFolderPictures" resultMap="pictureResultMap">
         SELECT * FROM pictures
@@ -58,12 +57,16 @@
         <result property="name" column="NAME"/>
         <result property="title" column="TITLE"/>
         <result property="description" column="DESCRIPTION"/>
-        <association property="parent" column="PARENT_ID"
-                     select="getFolderById"/>
+        <result property="parentId" column="PARENT_ID"/>
     </resultMap>
     <select id="getFolderById" resultMap="folderResultMap">
         SELECT * FROM folders
         WHERE ID=#{id}
+    </select>
+    <select id="getFolderByName" resultMap="folderResultMap"
+            parameterType="map">
+        SELECT * FROM folders
+        WHERE PARENT_ID=#{folderId} AND NAME=#{name}
     </select>
     <select id="getRootFolder" resultMap="folderResultMap">
         SELECT * FROM folders

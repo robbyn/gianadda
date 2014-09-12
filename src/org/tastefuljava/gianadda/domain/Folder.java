@@ -1,19 +1,14 @@
 package org.tastefuljava.gianadda.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
 import org.tastefuljava.gianadda.util.Util;
 
 public class Folder {
     private int id;
-    private Folder parent;
+    private Integer parentId;
     private String name;
     private String title;
     private String description;
-    private Map<String,Picture> pictures;
-    private Map<String,Folder> subfolders;
 
     public static Folder getRoot(String name) {
         return CurrentMapper.get().getRootFolder(name);
@@ -24,11 +19,11 @@ public class Folder {
     }
 
     public Folder getParent() {
-        return parent;
+        return parentId == null ? null : CurrentMapper.get().getFolderById(id);
     }
 
     public void setParent(Folder parent) {
-        this.parent = parent;
+        this.parentId = parent == null ? null : parent.getId();
     }
 
     public String getName() {
@@ -57,9 +52,6 @@ public class Folder {
 
     public void insert() {
         CurrentMapper.get().insertFolder(this);
-        if (parent != null) {
-            parent.subfolderAdded(this);
-        }
     }
 
     public void update() {
@@ -67,95 +59,44 @@ public class Folder {
     }
 
     public void delete() {
-        if (parent != null) {
-            parent.subfolderRemoved(this);
-        }
         CurrentMapper.get().deleteFolder(id);
     }
 
     public boolean isRoot() {
-        return parent == null;
+        return parentId == null;
     }
 
     public int getLevel() {
+        Folder parent = getParent();
         return parent == null ? 0 : parent.getLevel()+1;
     }
 
     public String getPath() {
+        Folder parent = getParent();
         return parent == null || parent.isRoot()
                 ? name : parent.getPath() + "/" + name;
     }
 
     public String getUrlPath() {
+        Folder parent = getParent();
         String esc = Util.urlEncode(name);
         return parent == null || parent.isRoot()
                 ? esc : parent.getUrlPath() + "/" + esc;
     }
 
     public Picture getPicture(String name) {
-        requirePictures();
-        return pictures.get(name);
+        return CurrentMapper.get().getPictureByName(id, name);
     }
 
-    public List<Picture> getPictures() {
-        requirePictures();
-        return new ArrayList<>(pictures.values());
-    }
-
-    public Map<String,Picture> getPictureMap() {
-        requirePictures();
-        return new TreeMap<>(pictures);
+    public Set<Picture> getPictures() {
+        return CurrentMapper.get().getFolderPictures(id);
     }
 
     public Folder getSubfolder(String name) {
-        requireSubfolders();
-        return subfolders.get(name);
+        return CurrentMapper.get().getFolderByName(id, name);
     }
 
-    public List<Folder> getSubfolders() {
-        requireSubfolders();
-        return new ArrayList<>(subfolders.values());
-    }
-
-    public Map<String,Folder> getSubfolderMap() {
-        requireSubfolders();
-        return new TreeMap<>(subfolders);
-    }
-
-    void pictureAdded(Picture pic) {
-        requirePictures();
-        pictures.put(pic.getName(), pic);
-    }
-
-    void pictureRemoved(Picture pic) {
-        requirePictures();
-        pictures.remove(pic.getName());
-    }
-
-    void subfolderAdded(Folder folder) {
-        requireSubfolders();
-        subfolders.put(folder.getName(), folder);
-    }
-
-    void subfolderRemoved(Folder folder) {
-        requireSubfolders();
-    }
-
-    private void requirePictures() {
-        if (pictures == null) {
-            pictures = new TreeMap<>();
-            for (Picture pic: CurrentMapper.get().getFolderPictures(id)) {
-                pictures.put(pic.getName(), pic);
-            }
-        }
-    }
-
-    private void requireSubfolders() {
-        if (subfolders == null) {
-            subfolders = new TreeMap<>();
-            for (Folder child: CurrentMapper.get().getSubfolders(id)) {
-                subfolders.put(child.getName(), child);
-            }
-        }
+    public Set<Folder> getSubfolders() {
+        return CurrentMapper.get().getSubfolders(id);
     }
 }

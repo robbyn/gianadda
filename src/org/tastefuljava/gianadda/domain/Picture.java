@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Picture {
     private int id;
-    private Folder folder;
+    private int folderId;
     private String name;
     private Date dateTime;
     private int width;
@@ -20,11 +20,11 @@ public class Picture {
     }
 
     public Folder getFolder() {
-        return folder;
+        return CurrentMapper.get().getFolderById(folderId);
     }
 
     public void setFolder(Folder folder) {
-        this.folder = folder;
+        this.folderId = folder.getId();
     }
 
     public String getName() {
@@ -96,13 +96,13 @@ public class Picture {
     }
 
     public String getPath() {
-        return folder == null || folder.isRoot()
+        Folder folder = getFolder();
+        return folder.isRoot()
                 ? name : folder.getPath() + "/" + name;
     }
 
     public void insert() {
         CurrentMapper.get().insertPicture(this);
-        folder.pictureAdded(this);
     }
 
     public void update() {
@@ -110,7 +110,6 @@ public class Picture {
     }
 
     public void delete() {
-        folder.pictureRemoved(this);
         CurrentMapper.get().deletePicture(id);
     }
 }
