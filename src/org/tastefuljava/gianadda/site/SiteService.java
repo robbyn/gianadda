@@ -4,13 +4,12 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tastefuljava.gianadda.catalog.Catalog;
 import org.tastefuljava.gianadda.catalog.CatalogSession;
-import org.tastefuljava.gianadda.domain.CurrentMapper;
-import org.tastefuljava.gianadda.domain.Mapper;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
 
@@ -98,7 +97,12 @@ public class SiteService implements Closeable {
     }
 
     public CatalogSession openSession() {
-        return catalog.openSession();
+        try {
+            return catalog.openSession();
+        } catch (SQLException | ClassNotFoundException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 
     private File getResourceDir() {

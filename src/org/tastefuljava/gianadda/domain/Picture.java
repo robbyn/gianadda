@@ -123,7 +123,7 @@ public class Picture {
     }
 
     public void delete() {
-        CurrentMapper.get().deletePicture(id);
+        CurrentMapper.get().deletePicture(this);
         requireFolder();
         folder.pictureDeleted(this);
     }

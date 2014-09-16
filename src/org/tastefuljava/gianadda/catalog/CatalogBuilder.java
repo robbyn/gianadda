@@ -14,10 +14,10 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.h2.tools.RunScript;
 import org.tastefuljava.gianadda.util.Configuration;
+import org.tastefuljava.jedo.mapping.Mapper;
+import org.tastefuljava.jedo.mapping.MappingFileReader;
 
 class CatalogBuilder {
     private static final Logger LOG
@@ -47,11 +47,11 @@ class CatalogBuilder {
         } else {
             upgradeDb();
         }
-        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-        try (InputStream in = getResourceAsStream("configuration.xml")) {
-            SqlSessionFactory fac = builder.build(in, props);
-            return new Catalog(dir, fac, new Configuration(props, link));
-        }
+        Configuration conf = new Configuration(props, link);
+        MappingFileReader reader = new MappingFileReader();
+        reader.load(CatalogBuilder.class.getResource("mapping.xml"));
+        Mapper mapper = reader.getMapper();
+        return new Catalog(dir, conf, mapper);
     }
 
     private static InputStream getResourceAsStream(String name) {

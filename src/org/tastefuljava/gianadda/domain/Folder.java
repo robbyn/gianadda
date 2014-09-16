@@ -75,7 +75,7 @@ public class Folder {
     }
 
     public void delete() {
-        CurrentMapper.get().deleteFolder(id);
+        CurrentMapper.get().deleteFolder(this);
         requireParent();
         if (parent != null) {
             parent.folderDeleted(this);
@@ -115,7 +115,8 @@ public class Folder {
     }
 
     public Folder getSubfolder(String name) {
-        return CurrentMapper.get().getFolderByName(id, name);
+        requireFolders();
+        return folders.get(name);
     }
 
     public List<Folder> getSubfolders() {
@@ -132,7 +133,7 @@ public class Folder {
     private void requirePictures() {
         if (pictures == null) {
             pictures = new TreeMap<>();
-            for (Picture pic: CurrentMapper.get().getFolderPictures(id)) {
+            for (Picture pic: CurrentMapper.get().getFolderPictures(this)) {
                 pictures.put(pic.getName(), pic);
             }
         }
@@ -154,7 +155,7 @@ public class Folder {
     private void requireFolders() {
         if (folders == null) {
             folders = new TreeMap<>();
-            for (Folder child: CurrentMapper.get().getSubfolders(id)) {
+            for (Folder child: CurrentMapper.get().getSubfolders(this)) {
                 folders.put(child.getName(), child);
             }
         }

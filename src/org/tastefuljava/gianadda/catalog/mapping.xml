@@ -1,92 +1,94 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.tastefuljava.gianadda.domain.Mapper">
-    <!-- Pictures -->
-    <resultMap id="gpsResultMap" type="GpsData">
-        <result property="latitude" column="LATITUDE"/>
-        <result property="longitude" column="LONGITUDE"/>
-        <result property="altitude" column="ALTITUDE"/>
-    </resultMap>
-    <resultMap id="pictureResultMap" type="Picture">
-        <id property="id" column="ID" />
-        <result property="name" column="NAME"/>
-        <result property="folderId" column="FOLDER_ID"/>
-        <result property="dateTime" column="DATETIME"/>
-        <result property="width" column="WIDTH"/>
-        <result property="height" column="HEIGHT"/>
-        <result property="description" column="DESCRIPTION"/>
-        <result property="artist" column="ARTIST"/>
-        <result property="copyright" column="COPYRIGHT"/>
-    </resultMap>
-    <select id="getPictureById" resultMap="pictureResultMap">
-        SELECT * FROM pictures
-        WHERE ID=#{id}
-    </select>
-    <select id="getPictureByName" resultMap="pictureResultMap"
-            parameterType="map">
-        SELECT * FROM pictures
-        WHERE FOLDER_ID=#{folderId} AND NAME=#{name}
-    </select>
-    <select id="getFolderPictures" resultMap="pictureResultMap">
-        SELECT * FROM pictures
-        WHERE FOLDER_ID=#{id}
-    </select>
-    <insert id="insertPicture" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,LATITUDE,
-            LONGITUDE,ALTITUDE,DESCRIPTION,ARTIST,COPYRIGHT)
-        VALUES(#{folder.id},#{name},#{dateTime},#{width},#{height},
-            #{gpsData.latitude},#{gpsData.longitude},#{gpsData.altitude},
-            #{description},#{artist},#{copyright});
-    </insert>
-    <update id="updatePicture">
-        UPDATE pictures
-        SET FOLDER_ID=#{folder.id},NAME=#{name},DATETIME=#{dateTime},
-            WIDTH=#{width},HEIGHT=#{height},LATITUDE=#{gpsData.latitude},
-            LONGITUDE=#{gpsData.longitude},ALTITUDE=#{gpsData.altitude},
-            DESCRIPTION=#{description},ARTIST=#{artist},COPYRIGHT=#{copyright}
-        WHERE ID=#{id}
-    </update>
-    <delete id="deletePicture">
-        DELETE FROM pictures WHERE ID=#{id}
-    </delete>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapping PUBLIC '-//tastefuljava.org//Jedo Mapping File 1.0//EN' 'jedo.dtd'>
+<mapping package="org.tastefuljava.gianadda.domain">
+    <class name="Folder">
+        <id>
+            <property name="id" column="ID"/>
+        </id>
+        <property name="parentId" column="PARENT_ID"/>
+        <property name="name" column="NAME"/>
+        <property name="title" column="TITLE"/>
+        <property name="description" column="DESCRIPTION"/>
 
-    <!-- Folders -->
-    <resultMap id="folderResultMap" type="Folder">
-        <id property="id" column="ID" />
-        <result property="name" column="NAME"/>
-        <result property="title" column="TITLE"/>
-        <result property="description" column="DESCRIPTION"/>
-        <result property="parentId" column="PARENT_ID"/>
-    </resultMap>
-    <select id="getFolderById" resultMap="folderResultMap">
-        SELECT * FROM folders
-        WHERE ID=#{id}
-    </select>
-    <select id="getFolderByName" resultMap="folderResultMap"
-            parameterType="map">
-        SELECT * FROM folders
-        WHERE PARENT_ID=#{folderId} AND NAME=#{name}
-    </select>
-    <select id="getRootFolder" resultMap="folderResultMap">
-        SELECT * FROM folders
-        WHERE PARENT_ID IS NULL AND NAME=#{name}
-    </select>
-    <select id="getSubfolders" resultMap="folderResultMap">
-        SELECT * FROM folders
-        WHERE PARENT_ID=#{id}
-    </select>
-    <insert id="insertFolder" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO folders(PARENT_ID,NAME,TITLE,DESCRIPTION)
-        VALUES(#{parent.id},#{name},#{title},#{description});
-    </insert>
-    <update id="updateFolder">
-        UPDATE folders
-        SET PARENT_ID=#{parent.id},NAME=#{name},TITLE=#{title},
-            DESCRIPTION=#{description},
-        WHERE ID=#{id}
-    </update>
-    <delete id="deleteFolder">
-        DELETE FROM folders WHERE ID=#{id}
-    </delete>
-</mapper>
+        <load>
+            SELECT * FROM folders
+            WHERE ID=${id}
+        </load>
+        <query name="root" parameters="name">
+            SELECT * FROM folders
+            WHERE PARENT_ID IS NULL AND NAME=${name}
+        </query>
+        <query name="subfolder" parameters="parent,name">
+            SELECT * FROM folders
+            WHERE PARENT_ID=${parent.id} AND NAME=${name}
+        </query>
+        <query name="subfolders" parameters="parent">
+            SELECT * FROM folders
+            WHERE PARENT_ID=${parent.id}
+        </query>
+        <insert get-generated-keys="true">
+            INSERT INTO folders(PARENT_ID,NAME,TITLE,DESCRIPTION)
+            VALUES(${parent.id},${name},${title},${description});
+        </insert>
+        <update>
+            UPDATE folders
+            SET PARENT_ID=${parent.id},NAME=${name},TITLE=${title},
+                DESCRIPTION=${description},
+            WHERE ID=${id}
+        </update>
+        <delete>
+            DELETE FROM folders WHERE ID=${id}
+        </delete>
+    </class>
+
+    <class name="Picture">
+        <id>
+            <property name="id" column="ID"/>
+        </id>
+        <property name="folderId" column="FOLDER_ID"/>
+        <property name="name" column="NAME"/>
+        <property name="dateTime" column="DATETIME"/>
+        <property name="width" column="WIDTH"/>
+        <property name="height" column="HEIGHT"/>
+        <property name="description" column="DESCRIPTION"/>
+        <property name="artist" column="ARTIST"/>
+        <property name="copyright" column="COPYRIGHT"/>
+        <component name="gpsData">
+            <property name="latitude" column="LATITUDE"/>
+            <property name="longitude" column="LONGITUDE"/>
+            <property name="altitude" column="ALTITUDE"/>
+        </component>
+
+        <load>
+            SELECT * FROM pictures
+            WHERE ID=${id}
+        </load>
+        <query name="byName" parameters="folder,name">
+            SELECT * FROM pictures
+            WHERE FOLDER_ID=${folder.id} AND NAME=${name}
+        </query>
+        <query name="inFolder" parameters="folder">
+            SELECT * FROM pictures
+            WHERE FOLDER_ID=${folder.id}
+        </query>
+        <insert get-generated-keys="true">
+            INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,LATITUDE,
+                LONGITUDE,ALTITUDE,DESCRIPTION,ARTIST,COPYRIGHT)
+            VALUES(${folder.id},${name},${dateTime},${width},${height},
+                ${gpsData.latitude},${gpsData.longitude},${gpsData.altitude},
+                ${description},${artist},${copyright});
+        </insert>
+        <update>
+            UPDATE pictures
+            SET FOLDER_ID=${folder.id},NAME=${name},DATETIME=${dateTime},
+                WIDTH=${width},HEIGHT=${height},LATITUDE=${gpsData.latitude},
+                LONGITUDE=${gpsData.longitude},ALTITUDE=${gpsData.altitude},
+                DESCRIPTION=${description},ARTIST=${artist},
+                COPYRIGHT=${copyright}
+            WHERE ID=${id}
+        </update>
+        <delete>
+            DELETE FROM pictures WHERE ID=${id}
+        </delete>
+    </class>
+</mapping>
