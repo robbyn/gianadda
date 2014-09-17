@@ -8,7 +8,6 @@ import org.tastefuljava.gianadda.util.Util;
 
 public class Folder {
     private int id;
-    private Integer parentId;
     private Folder parent;
     private String name;
     private String title;
@@ -25,12 +24,10 @@ public class Folder {
     }
 
     public Folder getParent() {
-        requireParent();
         return parent;
     }
 
     public void setParent(Folder parent) {
-        this.parentId = parent == null ? null : parent.getId();
         this.parent = parent;
     }
 
@@ -60,7 +57,6 @@ public class Folder {
 
     public void insert() {
         CurrentMapper.get().insertFolder(this);
-        requireParent();
         if (parent != null) {
             parent.folderInserted(this);
         }
@@ -68,7 +64,6 @@ public class Folder {
 
     public void update() {
         CurrentMapper.get().updateFolder(this);
-        requireParent();
         if (parent != null) {
             parent.folderUpdated(this);
         }
@@ -76,29 +71,25 @@ public class Folder {
 
     public void delete() {
         CurrentMapper.get().deleteFolder(this);
-        requireParent();
         if (parent != null) {
             parent.folderDeleted(this);
         }
     }
 
     public boolean isRoot() {
-        return parentId == null;
+        return parent == null;
     }
 
     public int getLevel() {
-        requireParent();
         return parent == null ? 0 : parent.getLevel()+1;
     }
 
     public String getPath() {
-        requireParent();
         return parent == null || parent.isRoot()
                 ? name : parent.getPath() + "/" + name;
     }
 
     public String getUrlPath() {
-        requireParent();
         String esc = Util.urlEncode(name);
         return parent == null || parent.isRoot()
                 ? esc : parent.getUrlPath() + "/" + esc;
@@ -122,12 +113,6 @@ public class Folder {
     public List<Folder> getSubfolders() {
         requireFolders();
         return new ArrayList<>(folders.values());
-    }
-
-    private void requireParent() {
-        if (parent == null && parentId != null) {
-            parent = CurrentMapper.get().getFolderById(parentId);
-        }
     }
 
     private void requirePictures() {
