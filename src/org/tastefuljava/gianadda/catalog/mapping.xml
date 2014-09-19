@@ -5,14 +5,12 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <reference name="parent" column="PARENT_ID" fetch-mode="eager"/>
+        <reference name="parent" column="PARENT_ID" fetch-mode="lazy"/>
         <property name="name" column="NAME"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
-        <collection name="folders" column="ID" query="subfolders"
-                fetch-mode="lazy"/>
-        <collection name="pictures" column="ID" query="inFolder"
-                fetch-mode="lazy"/>
+        <collection name="folders" query="subfolders" fetch-mode="lazy"/>
+        <collection name="pictures" query="inFolder" fetch-mode="lazy"/>
 
         <load>
             SELECT * FROM folders
