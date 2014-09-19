@@ -5,7 +5,7 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <reference name="parent" column="PARENT_ID" fetch-mode="lazy"/>
+        <reference name="parent" column="PARENT_ID"/>
         <property name="name" column="NAME"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
@@ -47,7 +47,7 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <reference name="folder" column="FOLDER_ID" fetch-mode="lazy"/>
+        <reference name="folder" column="FOLDER_ID"/>
         <property name="name" column="NAME"/>
         <property name="dateTime" column="DATETIME"/>
         <property name="width" column="WIDTH"/>

@@ -2,11 +2,10 @@ package org.tastefuljava.gianadda.domain;
 
 import java.awt.Dimension;
 import java.util.Date;
-import org.tastefuljava.jedo.Ref;
 
 public class Picture {
     private int id;
-    private final Ref<Folder> folder = new Ref<>();
+    private Folder folder;
     private String name;
     private Date dateTime;
     private int width;
@@ -21,11 +20,11 @@ public class Picture {
     }
 
     public Folder getFolder() {
-        return folder.get();
+        return folder;
     }
 
     public void setFolder(Folder folder) {
-        this.folder.set(folder);
+        this.folder = folder;
     }
 
     public String getName() {

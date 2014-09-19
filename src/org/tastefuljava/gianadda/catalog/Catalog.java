@@ -43,6 +43,7 @@ public class Catalog implements Closeable {
         boolean ok = false;
         Connection cnt = openConnection();
         try {
+            cnt.setAutoCommit(false);
             Session session = new Session(cnt, mapper);
             try {
                 CatalogSession csess = new CatalogSession(session);

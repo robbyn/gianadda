@@ -3,11 +3,10 @@ package org.tastefuljava.gianadda.domain;
 import java.util.ArrayList;
 import java.util.List;
 import org.tastefuljava.gianadda.util.Util;
-import org.tastefuljava.jedo.Ref;
 
 public class Folder {
     private int id;
-    private final Ref<Folder> parent = new Ref<>();
+    private Folder parent;
     private String name;
     private String title;
     private String description;
@@ -23,11 +22,11 @@ public class Folder {
     }
 
     public Folder getParent() {
-        return parent.get();
+        return parent;
     }
 
     public void setParent(Folder parent) {
-        this.parent.set(parent);
+        this.parent = parent;
     }
 
     public String getName() {
