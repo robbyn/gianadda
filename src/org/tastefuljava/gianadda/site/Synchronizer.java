@@ -66,7 +66,6 @@ public class Synchronizer {
     private final GalleryDirs dirs;
     private final Pattern templateNamePattern;
     private final TemplateEngine engine;
-    private final Folder rootFolder;
     private final Pattern picNamePattern;
     private final Pattern dirNamePattern;
     private final String previewPath;
@@ -75,7 +74,6 @@ public class Synchronizer {
 
     Synchronizer(Configuration link, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
-        this.rootFolder = getRootFolder(sess);
         this.engine = new TemplateEngine(
                 dirs.getBaseDir(), createParams(link));
         this.conf = buildConf(engine, dirs, link);
@@ -92,15 +90,15 @@ public class Synchronizer {
     }
 
     public void synchronize() throws IOException {
-        boolean changed = syncDir(rootFolder, dirs.getBaseDir());
+        boolean changed = syncDir(getRootFolder(), dirs.getBaseDir());
         if (changed || forceHtml) {
             LOG.log(Level.INFO, "Applying site-level theme");
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
-                    createFolderParams(rootFolder, 0));
+                    createFolderParams(getRootFolder(), 0));
         }
     }
 
-    private static Folder getRootFolder(CatalogSession sess) {
+    private Folder getRootFolder() {
         Folder folder = Folder.getRoot("/");
         if (folder == null) {
             folder = new Folder();

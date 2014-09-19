@@ -5,10 +5,14 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <reference name="parent" column="PARENT_ID"/>
+        <reference name="parent" column="PARENT_ID" fetch-mode="eager"/>
         <property name="name" column="NAME"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
+        <collection name="folders" column="ID" query="subfolders"
+                fetch-mode="lazy"/>
+        <collection name="pictures" column="ID" query="inFolder"
+                fetch-mode="lazy"/>
 
         <load>
             SELECT * FROM folders
@@ -22,9 +26,9 @@
             SELECT * FROM folders
             WHERE PARENT_ID=${parent.id} AND NAME=${name}
         </query>
-        <query name="subfolders" parameters="parent">
+        <query name="subfolders" parameters="parentId">
             SELECT * FROM folders
-            WHERE PARENT_ID=${parent.id}
+            WHERE PARENT_ID=${parentId}
         </query>
         <insert get-generated-keys="true">
             INSERT INTO folders(PARENT_ID,NAME,TITLE,DESCRIPTION)
@@ -45,7 +49,7 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <reference name="folder" column="FOLDER_ID"/>
+        <reference name="folder" column="FOLDER_ID" fetch-mode="lazy"/>
         <property name="name" column="NAME"/>
         <property name="dateTime" column="DATETIME"/>
         <property name="width" column="WIDTH"/>
@@ -67,9 +71,9 @@
             SELECT * FROM pictures
             WHERE FOLDER_ID=${folder.id} AND NAME=${name}
         </query>
-        <query name="inFolder" parameters="folder">
+        <query name="inFolder" parameters="folderId">
             SELECT * FROM pictures
-            WHERE FOLDER_ID=${folder.id}
+            WHERE FOLDER_ID=${folderId}
         </query>
         <insert get-generated-keys="true">
             INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,LATITUDE,

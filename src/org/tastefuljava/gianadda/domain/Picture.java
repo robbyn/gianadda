@@ -2,10 +2,12 @@ package org.tastefuljava.gianadda.domain;
 
 import java.awt.Dimension;
 import java.util.Date;
+import org.tastefuljava.jedo.Ref;
+import org.tastefuljava.jedo.SimpleRef;
 
 public class Picture {
     private int id;
-    private Folder folder;
+    private Ref<Folder> folder = new SimpleRef<>();
     private String name;
     private Date dateTime;
     private int width;
@@ -20,11 +22,11 @@ public class Picture {
     }
 
     public Folder getFolder() {
-        return folder;
+        return folder.get();
     }
 
     public void setFolder(Folder folder) {
-        this.folder = folder;
+        this.folder.set(folder);
     }
 
     public String getName() {
@@ -96,22 +98,19 @@ public class Picture {
     }
 
     public String getPath() {
-        return folder.isRoot()
-                ? name : folder.getPath() + "/" + name;
+        return getFolder().isRoot()
+                ? name : getFolder().getPath() + "/" + name;
     }
 
     public void insert() {
         CurrentMapper.get().insertPicture(this);
-        folder.pictureInserted(this);
     }
 
     public void update() {
         CurrentMapper.get().updatePicture(this);
-        folder.pictureUpdated(this);
     }
 
     public void delete() {
         CurrentMapper.get().deletePicture(this);
-        folder.pictureDeleted(this);
     }
 }
