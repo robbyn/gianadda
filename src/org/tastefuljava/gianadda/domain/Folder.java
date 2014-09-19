@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import org.tastefuljava.gianadda.util.Util;
 import org.tastefuljava.jedo.Ref;
-import org.tastefuljava.jedo.SimpleRef;
 
 public class Folder {
     private int id;
-    private Ref<Folder> parent = new SimpleRef<>();
+    private final Ref<Folder> parent = new Ref<>();
     private String name;
     private String title;
     private String description;
-    private List<Picture> pictures = new ArrayList<>();
-    private List<Folder> folders = new ArrayList<>();
+    private final List<Picture> pictures = new ArrayList<>();
+    private final List<Folder> folders = new ArrayList<>();
 
     public static Folder getRoot(String name) {
         return CurrentMapper.get().getRootFolder(name);

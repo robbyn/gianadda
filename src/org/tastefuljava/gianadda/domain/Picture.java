@@ -3,11 +3,10 @@ package org.tastefuljava.gianadda.domain;
 import java.awt.Dimension;
 import java.util.Date;
 import org.tastefuljava.jedo.Ref;
-import org.tastefuljava.jedo.SimpleRef;
 
 public class Picture {
     private int id;
-    private Ref<Folder> folder = new SimpleRef<>();
+    private final Ref<Folder> folder = new Ref<>();
     private String name;
     private Date dateTime;
     private int width;
