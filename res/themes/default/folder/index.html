@@ -3,6 +3,12 @@
 #set( $previewSize = $conf.dims['preview-size'] )
 #set( $subfolders = $folder.subfolders )
 #set( $pictures = $folder.pictures )
+#set( $geopics = [] )
+#foreach( $pic in $pictures )
+    #if( $pic.gpsData )
+        #set( $dummy = $geopics.add($pic) )
+    #end
+#end
 <html class="index">
     <head>
         <title>$esc.html($folder.title)</title>
@@ -23,6 +29,9 @@
                 </ul>
             </nav>
             #end
+            #if( not $geopics.empty )
+            <div class="map" id="map"></div>
+            #end
             #if( !$pictures.empty )
             <nav class="thumbs">
                 #foreach( $pic in $pictures )
@@ -32,15 +41,6 @@
                 </figure>
                 #end
             </nav>
-            #end
-            #set( $geopics = [] )
-            #foreach( $pic in $pictures )
-                #if( $pic.gpsData )
-                    #set( $dummy = $geopics.add($pic) )
-                #end
-            #end
-            #if( not $geopics.empty )
-            <div class="map" id="map"></div>
             #end
         </div>
         #if( not $geopics.empty )
