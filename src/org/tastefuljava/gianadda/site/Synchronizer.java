@@ -328,12 +328,14 @@ public class Synchronizer {
             pic.setCopyright(root.getString(RootIFD.Tag.Copyright));
             ExifIFD ifd = root.getExifIFD();
             if (ifd == null) {
-                throw new IOException("Not ExifIFD found in " + pic.getPath());
-            }
-            Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
-            if (ts != null) {
-                timestamp = ts;
-                file.setLastModified(ts.getTime());
+                LOG.log(Level.WARNING,
+                        "Not ExifIFD found in {0}", pic.getPath());
+            } else {
+                Date ts = ifd.getDateTime(ExifIFD.Tag.DateTimeOriginal);
+                if (ts != null) {
+                    timestamp = ts;
+                    file.setLastModified(ts.getTime());
+                }
             }
             GPSIFD gps = root.getGPSIFD();
             if (gps != null) {

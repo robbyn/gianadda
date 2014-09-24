@@ -34,7 +34,8 @@
         </echo>
     </target>
 
-    <target name="bundles" depends="win-bundle,all-bundle"/>
+    <target name="bundles" depends="win-bundle,all-bundle"
+            description="Create all bundles" />
 
     <target name="win-bundle" depends="exe">
         <mkdir dir="dist/bundles"/>
