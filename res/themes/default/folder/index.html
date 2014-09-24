@@ -51,8 +51,9 @@
                 #foreach( $pic in $geopics )
                     {
                         position: new google.maps.LatLng($pic.gpsData.latitude,$pic.gpsData.longitude),
-                        title: "$pic.name",
-                        url: "preview/${esc.url($pic.name)}.html"
+                        info: new google.maps.InfoWindow({
+                            content: '<a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" height="$math.round($thumbSize.height)" title="$esc.html($pic.name)"></a>',
+                        }),
                     },
                 #end
                 ];
@@ -71,7 +72,7 @@
                     marker = new google.maps.Marker(markers[i]);
                     marker.setMap(map);
                     google.maps.event.addListener(marker, 'click', function() {
-                        window.location.href = this.url;
+                        this.info.open(map, this);
                     });
                 }
                 map.fitBounds(bounds);
