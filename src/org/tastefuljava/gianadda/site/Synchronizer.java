@@ -299,13 +299,18 @@ public class Synchronizer {
     }
 
     private void processPic(Picture pic, File file) throws IOException {
-        Exif exif;
+        Exif exif = null;
         BufferedImage img;
         boolean ok = false;
         ImageInputStream in = new FileImageInputStream(file);
         try {
             in.mark();
-            exif = Exif.fromJPEG(in);
+            try {
+                exif = Exif.fromJPEG(in);
+            } catch (IOException e) {
+                LOG.log(Level.WARNING,
+                        "Could not load EXIF data from {0}", file);
+            }
             in.reset();
             img = ImageIO.read(in);
             ok = true;
