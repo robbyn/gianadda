@@ -73,3 +73,8 @@ h1 {
 .artist {
     font-weight: bold;
 }
+.map {
+    margin: 0 auto;
+    width: 600px;
+    height: 600px;
+}

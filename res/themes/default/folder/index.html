@@ -33,6 +33,50 @@
                 #end
             </nav>
             #end
+            #set( $geopics = [] )
+            #foreach( $pic in $pictures )
+                #if( $pic.gpsData )
+                    #set( $dummy = $geopics.add($pic) )
+                #end
+            #end
+            #if( not $geopics.empty )
+            <div class="map" id="map"></div>
+            #end
         </div>
+        #if( not $geopics.empty )
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr"></script>
+        <script type="text/javascript">
+            window.onload = function() {
+                var markers = [
+                #foreach( $pic in $geopics )
+                    {
+                        position: new google.maps.LatLng($pic.gpsData.latitude,$pic.gpsData.longitude),
+                        title: "$pic.name",
+                        url: "preview/${esc.url($pic.name)}.html"
+                    },
+                #end
+                ];
+                var bounds = new google.maps.LatLngBounds(markers[0].position);
+                for (var i = 1; i < markers.length; ++i) {
+                    bounds.extend(markers[i].position);
+                }
+                var mapOptions = {
+                    zoom: 8,
+                    center: bounds.getCenter(),
+                    mapTypeId: google.maps.MapTypeId.TERRAIN
+                };
+                var map = new google.maps.Map(document.getElementById("map"),
+                        mapOptions);
+                for (i = 0; i < markers.length; ++i) {
+                    marker = new google.maps.Marker(markers[i]);
+                    marker.setMap(map);
+                    google.maps.event.addListener(marker, 'click', function() {
+                        window.location.href = this.url;
+                    });
+                }
+                map.fitBounds(bounds);
+            }
+        </script>
+        #end
     </body>
 </html>
