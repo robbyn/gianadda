@@ -278,7 +278,7 @@ public class Synchronizer {
     }
 
     private File folderSiteDir(Folder folder) {
-        return new File(dirs.getSiteDir(), folder.getPath());
+        return folder.getFile(dirs.getSiteDir());
     }
 
     private File imageFile(Picture pic, ImageType type) {

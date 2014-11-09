@@ -13,7 +13,7 @@
                 #if($prev)
                 <a class="prev-btn" href="${esc.url($prev)}.html"><span>$prev</span></a>
                 #end
-                <a class="up-btn" href="${base}${pic.folder.path}/index.html"><span>${pic.folder.name}</span></a>
+                <a class="up-btn" href="${base}${pic.folder.path}index.html"><span>${pic.folder.name}</span></a>
             </div>
             <h1>$esc.html($pic.name)</h1>
             <div class="right-btns">
@@ -22,24 +22,26 @@
                 #end
             </div>
         </header>
-        <div>
-            <figure>
-                <img src="${pic.name}">
-                <figcaption>
-                    #set($position = $index + 1)
-                    <span class="index">$position/${count}</span>
-                    <span class="name">${pic.name}</span>
-                    #if($pic.description)
-                    <span class="description">${pic.description}</span>
-                    #end
-                    #if($pic.artist)
-                    <span class="artist">${pic.artist}</span>
-                    #end
-                    #if($pic.copyright)
-                    <span class="copyright">${pic.copyright}</span>
-                    #end
-                </figcaption>
-            </figure>
+        <div class="wrap">
+            <div>
+                <figure>
+                    <img src="${pic.name}">
+                    <figcaption>
+                        #set($position = $index + 1)
+                        <span class="index">$position/${count}</span>
+                        <span class="name">${pic.name}</span>
+                        #if($pic.description)
+                        <span class="description">${pic.description}</span>
+                        #end
+                        #if($pic.artist)
+                        <span class="artist">${pic.artist}</span>
+                        #end
+                        #if($pic.copyright)
+                        <span class="copyright">${pic.copyright}</span>
+                        #end
+                    </figcaption>
+                </figure>
+            </div>
         </div>
     </body>
 </html>

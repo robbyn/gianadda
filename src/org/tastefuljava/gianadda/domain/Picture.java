@@ -1,6 +1,7 @@
 package org.tastefuljava.gianadda.domain;
 
 import java.awt.Dimension;
+import java.io.File;
 import java.util.Date;
 
 public class Picture {
@@ -96,8 +97,11 @@ public class Picture {
     }
 
     public String getPath() {
-        return getFolder().isRoot()
-                ? name : getFolder().getPath() + "/" + name;
+        return getFolder().getPath() + name;
+    }
+
+    public File getFile(File root) {
+        return new File(getFolder().getFile(root), name);
     }
 
     public void insert() {

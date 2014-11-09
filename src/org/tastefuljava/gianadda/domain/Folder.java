@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.domain;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.tastefuljava.gianadda.util.Util;
@@ -74,8 +75,11 @@ public class Folder {
     }
 
     public String getPath() {
-        return isRoot() || getParent().isRoot()
-                ? name : getParent().getPath() + "/" + name;
+        return isRoot() ? "" : getParent().getPath() + name + "/";
+    }
+
+    public File getFile(File root) {
+        return isRoot() ? root : new File(getParent().getFile(root), name);
     }
 
     public String getUrlPath() {

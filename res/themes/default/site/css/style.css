@@ -1,12 +1,29 @@
 #set( $thumbSize = $conf.dims['thumb-size'] )
 #set( $previewSize = $conf.dims['preview-size'] )
 
+* {
+    font-family: "Helvetica, Arial, sans";
+}
 html {
-    font-family: "Arial, Helvetica, sans";
+    position: relative;
+    margin: 0;
+    padding: 0;
 }
 
-.index body {
+body {
     background: #999999;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+.wrap {
+    margin: 32px 0 0 0;
+    padding: 0;
+}
+.wrap>div {
+    width: 100%;
+    text-align: center;
+    padding: .5em;
 }
 .folders ul {
     display: block;
@@ -46,16 +63,6 @@ html {
 .thumbs figure img {
     display: block;
 }
-
-.preview body {
-    background: #999999;
-}
-.preview body>div {
-    box-sizing: border-box;
-    width: 100%;
-    text-align: center;
-    padding: .5em;
-}
 .preview figure {
     display: inline-block;
     margin: 0 auto;
@@ -78,13 +85,19 @@ html {
     height: 600px;
 }
 header {
-    position: relative;
+    position: fixed;
     background: #0099ff;
     margin: 0;
     display: block;
-    min-height: 32px;
+    height: 32px;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2000;
 }
 header h1 {
+    font-weight: bold;
+    font-size: 150%;
     min-height: 32px;
     margin: 0;
     line-height: 1;
