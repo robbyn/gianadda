@@ -7,11 +7,12 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 public class XMLWriter {
     private final PrintWriter out;
-    private final Stack tagStack = new Stack();
+    private final List<String> tagStack = new ArrayList<>();
     private boolean format = true;
     private boolean inAttributes = false;
     private boolean hasSubtags = false;
@@ -62,7 +63,7 @@ public class XMLWriter {
         inAttributes = true;
         hasSubtags = false;
         lnBefore = false;
-        tagStack.push(name);
+        tagStack.add(name);
     }
 
     public void attribute(String name, String value) {
@@ -87,7 +88,7 @@ public class XMLWriter {
     }
 
     public void endTag() {
-        String name = (String) tagStack.pop();
+        String name = tagStack.remove(tagStack.size()-1);
         if (inAttributes) {
             out.print(" />");
             inAttributes = false;

@@ -1,14 +1,24 @@
 package org.tastefuljava.gianadda.domain;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import org.tastefuljava.gianadda.geo.TrackPoint;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.tastefuljava.gianadda.geo.GpxReader;
+import org.tastefuljava.gianadda.geo.GpxWriter;
 
 public class Track {
+    private static final Logger LOG = Logger.getLogger(Track.class.getName());
+
     private int id;
     private Folder folder;
     private String name;
     private Date dateTime;
-    private TrackPoint[] points = {};
+    private String gpx;
 
     public int getId() {
         return id;
@@ -39,14 +49,17 @@ public class Track {
     }
 
     public void setPoints(TrackPoint[] newValue) {
-        int count = newValue == null ? 0 : newValue.length;
-        points = new TrackPoint[count];
-        for (int i = 0; i < count; ++i) {
-            points[i] = newValue[i];
-        }
+        StringWriter writer = new StringWriter();
+        GpxWriter.writeTrack(newValue, writer);
+        gpx = writer.toString();
     }
 
     public TrackPoint[] getPoints() {
-        return points.clone();
+        try (InputStream in = new ByteArrayInputStream(gpx.getBytes("UTF-8"))) {
+            return GpxReader.readTrack(in);
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex.getMessage());
+        }
     }
 }
