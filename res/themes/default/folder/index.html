@@ -18,7 +18,22 @@
         <link rel="stylesheet" href="${base}css/style.css">
     </head>
     <body>
-        <h1>$esc.html($folder.title)</h1>
+        <header>
+            <div class="left-btns">
+                #if($prev)
+                <a class="prev-btn" href="../$esc.url(prev)/index.html"><span>$prev</span></a>
+                #end
+                #if($folder.parent)
+                <a class="up-btn" href="${base}${folder.parent.path}/index.html"><span>${folder.parent.name}</span></a>
+                #end
+            </div>
+            <h1>$esc.html($folder.title)</h1>
+            <div class="right-btns">
+                #if($next)
+                <a class="next-btn" href="../$esc.url(next)/index.html"><span>$next</span></a>
+                #end
+            </div>
+        </header>
         <div>
             #if( !$subfolders.empty )
             <nav class="folders">

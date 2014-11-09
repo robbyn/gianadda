@@ -5,9 +5,6 @@ html {
     font-family: "Arial, Helvetica, sans";
 }
 
-.index h1 {
-    display: none;
-}
 .index body {
     background: #999999;
 }
@@ -16,6 +13,7 @@ html {
     margin: 0;
     padding: 0 .5em .5em .5em;
     background: #0099ff;
+    border-top: 1px solid white;
 }
 .folders ul li {
     list-style: none;
@@ -79,36 +77,60 @@ html {
     width: 600px;
     height: 600px;
 }
-.preview header {
+header {
     position: relative;
     background: #0099ff;
     margin: 0;
+    min-height: 32px;
 }
-.preview header h1 {
+header h1 {
     min-height: 32px;
     margin: 0;
     line-height: 1;
     text-align: center;
+    color: white;
 }
-.preview header .prev-btn {
+header .left-btns {
     position: absolute;
     left: 0;
     top: 50%;
     margin-top: -16px;
-    width: 32px;
+    padding: 0;
+    width: auto;
     height: 32px;
-    background: url('img/arrow-left.svg') no-repeat center center;
-    text-indent: -9999px;
-    overflow: hidden;
+    display: block;
 }
-.preview header .next-btn {
+header .right-btns {
     position: absolute;
     right: 0;
     top: 50%;
     margin-top: -16px;
+    padding: 0;
+    width: auto;
+    height: 32px;
+    display: block;
+}
+header .prev-btn {
+    margin: 0;
+    width: 32px;
+    height: 32px;
+    background: url('img/arrow-left.svg') no-repeat center center;
+    display: inline-block;
+}
+header .next-btn {
+    margin: 0;
     width: 32px;
     height: 32px;
     background: url('img/arrow-right.svg') no-repeat center center;
-    text-indent: -9999px;
-    overflow: hidden;
+    display: inline-block;
+}
+header .up-btn {
+    margin: 0;
+    width: 32px;
+    height: 32px;
+    background: url('img/arrow-up.svg') no-repeat center center;
+    display: inline-block;
+}
+header span {
+    display: none;
 }

@@ -90,7 +90,8 @@ public class Synchronizer {
     }
 
     public void synchronize() throws IOException {
-        boolean changed = syncDir(getRootFolder(), dirs.getBaseDir());
+        boolean changed
+                = syncDir(getRootFolder(), dirs.getBaseDir(), null, null);
         if (changed || forceHtml) {
             LOG.log(Level.INFO, "Applying site-level theme");
             applyTemplates(GalleryDirs.THEME_PATH + "/site", dirs.getSiteDir(),
@@ -157,7 +158,8 @@ public class Synchronizer {
         return Pattern.compile(s, flags);
     }
 
-    private boolean syncDir(Folder folder, File dir) throws IOException {
+    private boolean syncDir(Folder folder, File dir, String prev, String next)
+            throws IOException {
         LOG.log(Level.INFO, "Synchronizing folder {0}", folder.getPath());
         boolean changed = syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
@@ -165,6 +167,8 @@ public class Synchronizer {
             LOG.log(Level.INFO, "Applying folder-level theme to {0}",
                     folder.getPath());
             Map<String,Object> parms = createFolderParams(folder, 0);
+            parms.put("prev", prev);
+            parms.put("next", next);
             applyTemplates("_theme/folder", folderSiteDir(folder), parms);
         }
         return changed;
@@ -226,7 +230,10 @@ public class Synchronizer {
     private boolean synSubdirs(Folder folder, File dir) throws IOException {
         boolean changed = false;
         String[] dirNames = Files.listDirs(dir, dirNamePattern);
-        for (String name: dirNames) {
+        for (int i = 0; i < dirNames.length; ++i) {
+            String name = dirNames[i];
+            String prev = i == 0 ? null : dirNames[i-1];
+            String next = i+1 >= dirNames.length ? null : dirNames[i+1];
             Folder sub = folder.getSubfolder(name);
             if (sub == null) {
                 sub = new Folder();
@@ -237,7 +244,7 @@ public class Synchronizer {
                 sess.commit();
                 changed = true;
             }
-            changed |= syncDir(sub, new File(dir, name));
+            changed |= syncDir(sub, new File(dir, name), prev, next);
         }
         if (delete) {
             Set<String> nameSet = new HashSet<>();
