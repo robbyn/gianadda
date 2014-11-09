@@ -7,12 +7,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ElevationService {
     private static final Logger LOG
@@ -40,16 +40,17 @@ public class ElevationService {
             int count) throws IOException {
         for (int i = 0; i < 20; ++i) {
             String status = getElevations1(trkpts, start, count);
-            if (status.equals("OK")) {
-                return;
-            } else if (status.equals("OVER_QUERY_LIMIT")) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    LOG.log(Level.SEVERE, null, ex);
-                }
-            } else {
-                throw new IOException("Error getting elevations: " + status);
+            switch (status) {
+                case "OK":
+                    return;
+                case "OVER_QUERY_LIMIT":
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        LOG.log(Level.SEVERE, null, ex);
+                    }   break;
+                default:
+                    throw new IOException("Error getting elevations: " + status);
             }
         }
         throw new IOException("Error getting elevations: too many retries");
@@ -74,13 +75,10 @@ public class ElevationService {
                 String msg = con.getResponseMessage();
                 throw new IOException("HTTP Error " + code + ": " + msg);
             }
-            InputStream stream = con.getInputStream();
-            try {
+            try (InputStream stream = con.getInputStream()) {
                 return parseResults(trkpts, start, stream);
-            } finally {
-                stream.close();
             }
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             LOG.log(Level.SEVERE, "Error parsing results", e);
             throw new IOException(e.getMessage());
         } finally {
@@ -89,25 +87,14 @@ public class ElevationService {
     }
 
     private static String parseResults(TrackPoint trkpts[], int start,
-            InputStream in) throws IOException, SAXException {
-        XMLReader reader = null;
-        try {
-            reader = XMLReaderFactory.createXMLReader();
-        } catch (SAXException ex) {
-            reader = XMLReaderFactory.createXMLReader(
-                    "org.apache.crimson.parser.XMLReaderImpl");
-        }
-
-        try {
-            reader.setFeature("http://xml.org/sax/features/validation", false);
-        } catch (SAXException e) {
-            LOG.warning("Parser does not support validation feature");
-        }
+            InputStream in)
+            throws IOException, SAXException, ParserConfigurationException {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setValidating(false);
+        SAXParser parser = factory.newSAXParser();
 
         Handler handler = new Handler(trkpts, start);
-        reader.setContentHandler(handler);
-        reader.setErrorHandler(handler);
-        reader.parse(new InputSource(in));
+        parser.parse(in, handler);
         return handler.status;
     }
 
@@ -131,18 +118,21 @@ public class ElevationService {
         @Override
         public void endElement(String uri, String localName, String qName)
                 throws SAXException {
-            if (localName.equals("elevation")) {
-                double ele = Double.parseDouble(buf.toString());
-                TrackPoint src = trkpts[current];
-                TrackPoint dst = new TrackPoint(src.getLat(), src.getLng(),
-                        ele, src.getTime());
-                trkpts[current] = dst;
-                ++current;
-            } else if (localName.equals("status")) {
-                status = buf.toString();
-                if (!status.equals("OK")) {
-                    LOG.log(Level.SEVERE, "Status: {0}", status);
-                }
+            switch (localName) {
+                case "elevation":
+                    double ele = Double.parseDouble(buf.toString());
+                    TrackPoint src = trkpts[current];
+                    TrackPoint dst = new TrackPoint(src.getLat(), src.getLng(),
+                            ele, src.getTime());
+                    trkpts[current] = dst;
+                    ++current;
+                    break;
+                case "status":
+                    status = buf.toString();
+                    if (!status.equals("OK")) {
+                        LOG.log(Level.SEVERE, "Status: {0}", status);
+                    }
+                    break;
             }
         }
 
