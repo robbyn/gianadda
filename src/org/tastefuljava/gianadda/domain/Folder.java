@@ -55,15 +55,15 @@ public class Folder {
     }
 
     public void insert() {
-        CurrentMapper.get().insertFolder(this);
+        CurrentMapper.get().insert(this);
     }
 
     public void update() {
-        CurrentMapper.get().updateFolder(this);
+        CurrentMapper.get().update(this);
     }
 
     public void delete() {
-        CurrentMapper.get().deleteFolder(this);
+        CurrentMapper.get().delete(this);
     }
 
     public boolean isRoot() {

@@ -1,14 +1,8 @@
 package org.tastefuljava.gianadda.domain;
 
 public interface Mapper {
-    Picture getPictureById(int id);
-    void insertPicture(Picture pic);
-    void updatePicture(Picture pic);
-    void deletePicture(Picture pic);
-
-    Folder getFolderById(int id);
+    void insert(Object obj);
+    void update(Object obj);
+    void delete(Object obj);
     Folder getRootFolder(String name);
-    void insertFolder(Folder folder);
-    void updateFolder(Folder folder);
-    void deleteFolder(Folder folder);
 }

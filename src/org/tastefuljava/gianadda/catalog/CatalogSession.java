@@ -1,7 +1,6 @@
 package org.tastefuljava.gianadda.catalog;
 
 import java.io.Closeable;
-import java.util.List;
 import org.tastefuljava.gianadda.domain.CurrentMapper;
 import org.tastefuljava.gianadda.domain.Folder;
 import org.tastefuljava.gianadda.domain.Mapper;
@@ -39,48 +38,23 @@ public class CatalogSession implements Closeable {
         }
 
         @Override
-        public Picture getPictureById(int id) {
-            return session.load(Picture.class, id);
+        public void insert(Object obj) {
+            session.insert(obj);
         }
 
         @Override
-        public void insertPicture(Picture pic) {
-            session.insert(pic);
+        public void update(Object obj) {
+            session.update(obj);
         }
 
         @Override
-        public void updatePicture(Picture pic) {
-            session.update(pic);
-        }
-
-        @Override
-        public void deletePicture(Picture pic) {
-            session.delete(pic);
-        }
-
-        @Override
-        public Folder getFolderById(int id) {
-            return session.load(Folder.class, id);
+        public void delete(Object obj) {
+            session.delete(obj);
         }
 
         @Override
         public Folder getRootFolder(String name) {
             return session.queryOne(Folder.class, "root", name);
-        }
-
-        @Override
-        public void insertFolder(Folder folder) {
-            session.insert(folder);
-        }
-
-        @Override
-        public void updateFolder(Folder folder) {
-            session.update(folder);
-        }
-
-        @Override
-        public void deleteFolder(Folder folder) {
-            session.delete(folder);
         }
     }
 }

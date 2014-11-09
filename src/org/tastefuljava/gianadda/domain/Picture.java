@@ -105,14 +105,14 @@ public class Picture {
     }
 
     public void insert() {
-        CurrentMapper.get().insertPicture(this);
+        CurrentMapper.get().insert(this);
     }
 
     public void update() {
-        CurrentMapper.get().updatePicture(this);
+        CurrentMapper.get().update(this);
     }
 
     public void delete() {
-        CurrentMapper.get().deletePicture(this);
+        CurrentMapper.get().delete(this);
     }
 }
