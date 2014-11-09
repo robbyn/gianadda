@@ -35,23 +35,12 @@ public class CatalogSession implements Closeable {
     }
 
     private class Wrapper implements Mapper {
-
         private Wrapper() {
         }
 
         @Override
         public Picture getPictureById(int id) {
             return session.load(Picture.class, id);
-        }
-
-        @Override
-        public Picture getPictureByName(Folder folder, String name) {
-            return session.queryOne(Picture.class, "byName", folder, name);
-        }
-
-        @Override
-        public List<Picture> getFolderPictures(Folder folder) {
-            return session.query(Picture.class, "inFolder", folder);
         }
 
         @Override
@@ -75,18 +64,8 @@ public class CatalogSession implements Closeable {
         }
 
         @Override
-        public Folder getFolderByName(Folder folder, String name) {
-            return session.queryOne(Folder.class, "subfolder", folder, name);
-        }
-
-        @Override
         public Folder getRootFolder(String name) {
             return session.queryOne(Folder.class, "root", name);
-        }
-
-        @Override
-        public List<Folder> getSubfolders(Folder folder) {
-            return session.query(Folder.class, "subfolders", folder);
         }
 
         @Override
