@@ -351,7 +351,8 @@ public class Synchronizer {
             if (gps != null) {
                 Double latitude = gps.getLatitude();
                 Double longitude = gps.getLongitude();
-                if (latitude == null && longitude == null) {
+                if (latitude == null || longitude == null
+                        || latitude == 0 && longitude == 0) {
                     LOG.log(Level.WARNING,
                             "latitude/longitude missing in {0}", pic.getPath());
                 } else {

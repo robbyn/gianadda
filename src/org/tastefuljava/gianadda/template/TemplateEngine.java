@@ -68,7 +68,13 @@ public class TemplateEngine {
 
     private static VelocityContext createBaseContext() {
         VelocityContext context = new VelocityContext();
-        context.put("esc", new EscapeTool());
+        context.put("esc", new EscapeTool() {
+            @Override
+            public String url(Object obj) {
+                String s = super.url(obj);
+                return s == null ? null : s.replaceAll("\\+", "%20");
+            }
+        });
         context.put("date", new ComparisonDateTool());
         context.put("math", new MathTool());
         return context;
