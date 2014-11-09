@@ -8,11 +8,21 @@
         <link rel="stylesheet" href="${base}css/style.css">
     </head>
     <body>
-        <h1>${pic.name}</h2>
+        <header>
+            #if($prev)
+            <a class="prev-btn" href="${prev}.html">$prev</a>
+            #end
+            <h1>${pic.name}</h1>
+            #if($next)
+            <a class="next-btn" href="${next}.html">$next</a>
+            #end
+        </header>
         <div>
             <figure>
                 <img src="${pic.name}">
                 <figcaption>
+                    #set($position = $index + 1)
+                    <span class="index">$position/${count}</span>
                     <span class="name">${pic.name}</span>
                     #if($pic.description)
                     <span class="description">${pic.description}</span>

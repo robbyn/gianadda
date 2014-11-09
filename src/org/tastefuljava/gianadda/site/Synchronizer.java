@@ -174,7 +174,8 @@ public class Synchronizer {
             File dir) throws IOException {
         boolean changed = false;
         String[] picNames = Files.listFiles(dir, picNamePattern);
-        for (String name: picNames) {
+        for (int i = 0; i < picNames.length; ++i) {
+            String name = picNames[i];
             boolean picChanged = false;
             File file = new File(dir, name);
             Date timeStamp = new Date(file.lastModified());
@@ -203,7 +204,9 @@ public class Synchronizer {
                 changed = true;
             }
             if (picChanged || forceHtml) {
-                generatePreviewHtml(pic);
+                String prev = i == 0 ? null : picNames[i-1];
+                String next = i+1 >= picNames.length ? null : picNames[i+1];
+                generatePreviewHtml(pic, i, picNames.length, prev, next);
             }
         }
         if (delete) {
@@ -365,14 +368,21 @@ public class Synchronizer {
         generateImage(pic, img, 0, ImageType.THUMB);
     }
 
-    private void generatePreviewHtml(Picture pic) throws IOException {
+
+    private void generatePreviewHtml(Picture pic, int ix, int count,
+            String prev, String next) throws IOException {
         if (new File(dirs.getBaseDir(), previewPath).exists()) {
             LOG.log(Level.FINE, "Generate preview page for {0}", pic.getPath());
             File folderDir = folderSiteDir(pic.getFolder());
             File dir = ImageType.PREVIEW.directory(folderDir);
             Files.mkdirs(dir);
             File outFile = new File(dir, pic.getName() + ".html");
-            applyTemplate(previewPath, outFile, createPictureParams(pic, 1));
+            Map<String,Object> parms = createPictureParams(pic, 1);
+            parms.put("index", ix);
+            parms.put("count", count);
+            parms.put("prev", prev);
+            parms.put("next", next);
+            applyTemplate(previewPath, outFile, parms);
         }
     }
 

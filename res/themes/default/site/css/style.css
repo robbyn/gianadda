@@ -5,7 +5,7 @@ html {
     font-family: "Arial, Helvetica, sans";
 }
 
-h1 {
+.index h1 {
     display: none;
 }
 .index body {
@@ -69,6 +69,7 @@ h1 {
     display: block;
     max-height: $math.round($previewSize.height)px;
     max-width: 100%;
+    margin: 0 auto;
 }
 .artist {
     font-weight: bold;
@@ -77,4 +78,37 @@ h1 {
     margin: 0 auto;
     width: 600px;
     height: 600px;
+}
+.preview header {
+    position: relative;
+    background: #0099ff;
+    margin: 0;
+}
+.preview header h1 {
+    min-height: 32px;
+    margin: 0;
+    line-height: 1;
+    text-align: center;
+}
+.preview header .prev-btn {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -16px;
+    width: 32px;
+    height: 32px;
+    background: url('img/arrow-left.svg') no-repeat center center;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+.preview header .next-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -16px;
+    width: 32px;
+    height: 32px;
+    background: url('img/arrow-right.svg') no-repeat center center;
+    text-indent: -9999px;
+    overflow: hidden;
 }
