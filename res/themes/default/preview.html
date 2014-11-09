@@ -11,14 +11,14 @@
         <header>
             <div class="left-btns">
                 #if($prev)
-                <a class="prev-btn" href="$$esc.url($prev).html"><span>$prev</span></a>
+                <a class="prev-btn" href="${esc.url($prev)}.html"><span>$prev</span></a>
                 #end
                 <a class="up-btn" href="${base}${pic.folder.path}/index.html"><span>${pic.folder.name}</span></a>
             </div>
             <h1>$esc.html($pic.name)</h1>
             <div class="right-btns">
                 #if($next)
-                <a class="next-btn" href="$$esc.url($next).html"><span>$next</span></a>
+                <a class="next-btn" href="${esc.url($next)}.html"><span>$next</span></a>
                 #end
             </div>
         </header>

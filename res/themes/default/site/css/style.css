@@ -50,7 +50,7 @@ html {
 .preview body {
     background: #999999;
 }
-.preview body div {
+.preview body>div {
     box-sizing: border-box;
     width: 100%;
     text-align: center;
@@ -81,6 +81,7 @@ header {
     position: relative;
     background: #0099ff;
     margin: 0;
+    display: block;
     min-height: 32px;
 }
 header h1 {
