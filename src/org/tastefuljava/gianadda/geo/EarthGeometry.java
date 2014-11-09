@@ -144,5 +144,5 @@ public class EarthGeometry {
                 keep[last] = true;
             }
         }
-    }    
+    }
 }
