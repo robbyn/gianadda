@@ -129,7 +129,7 @@ public class Util {
 
     public static final String urlEncode(String s) {
         try {
-            return URLEncoder.encode(s, "UTF-8");
+            return URLEncoder.encode(s, "UTF-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException ex) {
             // VERY unlikely
             LOG.log(Level.SEVERE, null, ex);
