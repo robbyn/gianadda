@@ -8,10 +8,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class TestLatLngBounds {
-    
     public TestLatLngBounds() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
@@ -30,10 +29,9 @@ public class TestLatLngBounds {
 
     @Test
     public void testCenter() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(new LatLng(45, -179));
-        builder.include(new LatLng(48, 179));
-        LatLngBounds bounds = builder.build();
+        LatLngBounds bounds = LatLngBounds.build(
+                new LatLng(45, -179),
+                new LatLng(48, 179));
         LatLng center = bounds.getCenter();
         assertEquals(46.5, center.getLat(), 0.01);
         assertTrue(Math.abs(center.getLng()-180) < 0.01 ||
@@ -42,10 +40,9 @@ public class TestLatLngBounds {
 
     @Test
     public void testContains() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(new LatLng(45, -179));
-        builder.include(new LatLng(48, 179));
-        LatLngBounds bounds = builder.build();
+        LatLngBounds bounds = LatLngBounds.build(
+                new LatLng(45, -179),
+                new LatLng(48, 179));
         assertTrue(bounds.contains(46, -180));
         assertTrue(bounds.contains(46, 180));
         assertFalse(bounds.contains(44, -180));

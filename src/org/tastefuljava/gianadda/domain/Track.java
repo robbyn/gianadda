@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tastefuljava.gianadda.geo.GpxReader;
 import org.tastefuljava.gianadda.geo.GpxWriter;
+import org.tastefuljava.gianadda.geo.LatLngBounds;
 
 public class Track {
     private static final Logger LOG = Logger.getLogger(Track.class.getName());
@@ -18,6 +19,7 @@ public class Track {
     private Folder folder;
     private String name;
     private Date dateTime;
+    private LatLngBounds bounds;
     private String gpx;
 
     public int getId() {

@@ -19,6 +19,14 @@ public class LatLngBounds {
         westLng = builder.westLng;
     }
 
+    public static LatLngBounds build(LatLng... points) {
+        Builder builder = new Builder();
+        for (LatLng pt: points) {
+            builder.include(pt);
+        }
+        return builder.build();
+    }
+
     public LatLng getCenter() {
         double east = eastLng;
         if (east < 0) {
