@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.geo;
 
+import java.util.Arrays;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLat;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLng;
 
@@ -20,6 +21,10 @@ public class LatLngBounds {
     }
 
     public static LatLngBounds build(LatLng... points) {
+        return build(Arrays.asList(points));
+    }
+
+    public static LatLngBounds build(Iterable<LatLng> points) {
         Builder builder = new Builder();
         for (LatLng pt: points) {
             builder.include(pt);
