@@ -5,19 +5,77 @@ import static org.tastefuljava.gianadda.geo.LatLng.normalizeLat;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLng;
 
 public class LatLngBounds {
-    private double northLat;
     private double southLat;
-    private double eastLng;
     private double westLng;
+    private double northLat;
+    private double eastLng;
 
     public LatLngBounds() {
     }
 
+    public LatLngBounds(LatLng sw, LatLng ne) {
+        if (sw.getLat() > ne.getLat()) {
+            throw new IllegalArgumentException(
+                    "Invalid bounds: south latitude larger than north");
+        }
+        init(sw.getLat(), sw.getLng(), ne.getLat(), ne.getLng());
+    }
+
+    public LatLngBounds(double south, double west,
+            double north, double east) {
+        south = normalizeLat(south);
+        west = normalizeLng(west);
+        north = normalizeLat(north);
+        east = normalizeLng(east);
+        if (south > north) {
+            throw new IllegalArgumentException(
+                    "Invalid bounds: south latitude larger than north");
+        }
+        init(south, west, north, east);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + hashDouble(southLat);
+        hash = 37 * hash + hashDouble(westLng);
+        hash = 37 * hash + hashDouble(northLat);
+        hash = 37 * hash + hashDouble(eastLng);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LatLngBounds other = (LatLngBounds) obj;
+        return southLat == other.southLat
+                && westLng == other.westLng
+                && northLat == other.northLat
+                && eastLng == other.eastLng;
+    }
+
+    @Override
+    public String toString() {
+        return "LatLngBounds{south:" + southLat + ", west:" + westLng
+                + ", north:" + northLat + ", eastLng:" + eastLng + '}';
+    }
+
     private LatLngBounds(Builder builder) {
-        northLat = builder.northLat;
-        southLat = builder.southLat;
-        eastLng = builder.eastLng;
-        westLng = builder.westLng;
+        init(builder.southLat, builder.westLng,
+                builder.northLat, builder.eastLng);
+    }
+
+    private void init(double southLat, double westLng,
+            double northLat, double eastLng) {
+        this.southLat = southLat;
+        this.northLat = northLat;
+        this.westLng = westLng;
+        this.eastLng = eastLng;
     }
 
     public static LatLngBounds build(LatLng... points) {
@@ -77,6 +135,11 @@ public class LatLngBounds {
         return builder.build();
     }
 
+    private static int hashDouble(double val) {
+        long bits = Double.doubleToLongBits(val);
+        return (int)(bits ^ bits >>> 32);
+    }
+
     public static class Builder {
         private boolean valid = false;
         private double northLat;
@@ -116,10 +179,11 @@ public class LatLngBounds {
                 }
                 double east = normalizeLng(lng-eastLng);
                 double west = normalizeLng(lng-westLng);
+                double angle = eastLng-westLng;
                 if (west < 0 && east < 0) {
-                    eastLng = lng;
-                } else if (west > 0 && east > 0) {
                     westLng = lng;
+                } else if (west > 0 && east < 0) {
+                    eastLng = lng;
                 }
             }
         }

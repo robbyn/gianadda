@@ -28,6 +28,24 @@ public class TestLatLngBounds {
     }
 
     @Test
+    public void testBuild() {
+        LatLngBounds bounds = LatLngBounds.build(
+                new LatLng(45, -100),
+                new LatLng(48, 100));
+        assertEquals(new LatLngBounds(45, 100, 48, -100), bounds);
+        bounds = LatLngBounds.build(
+                new LatLng(45, -100),
+                new LatLng(46, 0),
+                new LatLng(48, 100));
+        assertEquals(new LatLngBounds(45, -100, 48, 100), bounds);
+        bounds = LatLngBounds.build(
+                new LatLng(45, -100),
+                new LatLng(48, 100),
+                new LatLng(46, 0));
+        assertEquals(new LatLngBounds(45, -100, 48, 100), bounds);
+    }
+
+    @Test
     public void testCenter() {
         LatLngBounds bounds = LatLngBounds.build(
                 new LatLng(45, -179),
@@ -51,8 +69,18 @@ public class TestLatLngBounds {
         assertFalse(bounds.contains(46, 178));
         assertFalse(bounds.contains(0, 0));
         bounds = LatLngBounds.build(
-                new LatLng(45, -200),
-                new LatLng(48, 200));
+                new LatLng(45, -100),
+                new LatLng(48, 100));
+        assertTrue(bounds.contains(46, 180));
+        bounds = LatLngBounds.build(
+                new LatLng(45, -100),
+                new LatLng(46, 0),
+                new LatLng(48, 100));
+        assertFalse(bounds.contains(46, 180));
+        bounds = LatLngBounds.build(
+                new LatLng(45, -100),
+                new LatLng(48, 100),
+                new LatLng(46, 0));
         assertTrue(bounds.contains(46, 180));
     }
 }
