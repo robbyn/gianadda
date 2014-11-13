@@ -50,5 +50,9 @@ public class TestLatLngBounds {
         assertFalse(bounds.contains(46, -178));
         assertFalse(bounds.contains(46, 178));
         assertFalse(bounds.contains(0, 0));
+        bounds = LatLngBounds.build(
+                new LatLng(45, -200),
+                new LatLng(48, 200));
+        assertTrue(bounds.contains(46, 180));
     }
 }
