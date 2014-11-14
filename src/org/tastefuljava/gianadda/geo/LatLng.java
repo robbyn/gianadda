@@ -16,10 +16,10 @@ public class LatLng {
 
     public static double normalizeLng(double lng) {
         if (lng < -180) {
-            lng = 180 - ((180 - lng) % 360);
+            lng = 180 - (180 - lng)%360;
             return lng == 180 ? -180 : lng;
         } else {
-            return ((lng + 180) % 360) - 180;
+            return (lng + 180)%360 - 180;
         }
     }
 
@@ -28,9 +28,9 @@ public class LatLng {
     public static double diffLng(double a, double b) {
         double d = b - a;
         if (d >= 0) {
-            return d % 360;
+            return d%360;
         } else {
-            d = 360 - (-d) % 360;
+            d = 360 - (-d)%360;
             return d < 360 ? d : 0;
         }
     }
