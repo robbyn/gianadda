@@ -42,7 +42,7 @@ public class TestLatLngBounds {
                 new LatLng(45, -100),
                 new LatLng(48, 100),
                 new LatLng(46, 0));
-        assertEquals(new LatLngBounds(45, -100, 48, 100), bounds);
+        assertEquals(new LatLngBounds(45, 100, 48, 0), bounds);
     }
 
     @Test
