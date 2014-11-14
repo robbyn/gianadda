@@ -12,8 +12,12 @@ public class TrackPoint extends LatLng {
         this.time = time;
     }
 
-    public Double getH() {
+    public Double getElevation() {
         return h;
+    }
+
+    public double getH() {
+        return h == null ? 0 : h;
     }
 
     public Date getTime() {
