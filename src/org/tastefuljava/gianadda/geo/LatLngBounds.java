@@ -1,7 +1,7 @@
 package org.tastefuljava.gianadda.geo;
 
 import java.util.Arrays;
-import static org.tastefuljava.gianadda.geo.LatLng.lngDiff;
+import static org.tastefuljava.gianadda.geo.LatLng.diffLng;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLat;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLng;
 
@@ -52,7 +52,7 @@ public class LatLngBounds {
     }
 
     public LatLng getCenter() {
-        double angle = lngDiff(west, east);
+        double angle = diffLng(west, east);
         return new LatLng((north + south)/2,
                 normalizeLng(west + angle/2));
     }
@@ -86,7 +86,7 @@ public class LatLngBounds {
         } else if (lat < south) {
             return false;
         }
-        return lngDiff(west, lng) <= lngDiff(west, east);
+        return diffLng(west, lng) <= diffLng(west, east);
     }
 
     @Override
@@ -162,8 +162,8 @@ public class LatLngBounds {
                 } else if (lat < south) {
                     south = lat;
                 }
-                double current = lngDiff(west, east);
-                double westToLng = lngDiff(west, lng);
+                double current = diffLng(west, east);
+                double westToLng = diffLng(west, lng);
                 if (westToLng <= current) {
                     // lng is inside the bounds
                 } else if (360 - westToLng < westToLng - current) {
