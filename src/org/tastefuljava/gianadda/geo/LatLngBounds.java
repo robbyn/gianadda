@@ -19,7 +19,7 @@ public class LatLngBounds {
             throw new IllegalArgumentException(
                     "Invalid bounds: south latitude larger than north");
         }
-        init(sw.getLat(), sw.getLng(), ne.getLat(), ne.getLng());
+        privateInit(sw.getLat(), sw.getLng(), ne.getLat(), ne.getLng());
     }
 
     public LatLngBounds(double s, double w, double n, double e) {
@@ -31,11 +31,11 @@ public class LatLngBounds {
             throw new IllegalArgumentException(
                     "Invalid bounds: south latitude larger than north");
         }
-        init(s, w, n, e);
+        privateInit(s, w, n, e);
     }
 
     private LatLngBounds(Builder builder) {
-        init(builder.south, builder.west,
+        privateInit(builder.south, builder.west,
                 builder.north, builder.east);
     }
 
@@ -49,6 +49,30 @@ public class LatLngBounds {
             builder.include(pt);
         }
         return builder.build();
+    }
+
+    public double getSouth() {
+        return south;
+    }
+
+    public double getWest() {
+        return west;
+    }
+
+    public double getNorth() {
+        return north;
+    }
+
+    public double getEast() {
+        return east;
+    }
+
+    public LatLng getSouthWest() {
+        return new LatLng(south, west);
+    }
+
+    public LatLng getNorthEast() {
+        return new LatLng(north, east);
     }
 
     public LatLng getCenter() {
@@ -65,6 +89,14 @@ public class LatLngBounds {
         return privateContains(normalizeLat(lat), normalizeLng(lng));
     }
 
+    public boolean intersects(LatLngBounds other) {
+        if (other.south > north || other.north < south) {
+            return false;
+        }
+        return diffLng(west, other.west) < diffLng(east, west)
+                || diffLng(west, other.east) < diffLng(east, west);
+    }
+
     public LatLngBounds including(LatLng pt) {
         Builder builder = new Builder();
         builder.privateInclude(north, east);
@@ -73,7 +105,7 @@ public class LatLngBounds {
         return builder.build();
     }
 
-    private void init(double s, double w, double n, double e) {
+    private void privateInit(double s, double w, double n, double e) {
         south = s;
         north = n;
         west = w;

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.EnumSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -26,14 +27,21 @@ public class Main {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
 
     enum Flag {
-        SYNCHRONIZE, FORCE_HTML, DELETE, VERBOSE, QUIET, DEBUG, HELP, TEST;
+        SYNCHRONIZE, FORCE_HTML, DELETE, VERBOSE, QUIET, DEBUG, HELP, TEST,
+        ELEVATION_SERVICE, FORCE_ELEVATION_SERVICE, GEOTAG, FORCE_GEOTAG,
+        SIMPLIFY;
+
+        public String getName() {
+            return name().toLowerCase().replace('_', '-');
+        }
 
         @Override
         public String toString() {
-            return "--" + name().toLowerCase().replace('_', '-');
+            return "--" + getName();
         }
     }
 
+    private double tolerance = 1; // meter
     private File dir = null;
     private String createTheme = null;
     private String changeTheme = null;
@@ -78,6 +86,9 @@ public class Main {
                         case "--change-theme":
                             st = 2;
                             break;
+                        case "--tolerance":
+                            st = 3;
+                            break;
                         case "-?":
                         case "-h":
                         case "--help":
@@ -97,6 +108,31 @@ public class Main {
                             flags.add(Flag.SYNCHRONIZE);
                             flags.add(Flag.FORCE_HTML);
                             flags.add(Flag.DELETE);
+                            break;
+                        case "-e":
+                        case "--elevation-service":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.ELEVATION_SERVICE);
+                            break;
+                        case "-E":
+                        case "--force-elevation-service":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.ELEVATION_SERVICE);
+                            flags.add(Flag.FORCE_ELEVATION_SERVICE);
+                            break;
+                        case "-g":
+                        case "--geotag":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.GEOTAG);
+                            break;
+                        case "-G":
+                        case "--force-geotag":
+                            flags.add(Flag.SYNCHRONIZE);
+                            flags.add(Flag.GEOTAG);
+                            flags.add(Flag.FORCE_GEOTAG);
+                            break;
+                        case "--simplify":
+                            flags.add(Flag.SIMPLIFY);
                             break;
                         case "-v":
                         case "--verbose":
@@ -128,6 +164,17 @@ public class Main {
                     changeTheme = arg;
                     flags.add(Flag.SYNCHRONIZE);
                     flags.add(Flag.FORCE_HTML);
+                    break;
+                case 3:
+                    try {
+                        tolerance = Double.parseDouble(arg);
+                    } catch (NumberFormatException e) {
+                        LOG.log(Level.SEVERE,
+                                "Invalid value for tolerance: {0}", arg);
+                        break loop;
+                    }
+                    st = 0;
+                    flags.add(Flag.SIMPLIFY);
                     break;
                 default:
                     break loop;
@@ -169,9 +216,15 @@ public class Main {
                 builder.changeTheme(changeTheme);
             }
             if (flags.contains(Flag.SYNCHRONIZE)) {
-                builder.synchronize(
-                        flags.contains(Flag.FORCE_HTML),
-                        flags.contains(Flag.DELETE));
+                Properties props = new Properties();
+                for (Flag flag: Flag.values()) {
+                    boolean isset = flags.contains(flag);
+                    props.put(flag.getName(), isset ? "true" : "false");
+                }
+                if (flags.contains(Flag.SIMPLIFY)) {
+                    props.put("tolerance", Double.toString(tolerance));
+                }
+                builder.synchronize(props);
             }
             if (flags.contains(Flag.TEST)) {
                 try (CatalogSession sess = builder.openSession()) {

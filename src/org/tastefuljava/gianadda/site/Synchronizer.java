@@ -23,10 +23,16 @@ import org.tastefuljava.gianadda.catalog.CatalogSession;
 import org.tastefuljava.gianadda.domain.Folder;
 import org.tastefuljava.gianadda.domain.GpsData;
 import org.tastefuljava.gianadda.domain.Picture;
+import org.tastefuljava.gianadda.domain.Track;
 import org.tastefuljava.gianadda.exif.Exif;
 import org.tastefuljava.gianadda.exif.ExifIFD;
 import org.tastefuljava.gianadda.exif.GPSIFD;
 import org.tastefuljava.gianadda.exif.RootIFD;
+import org.tastefuljava.gianadda.geo.EarthGeometry;
+import org.tastefuljava.gianadda.geo.ElevationService;
+import org.tastefuljava.gianadda.geo.GpxReader;
+import org.tastefuljava.gianadda.geo.LatLngBounds;
+import org.tastefuljava.gianadda.geo.TrackPoint;
 import org.tastefuljava.gianadda.template.TemplateEngine;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
@@ -38,6 +44,13 @@ public class Synchronizer {
 
     public static final String PROP_FORCE_HTML = "force-html";
     public static final String PROP_DELETE = "delete";
+    public static final String PROP_ELEVATION_SERVICE = "elevation-service";
+    public static final String PROP_FORCE_ELEVATION_SERVICE
+            = "force-elevation-service";
+    public static final String PROP_GEOTAG = "geotag";
+    public static final String PROP_FORCE_GEOTAG = "force-geotag";
+    public static final String PROP_SIMPLIFY = "simplify";
+    public static final String PROP_TOLERANCE = "tolerance";
 
     private static final String CONF_FILENAME = "settings.properties";
     private static final String THEME_CONF_PATH
@@ -67,10 +80,17 @@ public class Synchronizer {
     private final Pattern templateNamePattern;
     private final TemplateEngine engine;
     private final Pattern picNamePattern;
+    private final Pattern trackNamePattern;
     private final Pattern dirNamePattern;
     private final String previewPath;
     private final boolean forceHtml;
     private final boolean delete;
+    private final boolean useElevationService;
+    private final boolean forceElevationService;
+    private final boolean geotag;
+    private final boolean forceGeotag;
+    private final boolean simplify;
+    private final double tolerance;
 
     Synchronizer(Configuration link, CatalogSession sess,
             GalleryDirs dirs) throws IOException {
@@ -80,6 +100,7 @@ public class Synchronizer {
         this.sess = sess;
         this.dirs = dirs;
         this.picNamePattern = getConfPattern("pic-name-pattern", false);
+        this.trackNamePattern = getConfPattern("track-name-pattern", false);
         this.dirNamePattern = getConfPattern("dir-name-pattern", false);
         this.templateNamePattern = getConfPattern(
                 "template-name-pattern", false);
@@ -87,6 +108,15 @@ public class Synchronizer {
                 + "/" + conf.getString("preview-template", null);
         this.forceHtml = conf.getBoolean(PROP_FORCE_HTML, false);
         this.delete = conf.getBoolean(PROP_DELETE, false);
+        this.useElevationService
+                = conf.getBoolean(PROP_ELEVATION_SERVICE, false);
+        this.forceElevationService
+                = conf.getBoolean(PROP_FORCE_ELEVATION_SERVICE, false);
+        this.geotag = conf.getBoolean(PROP_GEOTAG, false);
+        this.forceGeotag = conf.getBoolean(PROP_FORCE_GEOTAG, false);
+        this.simplify = conf.getBoolean(PROP_SIMPLIFY, false);
+        this.tolerance = Double.parseDouble(
+                conf.getString(PROP_TOLERANCE, "1"));
     }
 
     public void synchronize() throws IOException {
@@ -161,7 +191,8 @@ public class Synchronizer {
     private boolean syncDir(Folder folder, File dir, String prev, String next)
             throws IOException {
         LOG.log(Level.INFO, "Synchronizing folder {0}", folder.getPath());
-        boolean changed = syncPics(folder, dir);
+        boolean changed = synTracks(folder, dir);
+        changed |= syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
         if (changed || forceHtml) {
             LOG.log(Level.INFO, "Applying folder-level theme to {0}",
@@ -225,6 +256,111 @@ public class Synchronizer {
             sess.commit();
         }
         return changed;
+    }
+
+    private boolean synTracks(Folder folder,
+            File dir) throws IOException {
+        boolean changed = false;
+        String[] names = Files.listFiles(dir, trackNamePattern);
+        for (int i = 0; i < names.length; ++i) {
+            String name = names[i];
+            boolean fileChanged = false;
+            File file = new File(dir, name);
+            Date timeStamp = new Date(file.lastModified());
+            Track track = folder.getTrack(name);
+            if (track == null) {
+                track = new Track();
+                track.setFolder(folder);
+                track.setName(name);
+                track.setDateTime(timeStamp);
+                LOG.log(Level.INFO, "New track found: {0}", track.getPath());
+                if (!tryProcessTrack(track, file)) {
+                    continue;
+                }
+                track.insert();
+                sess.commit();
+                fileChanged = true;
+            } else if (!timeStamp.equals(track.getDateTime())) {
+                LOG.log(Level.INFO, "Track has changed: {0}", track.getPath());
+                track.setDateTime(timeStamp);
+                if (!tryProcessTrack(track, file)) {
+                    continue;
+                }
+                track.update();
+                sess.commit();
+                fileChanged = true;
+            }
+            if (fileChanged) {
+                changed = true;
+            }
+            if (fileChanged || forceHtml) {
+                String prev = i == 0 ? null : names[i-1];
+                String next = i+1 >= names.length ? null : names[i+1];
+                generateTrackHtml(track, i, names.length, prev, next);
+            }
+        }
+        if (delete) {
+            Set<String> nameSet = new HashSet<>();
+            nameSet.addAll(Arrays.asList(names));
+            for (Track track: folder.getTracks()) {
+                if (!nameSet.contains(track.getName())) {
+                    deleteTrack(track);
+                    changed = true;
+                }
+            }
+            sess.commit();
+        }
+        return changed;
+    }
+
+    private boolean tryProcessTrack(Track track, File file) {
+        try {
+            processTrack(track, file);
+            return true;
+        } catch (IOException e) {
+            LOG.log(Level.WARNING,
+                    "Error while processing " + file + " - skipping", e);
+            return false;
+        }
+    }
+
+    private void processTrack(Track track, File file) throws IOException {
+        TrackPoint[] points = GpxReader.readTrack(file);
+        if (points != null && points.length > 1) {
+            if (simplify) {
+                int prev = points.length;
+                points = EarthGeometry.simplify(points, tolerance);
+                LOG.log(Level.INFO, "Simplified track - before: {0} points,"
+                        + " after: {1} points",
+                        new Object[]{prev, points.length});
+            }
+            if (forceElevationService
+                    || useElevationService && !allElevationsPresent(points)) {
+                LOG.info("Getting elevations from webservice");
+                ElevationService.getElevations(points);
+            }
+            LatLngBounds bounds = LatLngBounds.build(points);
+            track.setBounds(bounds);
+            track.setPoints(points);
+        }
+    }
+
+    private static boolean allElevationsPresent(TrackPoint[] points) {
+        for (TrackPoint pt: points) {
+            if (pt.getElevation() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void generateTrackHtml(Track track, int i, int length, String prev,
+            String next) {
+    }
+
+    private void deleteTrack(Track track) {
+        LOG.log(Level.INFO, "Removing picture {0}", track.getPath());
+        track.delete();
     }
 
     private boolean synSubdirs(Folder folder, File dir) throws IOException {

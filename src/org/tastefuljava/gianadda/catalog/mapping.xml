@@ -93,4 +93,48 @@
             DELETE FROM pictures WHERE ID=${id}
         </delete>
     </class>
+
+    <class name="Track">
+        <id>
+            <property name="id" column="ID"/>
+        </id>
+        <reference name="folder" column="FOLDER_ID"/>
+        <property name="name" column="NAME"/>
+        <property name="dateTime" column="DATETIME"/>
+        <component name="bounds">
+            <property name="south" column="SOUTH"/>
+            <property name="west" column="WEST"/>
+            <property name="north" column="NORTH"/>
+            <property name="east" column="EAST"/>
+        </component>
+        <property name="gpx" column="GPX"/>
+
+        <load>
+            SELECT * FROM tracks
+            WHERE ID=${id}
+        </load>
+        <query name="byName" parameters="folder,name">
+            SELECT * FROM tracks
+            WHERE FOLDER_ID=${folder.id} AND NAME=${name}
+        </query>
+        <query name="inFolder" parameters="folderId">
+            SELECT * FROM tracks
+            WHERE FOLDER_ID=${folderId}
+        </query>
+        <insert get-generated-keys="true">
+            INSERT INTO tracks(FOLDER_ID,NAME,DATETIME,SOUTH,WEST,NORTH,EAST,
+            GPX) VALUES(${folder.id},${name},${dateTime},${bounds.south},
+                ${bounds.west},${bounds.north},${bounds.east},${gpx});
+        </insert>
+        <update>
+            UPDATE tracks
+            SET FOLDER_ID=${folder.id},NAME=${name},DATETIME=${dateTime},
+                SOUTH=${bounds.south},WEST=${bounds.west},NORTH=${bounds.north},
+                EAST=${bounds.east},GPX=${gpx}
+            WHERE ID=${id}
+        </update>
+        <delete>
+            DELETE FROM tracks WHERE ID=${id}
+        </delete>
+    </class>
 </mapping>

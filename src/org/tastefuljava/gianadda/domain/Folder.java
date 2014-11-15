@@ -11,8 +11,9 @@ public class Folder {
     private String name;
     private String title;
     private String description;
-    private final List<Picture> pictures = new ArrayList<>();
     private final List<Folder> folders = new ArrayList<>();
+    private final List<Picture> pictures = new ArrayList<>();
+    private final List<Track> tracks = new ArrayList<>();
 
     public static Folder getRoot(String name) {
         return CurrentMapper.get().getRootFolder(name);
@@ -88,6 +89,19 @@ public class Folder {
                 ? esc : getParent().getUrlPath() + "/" + esc;
     }
 
+    public Folder getSubfolder(String name) {
+        for (Folder child: folders) {
+            if (child.getName().equals(name)) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    public List<Folder> getSubfolders() {
+        return new ArrayList<>(folders);
+    }
+
     public Picture getPicture(String name) {
         for (Picture pic: pictures) {
             if (pic.getName().equals(name)) {
@@ -101,16 +115,16 @@ public class Folder {
         return new ArrayList<>(pictures);
     }
 
-    public Folder getSubfolder(String name) {
-        for (Folder child: folders) {
-            if (child.getName().equals(name)) {
-                return child;
+    public Track getTrack(String name) {
+        for (Track track: tracks) {
+            if (track.getName().equals(name)) {
+                return track;
             }
         }
         return null;
     }
 
-    public List<Folder> getSubfolders() {
-        return new ArrayList<>(folders);
+    public List<Track> getTracks() {
+        return new ArrayList<>(tracks);
     }
 }
