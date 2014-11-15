@@ -315,8 +315,7 @@ public class Synchronizer {
 
     private boolean tryProcessTrack(Track track, File file) {
         try {
-            processTrack(track, file);
-            return true;
+            return processTrack(track, file);
         } catch (IOException e) {
             LOG.log(Level.WARNING,
                     "Error while processing " + file + " - skipping", e);
@@ -324,7 +323,7 @@ public class Synchronizer {
         }
     }
 
-    private void processTrack(Track track, File file) throws IOException {
+    private boolean processTrack(Track track, File file) throws IOException {
         TrackPoint[] points = GpxReader.readTrack(file);
         if (points != null && points.length > 1) {
             if (simplify) {
@@ -342,7 +341,9 @@ public class Synchronizer {
             LatLngBounds bounds = LatLngBounds.build(points);
             track.setBounds(bounds);
             track.setPoints(points);
+            return true;
         }
+        return false;
     }
 
     private static boolean allElevationsPresent(TrackPoint[] points) {
