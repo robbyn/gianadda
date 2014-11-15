@@ -68,14 +68,14 @@
             </div>
         </div>
         #if( not $geopics.empty or not $tracks.empty )
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr&libraries=geometry"></script>
         <script type="text/javascript">
             window.onload = function() {
                 var paths, path, tracks, track, markers, marker, bounds, pt,
                         i, j, mapOptions, map, builder;
                 paths = [
                 #foreach( $track in $tracks )
-                    [ #foreach( $pt in $track.points ) {lat:${pt.lat},lng:${pt.lng}}, #end ]
+                    google.maps.geometry.encoding.decodePath("${track.encoded}"),
                 #end
                 ];
                 tracks = [];
@@ -83,8 +83,6 @@
                     path = paths[i];
                     for (var j = 0; j < path.length; ++j) {
                         pt = path[j];
-                        pt = new google.maps.LatLng(pt.lat, pt.lng);
-                        path[j] = pt;
                         if (bounds) {
                             bounds.extend(pt);
                         } else {
