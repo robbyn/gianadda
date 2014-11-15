@@ -1,5 +1,5 @@
 Usage: gianadda [-?|-h|--help] [-v|--verbose] [-q|--quiet] [--debug] [-s|--sync]
-    [-f|--force-html]
+    [-f|--force-html] [--simplify] [--tolerance <tolerance>]
     [(-c|--create) <theme-name>] [(-t|--change-theme) <theme-name>]
     <gallery-directory>
 
@@ -34,6 +34,28 @@ Options:
     -f|--force-html
         Force the generation of the html (and css, js, ...) files of the web
         site, whether there was a change or not. When used, -s is implied.
+
+    --simplify
+        Simplify tracks using a Douglas-Peucker algorithm.
+
+    --tolerance <tolerance>
+        Specify the tolerance in meters for the Douglas-Peucker algorithm. When
+        used, --simplify is implied.
+
+    -e|--elevation-service
+        Use the Google Maps elevation web service to get the elevation of track
+        points.
+
+    -E|--force-elevation-service
+        Forces the use of the elevation service even when the track points
+        already have elevations.
+
+    -g|--geotag
+        Use the tacks of a folder to compute the location of the pictures, based
+        on their date/time.
+
+    -G|--force-geotag
+        Force geotagging even when pictures already have GPS Data.
 
     -v|--verbose
         Display information messages. Without this flag, only warnings and
