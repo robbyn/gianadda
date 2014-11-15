@@ -75,7 +75,7 @@
                         i, j, mapOptions, map, builder;
                 paths = [
                 #foreach( $track in $tracks )
-                    google.maps.geometry.encoding.decodePath("$esc.javascript(track.encoded)"),
+                    google.maps.geometry.encoding.decodePath("$esc.javascript($track.encoded)"),
                 #end
                 ];
                 tracks = [];
