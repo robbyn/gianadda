@@ -1,7 +1,11 @@
 <!DOCTYPE html>
+#set( $trackColor = "#FF0000" )
+#set( $trackOpacity = "0.5" )
+#set( $trackWeight = "5" )
 #set( $thumbSize = $conf.dims['thumb-size'] )
 #set( $previewSize = $conf.dims['preview-size'] )
 #set( $subfolders = $folder.subfolders )
+#set( $tracks = $folder.tracks )
 #set( $pictures = $folder.pictures )
 #set( $geopics = [] )
 #foreach( $pic in $pictures )
@@ -45,7 +49,7 @@
             </nav>
             #end
             <div>
-                #if( not $geopics.empty )
+                #if( not $geopics.empty or not $tracks.empty )
                 <div class="map" id="map"></div>
                 #end
                 #if( !$pictures.empty )
@@ -63,11 +67,35 @@
                 #end
             </div>
         </div>
-        #if( not $geopics.empty )
+        #if( not $geopics.empty or not $tracks.empty )
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr"></script>
         <script type="text/javascript">
             window.onload = function() {
-                var markers = [
+                var paths, path, tracks, track, markers, marker, bounds,
+                        i, j, mapOptions, map;
+                paths = [
+                #foreach( $track in $tracks )
+                    google.maps.geometry.encoding.decodePath('${track.encoded}'),
+                #end
+                ];
+                tracks = [];
+                for (i = 0; paths.length; ++i) {
+                    path = paths[i];
+                    for (var j = 0; j < path.length; ++j) {
+                        if (bounds) {
+                            bounds.extend(path[j]);
+                        } else {
+                            bounds = new google.maps.LatLngBounds(path[j]);
+                        }
+                    }
+                    tracks.push(new google.maps.Polyline({
+                        path: path,
+                        strokeColor: '${trackColor}',
+                        strokeOpacity: ${trackOpacity},
+                        strokeWeight: ${trackWeight}
+                    }));
+                }
+                markers = [
                 #foreach( $pic in $geopics )
                     {
                         position: new google.maps.LatLng($pic.gpsData.latitude,$pic.gpsData.longitude),
@@ -77,17 +105,24 @@
                     },
                 #end
                 ];
-                var bounds = new google.maps.LatLngBounds(markers[0].position);
-                for (var i = 1; i < markers.length; ++i) {
-                    bounds.extend(markers[i].position);
+                for (var i = 0; i < markers.length; ++i) {
+                    if (bounds) {
+                        bounds.extend(markers[i].position);
+                    } else {
+                        bounds = new google.maps.LatLngBounds(markers[i].position);
+                    }
                 }
-                var mapOptions = {
+                mapOptions = {
                     zoom: 8,
                     center: bounds.getCenter(),
                     mapTypeId: google.maps.MapTypeId.TERRAIN
                 };
-                var map = new google.maps.Map(document.getElementById("map"),
+                map = new google.maps.Map(document.getElementById("map"),
                         mapOptions);
+                for (i = 0; i < tracks.length; ++i) {
+                    track = tracks[i];
+                    track.setMap(map);
+                }
                 for (i = 0; i < markers.length; ++i) {
                     marker = new google.maps.Marker(markers[i]);
                     marker.setMap(map);

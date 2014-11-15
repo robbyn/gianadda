@@ -75,7 +75,7 @@ public class Track {
         }
     }
 
-    public String getGMapEncoded() {
+    public String getEncoded() {
         return GMapEncoder.encodePoints(getPoints());
     }
 

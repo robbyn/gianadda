@@ -11,6 +11,7 @@
         <property name="description" column="DESCRIPTION"/>
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
         <collection name="pictures" query="inFolder" fetch-mode="lazy"/>
+        <collection name="tracks" query="inFolder" fetch-mode="lazy"/>
 
         <load>
             SELECT * FROM folders

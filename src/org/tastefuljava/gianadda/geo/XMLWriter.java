@@ -16,10 +16,11 @@ public class XMLWriter {
     private boolean format = true;
     private boolean inAttributes = false;
     private boolean hasSubtags = false;
-    private boolean lnBefore = false;
+    private boolean lnBefore = true;
 
     public XMLWriter(PrintWriter out) {
         this.out = out;
+        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     }
 
     public XMLWriter(Writer out) {
