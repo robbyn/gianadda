@@ -71,21 +71,24 @@
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr"></script>
         <script type="text/javascript">
             window.onload = function() {
-                var paths, path, tracks, track, markers, marker, bounds,
-                        i, j, mapOptions, map;
+                var paths, path, tracks, track, markers, marker, bounds, pt,
+                        i, j, mapOptions, map, builder;
                 paths = [
                 #foreach( $track in $tracks )
-                    google.maps.geometry.encoding.decodePath('${track.encoded}'),
+                    [ #foreach( $pt in $track.points ) {lat:${pt.lat},lng:${pt.lng}}, #end ]
                 #end
                 ];
                 tracks = [];
-                for (i = 0; paths.length; ++i) {
+                for (i = 0; i < paths.length; ++i) {
                     path = paths[i];
                     for (var j = 0; j < path.length; ++j) {
+                        pt = path[j];
+                        pt = new google.maps.LatLng(pt.lat, pt.lng);
+                        path[j] = pt;
                         if (bounds) {
-                            bounds.extend(path[j]);
+                            bounds.extend(pt);
                         } else {
-                            bounds = new google.maps.LatLngBounds(path[j]);
+                            bounds = new google.maps.LatLngBounds(pt,pt);
                         }
                     }
                     tracks.push(new google.maps.Polyline({
@@ -106,10 +109,11 @@
                 #end
                 ];
                 for (var i = 0; i < markers.length; ++i) {
+                    pt = markers[i].position;
                     if (bounds) {
-                        bounds.extend(markers[i].position);
+                        bounds.extend(pt);
                     } else {
-                        bounds = new google.maps.LatLngBounds(markers[i].position);
+                        bounds = new google.maps.LatLngBounds(pt,pt);
                     }
                 }
                 mapOptions = {
