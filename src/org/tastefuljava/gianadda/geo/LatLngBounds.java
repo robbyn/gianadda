@@ -4,6 +4,7 @@ import java.util.Arrays;
 import static org.tastefuljava.gianadda.geo.LatLng.diffLng;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLat;
 import static org.tastefuljava.gianadda.geo.LatLng.normalizeLng;
+import org.tastefuljava.gianadda.util.Util;
 
 public class LatLngBounds {
     private double south;
@@ -124,10 +125,10 @@ public class LatLngBounds {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 37 * hash + hashDouble(south);
-        hash = 37 * hash + hashDouble(west);
-        hash = 37 * hash + hashDouble(north);
-        hash = 37 * hash + hashDouble(east);
+        hash = 37 * hash + Util.hashDouble(south);
+        hash = 37 * hash + Util.hashDouble(west);
+        hash = 37 * hash + Util.hashDouble(north);
+        hash = 37 * hash + Util.hashDouble(east);
         return hash;
     }
 
@@ -150,11 +151,6 @@ public class LatLngBounds {
     public String toString() {
         return "LatLngBounds{south:" + south + ", west:" + west
                 + ", north:" + north + ", east:" + east + '}';
-    }
-
-    private static int hashDouble(double val) {
-        long bits = Double.doubleToLongBits(val);
-        return (int)(bits ^ bits >>> 32);
     }
 
     public static class Builder {

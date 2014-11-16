@@ -1,8 +1,10 @@
 package org.tastefuljava.gianadda.geo;
 
+import org.tastefuljava.gianadda.util.Util;
+
 public class LatLng {
-    private final double lat;
-    private final double lng;
+    protected final double lat;
+    protected final double lng;
 
     public static double normalizeLat(double lat) {
         if (lat < -90) {
@@ -51,5 +53,31 @@ public class LatLng {
     @Override
     public String toString() {
         return "LatLng{" + "lat=" + lat + ", lng=" + lng + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Util.hashDouble(lat);
+        hash = 89 * hash + Util.hashDouble(lng);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final LatLng other = (LatLng) obj;
+        if (lat != other.lat) {
+            return false;
+        }
+        if (lng != other.lng) {
+            return false;
+        }
+        return true;
     }
 }

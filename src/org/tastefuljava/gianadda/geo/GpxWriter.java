@@ -4,13 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import org.tastefuljava.gianadda.util.Util;
 
 public class GpxWriter {
-    private static final DateFormat TIME_FORMAT
-            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     private static final DecimalFormat NUMBER_FORMAT
             = new DecimalFormat("0.00000000");
 
@@ -53,12 +50,14 @@ public class GpxWriter {
             out.startTag("trkpt");
             out.attribute("lat", NUMBER_FORMAT.format(pt.getLat()));
             out.attribute("lon", NUMBER_FORMAT.format(pt.getLng()));
-            out.startTag("ele");
-            out.data(NUMBER_FORMAT.format(pt.getH()));
-            out.endTag();
+            if (pt.getElevation() != null) {
+                out.startTag("ele");
+                out.data(NUMBER_FORMAT.format(pt.getElevation()));
+                out.endTag();
+            }
             if (pt.getTime() != null) {
                 out.startTag("time");
-                out.data(TIME_FORMAT.format(pt.getTime()));
+                out.data(Util.formatXsdDateTime(pt.getTime()));
                 out.endTag();
             }
             out.endTag();

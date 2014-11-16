@@ -33,6 +33,11 @@ public class Util {
             + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]+))?"
             + "(?:([Zz])|([+-])([0-9]{2}):([0-9]{2}))?");
 
+    public static int hashDouble(double val) {
+        long bits = Double.doubleToLongBits(val);
+        return (int) (bits ^ bits >>> 32);
+    }
+
     private Util() {
         // Private constructor to prevent instanciation
     }
