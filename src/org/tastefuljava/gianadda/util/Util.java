@@ -10,6 +10,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -17,6 +18,9 @@ import java.util.regex.Pattern;
 
 public class Util {
     private static final Logger LOG = Logger.getLogger(Util.class.getName());
+
+    public static final String XSD_DATETIME_FORMAT
+            = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     private static final String NUM = "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)";
     private static final Pattern DIMENSION_PATTERN
@@ -96,7 +100,19 @@ public class Util {
                 + formatNumber(dim.getHeight());
     }
 
-    public Date parseDate(String s, String pattern) {
+    public static Date parseXsdDateTime(String s) {
+        return parseDate(s, XSD_DATETIME_FORMAT);
+    }
+
+    public static String formatXsdDateTime(Date d) {
+        return formatDate(d, XSD_DATETIME_FORMAT);
+    }
+
+    public static String formatXsdDateTime(Date d, TimeZone tz) {
+        return getDateFormat(XSD_DATETIME_FORMAT, tz).format(d);
+    }
+
+    public static Date parseDate(String s, String pattern) {
         if (isBlank(s)) {
             return null;
         }
@@ -108,7 +124,7 @@ public class Util {
         }
     }
 
-    public String formatDate(Date date, String pattern) {
+    public static String formatDate(Date date, String pattern) {
         if (date == null) {
             return null;
         }
@@ -116,7 +132,13 @@ public class Util {
     }
 
     public static DateFormat getDateFormat(String pattern) {
-        return new SimpleDateFormat(pattern);
+        return getDateFormat(pattern, TimeZone.getDefault());
+    }
+
+    public static DateFormat getDateFormat(String pattern, TimeZone tz) {
+        DateFormat result = new SimpleDateFormat(pattern);
+        result.setTimeZone(tz);
+        return result;
     }
 
     public static DecimalFormat getDecimalFormat(String pattern) {

@@ -4,25 +4,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.tastefuljava.gianadda.util.Util;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class GpxReader extends DefaultHandler {
-    private static final DateFormat TIME_FORMAT
-            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
     private final List<TrackPoint> track = new ArrayList<>();
-    private final StringBuffer buf = new StringBuffer();
+    private final StringBuilder buf = new StringBuilder();
     private double lat;
     private double lon;
     private Double ele;
@@ -56,6 +51,7 @@ public class GpxReader extends DefaultHandler {
                 lat = Double.parseDouble(attributes.getValue("lat"));
                 lon = Double.parseDouble(attributes.getValue("lon"));
                 ele = null;
+                time = null;
                 break;
         }
     }
@@ -71,14 +67,7 @@ public class GpxReader extends DefaultHandler {
                 ele = Double.parseDouble(buf.toString());
                 break;
             case "time":
-                // TODO: convert time
-                break;
-            case "":
-                try {
-                    time = TIME_FORMAT.parse(buf.toString());
-                } catch (ParseException e) {
-                    throw new SAXException("Invalid time " + buf.toString());
-                }
+                time = Util.parseXsdDateTime(buf.toString());
                 break;
         }
     }
