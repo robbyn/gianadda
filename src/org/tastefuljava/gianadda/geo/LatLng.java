@@ -23,7 +23,7 @@ public class LatLng {
         }
     }
 
-    // gives the angle from longituda a to longitude be travelling eastward.
+    // gives the angle from longituda a to longitude b, moving eastward.
     // result comprise in [0;360[
     public static double diffLng(double a, double b) {
         double d = b - a;
