@@ -70,6 +70,9 @@ public class GpxReader extends DefaultHandler {
             case "ele":
                 ele = Double.parseDouble(buf.toString());
                 break;
+            case "time":
+                // TODO: convert time
+                break;
             case "":
                 try {
                     time = TIME_FORMAT.parse(buf.toString());
