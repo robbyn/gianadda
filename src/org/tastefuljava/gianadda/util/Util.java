@@ -9,7 +9,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,12 +22,16 @@ public class Util {
     private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
     public static final String XSD_DATETIME_FORMAT
-            = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+            = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
     private static final String NUM = "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)";
     private static final Pattern DIMENSION_PATTERN
             = Pattern.compile("^\\s*(" + NUM + ")\\s*,\\s*(" + NUM + ")\\s*$");
     private static final String DEFAULT_NUMBER_FORMAT = "0.####";
+    private static final Pattern XSD_DATETIME_PATTERN = Pattern.compile(
+            "([+-]?[0-9]{4})-(1[0-2]|0[1-9])-([0-9]{2})"
+            + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]{3}))?"
+            + "(?:([Zz])|([+-])([0-9]{2}):([0-9]{2}))?");
 
     private Util() {
         // Private constructor to prevent instanciation
@@ -101,7 +107,41 @@ public class Util {
     }
 
     public static Date parseXsdDateTime(String s) {
-        return parseDate(s, XSD_DATETIME_FORMAT);
+        Matcher matcher = XSD_DATETIME_PATTERN.matcher(s);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException(
+                    "Unparseable date: \"" + s + "\"");
+        }
+        // Determine timezone
+        TimeZone tz;
+        if (matcher.group(8) != null) {
+            tz = TimeZone.getTimeZone("GMT");
+        } else if (matcher.group(9) == null) {
+            tz = TimeZone.getDefault();
+        } else {
+            String sign = matcher.group(9);
+            String hours = matcher.group(10);
+            String mins = matcher.group(11);
+            int offs = 1000*(60*(60*Integer.parseInt(hours)
+                    + Integer.parseInt(mins)));
+            if ("-".equals(sign)) {
+                offs = -offs;
+            }
+            tz = new SimpleTimeZone(offs, sign + hours + ":" + mins);
+        }
+        Calendar cal = Calendar.getInstance(tz);
+        cal.set(Calendar.YEAR, Integer.parseInt(matcher.group(1)));
+        cal.set(Calendar.MONTH, Integer.parseInt(matcher.group(2))-1);
+        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(matcher.group(3)));
+        cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(matcher.group(4)));
+        cal.set(Calendar.MINUTE, Integer.parseInt(matcher.group(5)));
+        cal.set(Calendar.SECOND, Integer.parseInt(matcher.group(6)));
+        if (matcher.group(7) != null) {
+            cal.set(Calendar.MILLISECOND, Integer.parseInt(matcher.group(7)));
+        } else {
+            cal.set(Calendar.MILLISECOND, 0);
+        }
+        return cal.getTime();
     }
 
     public static String formatXsdDateTime(Date d) {

@@ -2,6 +2,7 @@ package org.tastefuljava.gianadda.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -34,6 +35,7 @@ public class UtilTest {
     @Test
     public void testXsd() {
         TimeZone gmt = TimeZone.getTimeZone("GMT");
+        TimeZone tz = new SimpleTimeZone(1000*(60*(2*60+0)), "+02:00");
         Calendar cal = Calendar.getInstance(gmt);
         cal.set(Calendar.YEAR, 2014);
         cal.set(Calendar.MONTH, 10);
@@ -45,8 +47,15 @@ public class UtilTest {
         Date date = cal.getTime();
         cal.set(Calendar.MILLISECOND, 0);
         Date rounded = cal.getTime();
-        assertEquals("2014-11-16T19:18:34.317Z",
+        assertEquals("2014-11-16T19:18:34Z",
                 Util.formatXsdDateTime(date, gmt));
-        assertEquals(rounded, Util.parseXsdDateTime("2014-11-16T19:18:34Z"));
+        assertEquals("2014-11-16T21:18:34+02:00",
+                Util.formatXsdDateTime(date, tz));
+        assertEquals(date,
+                Util.parseXsdDateTime("2014-11-16T19:18:34.317Z"));
+        assertEquals(date,
+                Util.parseXsdDateTime("2014-11-16T21:18:34.317+02:00"));
+        assertEquals(rounded,
+                Util.parseXsdDateTime("2014-11-16T19:18:34Z"));
     }
 }
