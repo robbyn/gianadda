@@ -30,7 +30,7 @@ public class Util {
     private static final String DEFAULT_NUMBER_FORMAT = "0.####";
     private static final Pattern XSD_DATETIME_PATTERN = Pattern.compile(
             "([+-]?[0-9]{4})-(1[0-2]|0[1-9])-([0-9]{2})"
-            + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]{3}))?"
+            + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]+))?"
             + "(?:([Zz])|([+-])([0-9]{2}):([0-9]{2}))?");
 
     private Util() {
@@ -136,10 +136,18 @@ public class Util {
         cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(matcher.group(4)));
         cal.set(Calendar.MINUTE, Integer.parseInt(matcher.group(5)));
         cal.set(Calendar.SECOND, Integer.parseInt(matcher.group(6)));
-        if (matcher.group(7) != null) {
-            cal.set(Calendar.MILLISECOND, Integer.parseInt(matcher.group(7)));
-        } else {
+        String millis = matcher.group(7);
+        if (millis == null) {
             cal.set(Calendar.MILLISECOND, 0);
+        } else {
+            if (millis.length() > 3) {
+                millis = millis.substring(0, 3);
+            } else {
+                while (millis.length() < 3) {
+                    millis += "0";
+                }
+            }
+            cal.set(Calendar.MILLISECOND, Integer.parseInt(millis));
         }
         return cal.getTime();
     }
