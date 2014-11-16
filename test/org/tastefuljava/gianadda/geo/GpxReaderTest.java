@@ -36,6 +36,11 @@ public class GpxReaderTest {
             String name = "gpx/sample" + i + ".gpx";
             try (InputStream in = getClass().getResourceAsStream(name)) {
                 TrackPoint[] pts = GpxReader.readTrack(in);
+                assertNotNull(pts);
+                assertTrue(pts.length > 0);
+                for (TrackPoint pt: pts) {
+                    assertNotNull(pt.getTime());
+                }
             }
         }
     }
