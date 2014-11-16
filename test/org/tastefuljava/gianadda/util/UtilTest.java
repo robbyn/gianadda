@@ -47,10 +47,12 @@ public class UtilTest {
         Date date = cal.getTime();
         cal.set(Calendar.MILLISECOND, 0);
         Date rounded = cal.getTime();
+
         assertEquals("2014-11-16T19:18:34Z",
                 Util.formatXsdDateTime(date, gmt));
         assertEquals("2014-11-16T21:18:34+02:00",
                 Util.formatXsdDateTime(date, tz));
+
         assertEquals(date,
                 Util.parseXsdDateTime("2014-11-16T19:18:34.317Z"));
         assertEquals(date,
