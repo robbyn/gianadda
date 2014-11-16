@@ -31,7 +31,7 @@ public class Util {
     private static final Pattern XSD_DATETIME_PATTERN = Pattern.compile(
             "([+-]?[0-9]{4})-(1[0-2]|0[1-9])-([0-9]{2})"
             + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]+))?"
-            + "(?:([Zz])|([+-])([0-9]{2}):([0-9]{2}))?");
+            + "(?:([Zz])|([+-][0-9]{2}:[0-9]{2}))?");
 
     public static int hashDouble(double val) {
         long bits = Double.doubleToLongBits(val);
@@ -121,18 +121,10 @@ public class Util {
         TimeZone tz;
         if (matcher.group(8) != null) {
             tz = TimeZone.getTimeZone("GMT");
-        } else if (matcher.group(9) == null) {
-            tz = TimeZone.getDefault();
+        } else if (matcher.group(9) != null) {
+            tz = TimeZone.getTimeZone("GMT" + matcher.group(9));
         } else {
-            String sign = matcher.group(9);
-            String hours = matcher.group(10);
-            String mins = matcher.group(11);
-            int offs = 1000*(60*(60*Integer.parseInt(hours)
-                    + Integer.parseInt(mins)));
-            if ("-".equals(sign)) {
-                offs = -offs;
-            }
-            tz = new SimpleTimeZone(offs, sign + hours + ":" + mins);
+            tz = TimeZone.getDefault();
         }
         Calendar cal = Calendar.getInstance(tz);
         cal.set(Calendar.YEAR, Integer.parseInt(matcher.group(1)));
