@@ -22,7 +22,7 @@ public class Util {
     private static final Logger LOG = Logger.getLogger(Util.class.getName());
 
     public static final String XSD_DATETIME_FORMAT
-            = "yyyy-MM-dd'T'HH:mm:ssXXX";
+            = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     private static final String NUM = "[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)";
     private static final Pattern DIMENSION_PATTERN
