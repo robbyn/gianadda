@@ -66,6 +66,11 @@
                 </nav>
                 #end
             </div>
+            #if( $folder.body )
+            <div>
+                $folder.body
+            </div>
+            #end
         </div>
         #if( not $geopics.empty or not $tracks.empty )
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr&libraries=geometry"></script>
