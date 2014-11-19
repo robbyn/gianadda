@@ -138,4 +138,32 @@
             DELETE FROM tracks WHERE ID=${id}
         </delete>
     </class>
+
+    <class name="Tag">
+        <id>
+            <property name="id" column="ID"/>
+        </id>
+        <property name="tag" column="TAG"/>
+
+        <load>
+            SELECT * FROM tags
+            WHERE ID=${id}
+        </load>
+        <query name="byTag" parameters="tag">
+            SELECT * FROM tracks
+            WHERE TAG=${tag}
+        </query>
+        <insert get-generated-keys="true">
+            INSERT INTO tags(TAG)
+            VALUES(${tag})
+        </insert>
+        <update>
+            UPDATE tracks
+            SET TAG=${tag}
+            WHERE ID=${id}
+        </update>
+        <delete>
+            DELETE FROM tags WHERE ID=${id}
+        </delete>
+    </class>
 </mapping>

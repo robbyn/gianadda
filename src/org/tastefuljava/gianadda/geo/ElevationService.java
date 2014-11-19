@@ -20,7 +20,7 @@ public class ElevationService {
 
     private static final int CONNECT_TIMEOUT = 10000;
     private static final int READ_TIMEOUT = 10000;
-    private static final int MAX_COUNT = 50;
+    private static final int MAX_COUNT = 100;
     private static final String SERVICE_URL
             = "http://maps.google.com/maps/api/elevation/xml";
 
