@@ -52,7 +52,7 @@ public class MetaReader {
             parser.parse(metaFile, handler);
         } catch (SAXException | ParserConfigurationException e) {
             LOG.log(Level.SEVERE, "Error reading project", e);
-            throw new JedoException(e.getMessage());
+            throw new IOException(e.getMessage());
         }
     }
 

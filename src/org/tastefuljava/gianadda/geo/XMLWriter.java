@@ -20,7 +20,6 @@ public class XMLWriter {
 
     public XMLWriter(PrintWriter out) {
         this.out = out;
-        out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     }
 
     public XMLWriter(Writer out) {
@@ -158,5 +157,13 @@ public class XMLWriter {
                     break;
             }
         }
+    }
+
+    public void println(String s) {
+        if (!lnBefore) {
+            out.println();
+            lnBefore = true;
+        }
+        out.println(s);
     }
 }
