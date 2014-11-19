@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.site;
 
+import org.tastefuljava.gianadda.meta.MetaReader;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -134,8 +135,10 @@ public class Synchronizer {
     private Folder getRootFolder() {
         Folder folder = Folder.getRoot("/");
         if (folder == null) {
+            Date now = new Date();
             folder = new Folder();
-            folder.setDateTime(new Date());
+            folder.setDateTime(now);
+            folder.setPubDate(now);
             folder.setName("/");
             folder.setTitle("Root");
             folder.setDescription("Root folder");
@@ -382,10 +385,12 @@ public class Synchronizer {
             File subdir = new File(dir, name);
             Folder sub = folder.getSubfolder(name);
             if (sub == null) {
+                Date date = new Date(subdir.lastModified());
                 sub = new Folder();
                 sub.setParent(folder);
                 sub.setName(name);
-                sub.setDateTime(new Date(subdir.lastModified()));
+                sub.setDateTime(date);
+                sub.setPubDate(date);
                 sub.setTitle(name);
                 sub.insert();
                 sess.commit();

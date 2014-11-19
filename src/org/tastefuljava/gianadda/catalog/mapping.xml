@@ -8,6 +8,7 @@
         <reference name="parent" column="PARENT_ID"/>
         <property name="name" column="NAME"/>
         <property name="dateTime" column="DATETIME"/>
+        <property name="pubDate" column="PUBDATE"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
@@ -32,12 +33,12 @@
             WHERE PARENT_ID=${parentId}
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO folders(PARENT_ID,NAME,DATETIME,TITLE,DESCRIPTION)
-            VALUES(${parent.id},${name},${dateTime},${title},${description});
+            INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,DESCRIPTION)
+            VALUES(${parent.id},${name},${dateTime},${pubDate},${title},${description});
         </insert>
         <update>
             UPDATE folders
-            SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},
+            SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},PUBDATE=${pubDate},
                 TITLE=${title},DESCRIPTION=${description},
             WHERE ID=${id}
         </update>

@@ -11,6 +11,7 @@ public class Folder {
     private Folder parent;
     private String name;
     private Date dateTime;
+    private Date pubDate;
     private String title;
     private String description;
     private final List<Folder> folders = new ArrayList<>();
@@ -51,6 +52,14 @@ public class Folder {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Date getPubDate() {
+        return pubDate;
+    }
+
+    public void setPubDate(Date pubDate) {
+        this.pubDate = pubDate;
     }
 
     public String getTitle() {

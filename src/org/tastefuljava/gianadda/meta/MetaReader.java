@@ -1,4 +1,4 @@
-package org.tastefuljava.gianadda.site;
+package org.tastefuljava.gianadda.meta;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.tastefuljava.gianadda.domain.Folder;
+import org.tastefuljava.gianadda.util.Util;
 import org.tastefuljava.jedo.JedoException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -106,6 +107,7 @@ public class MetaReader {
                     folder.removeAllTags();
                     break;
                 case "title":
+                case "pubDate":
                 case "tag":
                 case "summary":
                 case "content":
@@ -122,6 +124,10 @@ public class MetaReader {
                     break;
                 case "title":
                     folder.setTitle(buf.toString().trim());
+                    break;
+                case "pubDate":
+                    folder.setPubDate(
+                            Util.parseXsdDateTime(buf.toString().trim()));
                     break;
                 case "tag":
                     folder.addTag(buf.toString().trim());
