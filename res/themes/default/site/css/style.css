@@ -148,3 +148,6 @@ header .up-btn {
 header span {
     display: none;
 }
+.body {
+    max-width: 80em;
+}
