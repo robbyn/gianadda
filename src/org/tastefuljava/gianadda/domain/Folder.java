@@ -14,6 +14,7 @@ public class Folder {
     private Date pubDate;
     private String title;
     private String description;
+    private String body;
     private final List<Folder> folders = new ArrayList<>();
     private final List<Picture> pictures = new ArrayList<>();
     private final List<Track> tracks = new ArrayList<>();
@@ -76,6 +77,14 @@ public class Folder {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public void insert() {

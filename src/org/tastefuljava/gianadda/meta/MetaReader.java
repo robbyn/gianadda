@@ -10,7 +10,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.tastefuljava.gianadda.domain.Folder;
 import org.tastefuljava.gianadda.util.Util;
-import org.tastefuljava.jedo.JedoException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -136,7 +135,7 @@ public class MetaReader {
                     folder.setDescription(buf.toString());
                     break;
                 case "content":
-                    // to be implemented
+                    folder.setBody(buf.toString());
                     break;
             }
         }

@@ -11,6 +11,7 @@
         <property name="pubDate" column="PUBDATE"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
+        <property name="body" column="BODY"/>
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
         <collection name="pictures" query="inFolder" fetch-mode="lazy"/>
         <collection name="tracks" query="inFolder" fetch-mode="lazy"/>
@@ -33,13 +34,16 @@
             WHERE PARENT_ID=${parentId}
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,DESCRIPTION)
-            VALUES(${parent.id},${name},${dateTime},${pubDate},${title},${description});
+            INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,
+                DESCRIPTION,BODY)
+            VALUES(${parent.id},${name},${dateTime},${pubDate},${title},
+                ${description},${body});
         </insert>
         <update>
             UPDATE folders
-            SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},PUBDATE=${pubDate},
-                TITLE=${title},DESCRIPTION=${description},
+            SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},
+                PUBDATE=${pubDate},TITLE=${title},DESCRIPTION=${description},
+                BODY=${body}
             WHERE ID=${id}
         </update>
         <delete>
