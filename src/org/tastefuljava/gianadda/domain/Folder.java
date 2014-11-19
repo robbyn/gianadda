@@ -22,6 +22,9 @@ public class Folder {
         return CurrentMapper.get().getRootFolder(name);
     }
 
+    public Folder() {
+    }
+
     public int getId() {
         return id;
     }

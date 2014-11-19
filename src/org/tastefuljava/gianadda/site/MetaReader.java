@@ -2,9 +2,14 @@ package org.tastefuljava.gianadda.site;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.tastefuljava.gianadda.domain.Folder;
+import org.tastefuljava.jedo.JedoException;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -20,14 +25,40 @@ public class MetaReader {
                 "Cannot instanciate " + MetaReader.class.getName());
     }
 
-    public static void read(File metaFile, Folder folder) {
-        
+    public static boolean check(File metaFile, Folder folder)
+            throws IOException {
+        if (!metaFile.isFile()) {
+            return false;
+        }
+        Date fileDate = new Date(metaFile.lastModified());
+        Date folderDate = folder.getDateTime();
+        if (folderDate != null && fileDate.equals(folderDate)) {
+            return false;
+        }
+        folder.setDateTime(fileDate);
+        parse(metaFile, folder);
+        return true;
     }
 
-    private class ParserHandler extends DefaultHandler {
-        private static final String DTD_SYSTEM_ID = "jedo.dtd";
+    private static void parse(File metaFile, Folder folder)
+            throws IOException {
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setValidating(true);
+            factory.setNamespaceAware(true);
+            SAXParser parser = factory.newSAXParser();
+            ParserHandler handler = new ParserHandler(folder);
+            parser.parse(metaFile, handler);
+        } catch (SAXException | ParserConfigurationException e) {
+            LOG.log(Level.SEVERE, "Error reading project", e);
+            throw new JedoException(e.getMessage());
+        }
+    }
+
+    private static class ParserHandler extends DefaultHandler {
+        private static final String DTD_SYSTEM_ID = "folder-meta.dtd";
         private static final String DTD_PUBLIC_ID
-                = "-//tastefuljava.org//Jedo Mapping File 1.0//EN";
+                = "-//tastefuljava.org//Gianadda Folder Metadata File 1.0//EN";
 
         private final Folder folder;
         private final StringBuilder buf = new StringBuilder();

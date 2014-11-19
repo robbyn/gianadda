@@ -13,6 +13,7 @@
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
         <collection name="pictures" query="inFolder" fetch-mode="lazy"/>
         <collection name="tracks" query="inFolder" fetch-mode="lazy"/>
+        <collection name="tags" query="inFolder" fetch-mode="lazy"/>
 
         <load>
             SELECT * FROM folders
@@ -31,13 +32,13 @@
             WHERE PARENT_ID=${parentId}
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO folders(PARENT_ID,NAME,TITLE,DESCRIPTION)
-            VALUES(${parent.id},${name},${title},${description});
+            INSERT INTO folders(PARENT_ID,NAME,DATETIME,TITLE,DESCRIPTION)
+            VALUES(${parent.id},${name},${dateTime},${title},${description});
         </insert>
         <update>
             UPDATE folders
-            SET PARENT_ID=${parent.id},NAME=${name},TITLE=${title},
-                DESCRIPTION=${description},
+            SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},
+                TITLE=${title},DESCRIPTION=${description},
             WHERE ID=${id}
         </update>
         <delete>
@@ -163,16 +164,20 @@
             WHERE ID=${id}
         </load>
         <query name="byLabel" parameters="label">
-            SELECT * FROM tracks
-            WHERE TAG=${label}
+            SELECT * FROM tags
+            WHERE LABEL=${label}
+        </query>
+        <query name="inFolder" parameters="folderId">
+            SELECT tags.ID AS ID, tags.LABEL AS LABEL FROM tags, foldertags
+            WHERE FOLDER_ID=${folderId} AND ID=TAG_ID
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO tags(TAG)
+            INSERT INTO tags(LABEL)
             VALUES(${label})
         </insert>
         <update>
-            UPDATE tracks
-            SET TAG=${label}
+            UPDATE tags
+            SET LABEL=${label}
             WHERE ID=${id}
         </update>
         <delete>

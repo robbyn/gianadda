@@ -135,6 +135,7 @@ public class Synchronizer {
         Folder folder = Folder.getRoot("/");
         if (folder == null) {
             folder = new Folder();
+            folder.setDateTime(new Date());
             folder.setName("/");
             folder.setTitle("Root");
             folder.setDescription("Root folder");
@@ -193,7 +194,12 @@ public class Synchronizer {
     private boolean syncDir(Folder folder, File dir, String prev, String next)
             throws IOException {
         LOG.log(Level.INFO, "Synchronizing folder {0}", folder.getPath());
-        boolean changed = synTracks(folder, dir);
+        File meta = new File(dir, folderMetaName);
+        boolean changed = MetaReader.check(meta, folder);
+        if (changed) {
+            sess.commit();            
+        }
+        changed |= synTracks(folder, dir);
         changed |= syncPics(folder, dir);
         changed |= synSubdirs(folder, dir);
         if (changed || forceHtml) {
@@ -373,17 +379,19 @@ public class Synchronizer {
             String name = dirNames[i];
             String prev = i == 0 ? null : dirNames[i-1];
             String next = i+1 >= dirNames.length ? null : dirNames[i+1];
+            File subdir = new File(dir, name);
             Folder sub = folder.getSubfolder(name);
             if (sub == null) {
                 sub = new Folder();
                 sub.setParent(folder);
                 sub.setName(name);
+                sub.setDateTime(new Date(subdir.lastModified()));
                 sub.setTitle(name);
                 sub.insert();
                 sess.commit();
                 changed = true;
             }
-            changed |= syncDir(sub, new File(dir, name), prev, next);
+            changed |= syncDir(sub, subdir, prev, next);
         }
         if (delete) {
             Set<String> nameSet = new HashSet<>();
