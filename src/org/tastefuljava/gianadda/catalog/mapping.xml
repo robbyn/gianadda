@@ -42,6 +42,9 @@
         <delete>
             DELETE FROM folders WHERE ID=${id}
         </delete>
+        <statement name="removeTags" parameters="folder">
+            DELETE FROM foldertags WHERE FOLDER_ID=${folder.id}
+        </statement>
     </class>
 
     <class name="Picture">
@@ -143,27 +146,34 @@
         <id>
             <property name="id" column="ID"/>
         </id>
-        <property name="tag" column="TAG"/>
+        <property name="label" column="LABEL"/>
 
         <load>
             SELECT * FROM tags
             WHERE ID=${id}
         </load>
-        <query name="byTag" parameters="tag">
+        <query name="byLabel" parameters="label">
             SELECT * FROM tracks
-            WHERE TAG=${tag}
+            WHERE TAG=${label}
         </query>
         <insert get-generated-keys="true">
             INSERT INTO tags(TAG)
-            VALUES(${tag})
+            VALUES(${label})
         </insert>
         <update>
             UPDATE tracks
-            SET TAG=${tag}
+            SET TAG=${label}
             WHERE ID=${id}
         </update>
         <delete>
             DELETE FROM tags WHERE ID=${id}
         </delete>
+        <statement name="unlink" parameters="tag">
+            DELETE FROM foldertags WHERE TAG_ID=${tag.id}
+        </statement>
+        <statement name="cleanup">
+            DELETE FROM tags
+            WHERE NOT EXISTS(SELECT * FROM foldertags WHERE TAG_ID=ID);
+        </statement>
     </class>
 </mapping>

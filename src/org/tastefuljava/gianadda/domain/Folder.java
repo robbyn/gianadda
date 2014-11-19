@@ -64,6 +64,7 @@ public class Folder {
     }
 
     public void delete() {
+        CurrentMapper.get().apply(this, "removeTags");
         CurrentMapper.get().delete(this);
     }
 
