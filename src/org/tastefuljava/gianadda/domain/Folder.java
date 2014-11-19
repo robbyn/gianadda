@@ -2,6 +2,7 @@ package org.tastefuljava.gianadda.domain;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.tastefuljava.gianadda.util.Util;
 
@@ -9,11 +10,13 @@ public class Folder {
     private int id;
     private Folder parent;
     private String name;
+    private Date dateTime;
     private String title;
     private String description;
     private final List<Folder> folders = new ArrayList<>();
     private final List<Picture> pictures = new ArrayList<>();
     private final List<Track> tracks = new ArrayList<>();
+    private final List<Tag> tags = new ArrayList<>();
 
     public static Folder getRoot(String name) {
         return CurrentMapper.get().getRootFolder(name);
@@ -37,6 +40,14 @@ public class Folder {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getTitle() {
@@ -64,7 +75,7 @@ public class Folder {
     }
 
     public void delete() {
-        CurrentMapper.get().apply(this, "removeTags");
+        removeAllTags();
         CurrentMapper.get().delete(this);
     }
 
@@ -127,5 +138,25 @@ public class Folder {
 
     public List<Track> getTracks() {
         return new ArrayList<>(tracks);
+    }
+
+    public List<Tag> getTags() {
+        return new ArrayList<>(tags);
+    }
+
+    public void removeAllTags() {
+        CurrentMapper.get().apply(this, "removeAllTags");
+    }
+
+    public void addTag(Tag tag) {
+        CurrentMapper.get().apply(this, "addTag", tag);
+    }
+
+    public void addTag(String label) {
+        addTag(Tag.findOrCreate(label));
+    }
+
+    public void removeTag(Tag tag) {
+        CurrentMapper.get().apply(this, "removeTag", tag);
     }
 }

@@ -83,6 +83,7 @@ public class Synchronizer {
     private final Pattern trackNamePattern;
     private final Pattern dirNamePattern;
     private final String previewPath;
+    private final String folderMetaName;
     private final boolean forceHtml;
     private final boolean delete;
     private final boolean useElevationService;
@@ -106,6 +107,7 @@ public class Synchronizer {
                 "template-name-pattern", false);
         this.previewPath = GalleryDirs.THEME_PATH
                 + "/" + conf.getString("preview-template", null);
+        this.folderMetaName = conf.getString("folder-meta-name", null);
         this.forceHtml = conf.getBoolean(PROP_FORCE_HTML, false);
         this.delete = conf.getBoolean(PROP_DELETE, false);
         this.useElevationService

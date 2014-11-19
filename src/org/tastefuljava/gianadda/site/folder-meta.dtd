@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT folder-meta (title,tag*,summary?,content?)>
+<!ATTLIST folder-meta version CDATA #REQUIRED>
+
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT tag (#PCDATA)>
+<!ELEMENT summary (#PCDATA)>
+<!ATTLIST summary type CDATA #REQUIRED>
+<!ELEMENT content (#PCDATA)>
+<!ATTLIST content type CDATA #REQUIRED>

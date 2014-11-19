@@ -7,6 +7,7 @@
         </id>
         <reference name="parent" column="PARENT_ID"/>
         <property name="name" column="NAME"/>
+        <property name="dateTime" column="DATETIME"/>
         <property name="title" column="TITLE"/>
         <property name="description" column="DESCRIPTION"/>
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
@@ -42,7 +43,16 @@
         <delete>
             DELETE FROM folders WHERE ID=${id}
         </delete>
-        <statement name="removeTags" parameters="folder">
+        <statement name="addTag" parameters="folder,tag">
+            INSERT INTO foldertags(FOLDER_ID,TAG_ID)
+            SELECT ${folder.id} AS FOLDER_ID,${tag.id} AS TAG_ID
+                WHERE NOT EXISTS(SELECT * FROM foldertags
+                    WHERE FOLDER_ID=${folder.id} AND TAG_ID=${tag.id})
+        </statement>
+        <statement name="removeTag" parameters="folder,tag">
+            DELETE FROM foldertags WHERE FOLDER_ID=${folder.id}
+        </statement>
+        <statement name="removeAllTags" parameters="folder">
             DELETE FROM foldertags WHERE FOLDER_ID=${folder.id}
         </statement>
     </class>
