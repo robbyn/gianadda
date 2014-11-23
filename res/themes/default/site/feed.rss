@@ -10,7 +10,9 @@
             <title>$esc.xml($folder.title)</title>
             <link>$folder.url</link>
             <pubDate>$fmt.formatDate($folder.pubDate, "EEEE dd/MM/yyyy HH:mm")</pubDate>
+#if( $folder.description )
             <description>$esc.xml($folder.description)</description>
+#end
         </item>
 #end
     </channel>
