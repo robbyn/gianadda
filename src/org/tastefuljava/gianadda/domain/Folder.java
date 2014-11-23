@@ -24,6 +24,10 @@ public class Folder {
         return CurrentMapper.get().getRootFolder(name);
     }
 
+    public static List<Folder> latest(int count) {
+        return CurrentMapper.get().query(Folder.class, "latest", count);
+    }
+
     public Folder() {
     }
 

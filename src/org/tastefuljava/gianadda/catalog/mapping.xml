@@ -33,6 +33,9 @@
             SELECT * FROM folders
             WHERE PARENT_ID=${parentId}
         </query>
+        <query name="latest" parameters="count">
+            SELECT * FROM folders LIMIT ${count}
+        </query>
         <insert get-generated-keys="true">
             INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,
                 DESCRIPTION,BODY)

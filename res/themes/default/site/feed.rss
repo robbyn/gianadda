@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+#set( $root = $folders.root )
+<rss version="2.0">
+    <channel>
+        <title>$esc.xml($root.title)</title>
+        <link>$root.path</link>
+#foreach( $folder in $folders.latest(10) )
+        <item>
+            <title>$esc.xml($root.title)</title>
+            <link>$folder.path</link>
+            <pubDate>$fmt.formatDate($folder.pubDate, "EEEE dd/MM/yyyy HH:mm")</pubDate>
+            <description>$esc.xml($root.title)</description>
+        </item>
+#end
+    </channel>
+</rss>
