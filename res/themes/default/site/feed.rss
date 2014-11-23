@@ -3,13 +3,14 @@
 <rss version="2.0">
     <channel>
         <title>$esc.xml($root.title)</title>
-        <link>$root.path</link>
+        <link>$root.url</link>
+        <description>$esc.xml($root.description)</description>
 #foreach( $folder in $folders.latest(10) )
         <item>
             <title>$esc.xml($folder.title)</title>
-            <link>$folder.path</link>
+            <link>$folder.url</link>
             <pubDate>$fmt.formatDate($folder.pubDate, "EEEE dd/MM/yyyy HH:mm")</pubDate>
-            <description>$esc.xml($folder.title)</description>
+            <description>$esc.xml($folder.description)</description>
         </item>
 #end
     </channel>

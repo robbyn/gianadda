@@ -13,6 +13,7 @@ public class Folder {
     private Date dateTime;
     private Date pubDate;
     private String title;
+    private String link;
     private String description;
     private String body;
     private final List<Folder> folders = new ArrayList<>();
@@ -75,6 +76,14 @@ public class Folder {
         this.title = title;
     }
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -118,6 +127,20 @@ public class Folder {
 
     public File getFile(File root) {
         return isRoot() ? root : new File(getParent().getFile(root), name);
+    }
+
+    public String getUrl() {
+        if (link != null) {
+            return link;
+        } else if (isRoot()) {
+            return "";
+        } else {
+            String url = parent.getUrl();
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+            return url + Util.urlEncode(name) + "/";
+        }
     }
 
     public String getUrlPath() {

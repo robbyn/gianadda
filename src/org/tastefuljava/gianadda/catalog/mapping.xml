@@ -10,6 +10,7 @@
         <property name="dateTime" column="DATETIME"/>
         <property name="pubDate" column="PUBDATE"/>
         <property name="title" column="TITLE"/>
+        <property name="link" column="LINK"/>
         <property name="description" column="DESCRIPTION"/>
         <property name="body" column="BODY"/>
         <collection name="folders" query="subfolders" fetch-mode="lazy"/>
@@ -37,16 +38,16 @@
             SELECT * FROM folders ORDER BY PUBDATE DESC LIMIT ${count}
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,
+            INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,LINK,
                 DESCRIPTION,BODY)
-            VALUES(${parent.id},${name},${dateTime},${pubDate},${title},
+            VALUES(${parent.id},${name},${dateTime},${pubDate},${title},${link},
                 ${description},${body});
         </insert>
         <update>
             UPDATE folders
             SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},
-                PUBDATE=${pubDate},TITLE=${title},DESCRIPTION=${description},
-                BODY=${body}
+                PUBDATE=${pubDate},TITLE=${title},LINK=${link},
+                DESCRIPTION=${description},BODY=${body}
             WHERE ID=${id}
         </update>
         <delete>

@@ -101,16 +101,10 @@ public class MetaReader {
         @Override
         public void startElement(String uri, String localName, String qName,
                 Attributes attrs) throws SAXException {
+            buf.setLength(0);
             switch (qName) {
                 case "folder-meta":
                     folder.removeAllTags();
-                    break;
-                case "title":
-                case "pubDate":
-                case "tag":
-                case "summary":
-                case "content":
-                    buf.setLength(0);
                     break;
             }
         }
@@ -123,6 +117,9 @@ public class MetaReader {
                     break;
                 case "title":
                     folder.setTitle(buf.toString().trim());
+                    break;
+                case "link":
+                    folder.setLink(buf.toString().trim());
                     break;
                 case "pubDate":
                     folder.setPubDate(
