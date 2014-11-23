@@ -4,7 +4,9 @@
     <channel>
         <title>$esc.xml($root.title)</title>
         <link>$root.url</link>
+#if( $root.description )
         <description>$esc.xml($root.description)</description>
+#end
 #foreach( $folder in $folders.latest(10) )
         <item>
             <title>$esc.xml($folder.title)</title>
