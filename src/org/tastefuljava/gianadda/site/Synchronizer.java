@@ -138,7 +138,7 @@ public class Synchronizer {
             Date now = new Date();
             folder = new Folder();
             folder.setDateTime(now);
-            folder.setPubDate(new Date(0));
+            folder.setPubDate(null);
             folder.setName("/");
             folder.setTitle("Root");
             folder.setDescription("Root folder");
@@ -202,6 +202,7 @@ public class Synchronizer {
         File meta = new File(dir, folderMetaName);
         boolean changed = MetaReader.check(meta, folder);
         if (changed) {
+            folder.update();
             sess.commit();            
         }
         changed |= synTracks(folder, dir);
@@ -392,7 +393,7 @@ public class Synchronizer {
                 sub.setParent(folder);
                 sub.setName(name);
                 sub.setDateTime(date);
-                sub.setPubDate(new Date(0));
+                sub.setPubDate(null);
                 sub.setTitle(name);
                 sub.insert();
                 sess.commit();
