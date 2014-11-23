@@ -138,7 +138,7 @@ public class Synchronizer {
             Date now = new Date();
             folder = new Folder();
             folder.setDateTime(now);
-            folder.setPubDate(now);
+            folder.setPubDate(new Date(0));
             folder.setName("/");
             folder.setTitle("Root");
             folder.setDescription("Root folder");
@@ -392,7 +392,7 @@ public class Synchronizer {
                 sub.setParent(folder);
                 sub.setName(name);
                 sub.setDateTime(date);
-                sub.setPubDate(date);
+                sub.setPubDate(new Date(0));
                 sub.setTitle(name);
                 sub.insert();
                 sess.commit();
