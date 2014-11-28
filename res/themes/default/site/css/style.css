@@ -82,13 +82,13 @@ body>div {
     width: 600px;
     height: 600px;
 }
-@media all and (max-width: 450px) {
+@media all and (max-width: 640px) {
     .map {
         width: 400px;
         height: 400px;
     }
 }
-@media all and (max-width: 320px) {
+@media all and (max-width: 280px) {
     .map {
         width: 240px;
         height: 240px;
