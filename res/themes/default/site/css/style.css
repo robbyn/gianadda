@@ -88,7 +88,7 @@ body>div {
         height: 400px;
     }
 }
-@media all and (max-width: 280px) {
+@media all and (max-width: 450px) {
     .map {
         width: 240px;
         height: 240px;
