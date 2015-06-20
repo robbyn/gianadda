@@ -3,6 +3,7 @@ package org.tastefuljava.gianadda.site;
 import org.tastefuljava.gianadda.meta.MetaReader;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -471,7 +472,7 @@ public class Synchronizer {
         try {
             in.mark();
             try {
-                exif = Exif.fromJPEG(in);
+                exif = Exif.fromJPEG((DataInput)in);
             } catch (IOException e) {
                 LOG.log(Level.WARNING,
                         "Could not load EXIF data from {0}", file);
