@@ -4,7 +4,6 @@
         <title>${pic.name}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta property="og:image" content="${pic.name}">
         <link rel="image_src" href="${pic.name}">
         <link rel="stylesheet" href="${base}css/normalize.css">
         <link rel="stylesheet" href="${base}css/style.css">
@@ -27,7 +26,7 @@
         <div class="wrap">
             <div>
                 <figure>
-                    <img src="${pic.name}">
+                    <a href="${base}../${pic.path}"><img src="${pic.name}"></a>
                     <figcaption>
                         #set($position = $index + 1)
                         <span class="index">$position/${count}</span>
