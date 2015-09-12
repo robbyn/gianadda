@@ -3,6 +3,7 @@ package org.tastefuljava.gianadda.domain;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.Date;
+import org.tastefuljava.gianadda.util.Util;
 
 public class Picture {
     private int id;
@@ -78,6 +79,10 @@ public class Picture {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDescriptionOrName() {
+        return Util.isBlank(description) ? name : description;
     }
 
     public String getArtist() {
