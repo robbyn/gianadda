@@ -531,8 +531,8 @@ public class Synchronizer {
         pic.setWidth(width);
         pic.setHeight(height);
         img = generateImage(pic, img, angle, ImageType.PREVIEW,
-                StretchMode.FILL);        
-        generateImage(pic, img, 0, ImageType.THUMB, StretchMode.FILL);
+                StretchMode.FIT);        
+        generateImage(pic, img, 0, ImageType.THUMB, StretchMode.FIT);
     }
 
 
