@@ -13,6 +13,12 @@
         #set( $dummy = $geopics.add($pic) )
     #end
 #end
+#set( $subtracks = [] )
+#foreach( $sub in $subfolders )
+    #foreach( $tr in $sub.tracks )
+        #set( $dummy = $subtracks.add($tr) )
+    #end
+#end
 <html class="index">
     <head>
         <title>$esc.html($folder.title)</title>
@@ -39,17 +45,8 @@
             </div>
         </header>
         <div class="wrap">
-            #if( !$subfolders.empty )
-            <nav class="folders">
-                <ul>
-                #foreach( $sub in $subfolders )
-                <li id="fld$sub.id"><a href="$esc.url($sub.name)/index.html">$esc.html($sub.title)</a></li>
-                #end
-                </ul>
-            </nav>
-            #end
             <div>
-                #if( not $geopics.empty or not $tracks.empty )
+                #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
                 <div class="map" id="map"></div>
                 #end
                 #if( !$pictures.empty )
@@ -66,13 +63,22 @@
                 </nav>
                 #end
             </div>
+            #if( !$subfolders.empty )
+            <nav class="folders">
+                <ul>
+                #foreach( $sub in $subfolders )
+                <li id="fld$sub.id"><a href="$esc.url($sub.name)/index.html">$esc.html($sub.title)</a></li>
+                #end
+                </ul>
+            </nav>
+            #end
             #if( $folder.body )
             <div class="body">
                 $folder.body
             </div>
             #end
         </div>
-        #if( not $geopics.empty or not $tracks.empty )
+        #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr&libraries=geometry"></script>
         <script type="text/javascript">
             window.onload = function() {
@@ -107,6 +113,14 @@
                         position: new google.maps.LatLng($pic.gpsData.latitude,$pic.gpsData.longitude),
                         info: new google.maps.InfoWindow({
                             content: '<a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" height="$math.round($thumbSize.height)" title="$esc.html($pic.name)"></a>',
+                        }),
+                    },
+                #end
+                #foreach( $tr in $subtracks )
+                    {
+                        position: new google.maps.LatLng($tr.center.lat,$tr.center.lng),
+                        info: new google.maps.InfoWindow({
+                            content: '<a href="${esc.url($tr.folder.name)}/index.html">${esc.html($tr.folder.title)}</a>',
                         }),
                     },
                 #end

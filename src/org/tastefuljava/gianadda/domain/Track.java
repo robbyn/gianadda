@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.tastefuljava.gianadda.geo.GMapEncoder;
 import org.tastefuljava.gianadda.geo.GpxReader;
 import org.tastefuljava.gianadda.geo.GpxWriter;
+import org.tastefuljava.gianadda.geo.LatLng;
 import org.tastefuljava.gianadda.geo.LatLngBounds;
 
 public class Track {
@@ -58,6 +59,10 @@ public class Track {
 
     public void setBounds(LatLngBounds bounds) {
         this.bounds = bounds;
+    }
+
+    public LatLng getCenter() {
+        return bounds.getCenter();
     }
 
     public void setPoints(TrackPoint[] newValue) {

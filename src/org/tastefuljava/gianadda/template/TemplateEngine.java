@@ -74,6 +74,12 @@ public class TemplateEngine {
                 String s = super.url(obj);
                 return s == null ? null : s.replaceAll("\\+", "%20");
             }
+
+            @Override
+            public String html(Object string) {
+                String s = super.html(string);
+                return s == null ? null : s.replaceAll("\\'", "&apos;");
+            }
         });
         context.put("date", new ComparisonDateTool());
         context.put("math", new MathTool());
