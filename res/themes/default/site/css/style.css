@@ -33,14 +33,16 @@ body>div {
 .folders ul li {
     list-style: none;
     display: inline-block;
-    margin: .5em 0 0 0;
+    margin: .5em 0.25em 0 0.25em;
     padding: 0;
     text-indent: 0;
 }
 .folders ul li a {
     text-decoration: none;
-    color: white;
+    color: #203340;
     display: block;
+    background: #7FCCFF;
+    padding: 0 0.25em;
 }
 .thumbs {
     text-align: justify;

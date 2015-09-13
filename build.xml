@@ -59,4 +59,17 @@
             </zipfileset>
         </zip>
     </target>
+
+    <target name="deploy-jar" depends="clean,jar"
+            description="Deploy to perry.ch">
+        <copy todir="${user.home}/perry.ch/gianadda">
+            <fileset dir="dist">
+                <include name="gianadda.jar"/>
+                <include name="lib/**"/>
+            </fileset>
+            <fileset dir="res/bundles/all">
+                <include name="gianadda.sh"/>
+            </fileset>
+        </copy>
+    </target>
 </project>
