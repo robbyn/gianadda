@@ -60,6 +60,7 @@ public enum StretchMode {
             }
         }
     },
+
     NONE("None") {
         @Override
         public void adjustRect(Rectangle src, Rectangle dst,
