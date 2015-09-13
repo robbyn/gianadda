@@ -376,7 +376,7 @@ public class Synchronizer {
     }
 
     private void deleteTrack(Track track) {
-        LOG.log(Level.INFO, "Removing picture {0}", track.getPath());
+        LOG.log(Level.INFO, "Removing track {0}", track.getPath());
         track.delete();
     }
 
@@ -428,6 +428,9 @@ public class Synchronizer {
         }
         for (Picture pic: folder.getPictures()) {
             deletePic(pic);
+        }
+        for (Track track: folder.getTracks()) {
+            deleteTrack(track);
         }
         LOG.log(Level.INFO, "removing folder {0}", folder.getPath());
         folder.delete();
