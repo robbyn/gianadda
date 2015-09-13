@@ -58,21 +58,26 @@ public class ImageUtil {
     }
 
     public static BufferedImage rotateAndResize(BufferedImage img, int angle,
-            int width, int height) {
+            int width, int height, StretchMode mode) {
         int w, h;
-        if (angle == 0 || angle == 180) {
-            w = width;
-            h = height;
-        } else if (angle == 90 || angle == 270) {
-            w = height;
-            h = width;
-        } else {
-            throw new RuntimeException("Invalid angle " + angle);
+        switch (angle) {
+            case 0:
+            case 180:
+                w = width;
+                h = height;
+                break;
+            case 90:
+            case 270:
+                w = height;
+                h = width;
+                break;
+            default:
+                throw new RuntimeException("Invalid angle " + angle);
         }
         Rectangle src = new Rectangle(0, 0,
                 img.getWidth(), img.getHeight());
         Rectangle dst = new Rectangle(0, 0, w, h);
-        StretchMode.FIT.adjustRect(src, dst, HorizontalPosition.LEFT,
+        mode.adjustRect(src, dst, HorizontalPosition.LEFT,
                 VerticalPosition.TOP, 0, 0);
         img = resize(img, dst.width, dst.height);
         return angle == 0 ? img : rotate(img, angle);

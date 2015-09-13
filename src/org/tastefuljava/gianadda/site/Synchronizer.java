@@ -35,6 +35,7 @@ import org.tastefuljava.gianadda.geo.ElevationService;
 import org.tastefuljava.gianadda.geo.GpxReader;
 import org.tastefuljava.gianadda.geo.LatLngBounds;
 import org.tastefuljava.gianadda.geo.TrackPoint;
+import org.tastefuljava.gianadda.layout.StretchMode;
 import org.tastefuljava.gianadda.template.TemplateEngine;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
@@ -444,9 +445,10 @@ public class Synchronizer {
     }
 
     private BufferedImage generateImage(Picture pic, BufferedImage img,
-            int angle, ImageType type) throws IOException {
+            int angle, ImageType type, StretchMode mode) throws IOException {
         Dimension dim = type.getSizeFrom(conf);
-        img = ImageUtil.rotateAndResize(img, angle, dim.width, dim.height);
+        img = ImageUtil.rotateAndResize(img, angle, dim.width, dim.height,
+                mode);
         File file = imageFile(pic, type);
         Files.mkdirs(file.getParentFile());
         ImageIO.write(img, "jpeg", file);
@@ -528,8 +530,9 @@ public class Synchronizer {
         int height = img.getHeight();
         pic.setWidth(width);
         pic.setHeight(height);
-        img = generateImage(pic, img, angle, ImageType.PREVIEW);        
-        generateImage(pic, img, 0, ImageType.THUMB);
+        img = generateImage(pic, img, angle, ImageType.PREVIEW,
+                StretchMode.FILL);        
+        generateImage(pic, img, 0, ImageType.THUMB, StretchMode.FILL);
     }
 
 
