@@ -29,6 +29,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="${base}css/normalize.css">
         <link rel="stylesheet" href="${base}css/style.css">
+        #if($folder.isRoot())
+        <link rel="alternate" type="application/rss+xml" href="${base}feed.rss" />
+        #end
     </head>
     <body>
         <header>

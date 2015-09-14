@@ -15,26 +15,11 @@ public class LayoutTool {
         this.conf = conf;
     }
 
-    public Dimension previewSize(Dimension size, int angle) {
+    public Dimension previewSize(Dimension size) {
         Dimension dim = ImageType.PREVIEW.getSizeFrom(conf);
-        int w, h;
-        switch (angle) {
-            case 0:
-            case 180:
-                w = dim.width;
-                h = dim.height;
-                break;
-            case 90:
-            case 270:
-                w = dim.height;
-                h = dim.width;
-                break;
-            default:
-                throw new RuntimeException("Invalid angle " + angle);
-        }
         Rectangle src = new Rectangle(0, 0,
                 size.width, size.height);
-        Rectangle dst = new Rectangle(0, 0, w, h);
+        Rectangle dst = new Rectangle(0, 0, dim.width, dim.height);
         StretchMode.FIT.adjustRect(src, dst, HorizontalPosition.LEFT,
                 VerticalPosition.TOP, 0, 0);
         return dst.getSize();

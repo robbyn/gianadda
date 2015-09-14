@@ -530,10 +530,20 @@ public class Synchronizer {
             angle = getAngle(root);
         }
         pic.setDateTime(timestamp);
-        int width = img.getWidth();
-        int height = img.getHeight();
-        pic.setWidth(width);
-        pic.setHeight(height);
+        switch (angle) {
+            case 0:
+            case 180:
+                pic.setWidth(img.getWidth());
+                pic.setHeight(img.getHeight());
+                break;
+            case 90:
+            case 270:
+                pic.setWidth(img.getHeight());
+                pic.setHeight(img.getWidth());
+                break;
+            default:
+                throw new RuntimeException("Invalid angle " + angle);
+        }
         pic.setAngle(angle);
         img = generateImage(pic, img, angle, ImageType.PREVIEW,
                 StretchMode.FIT);        

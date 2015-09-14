@@ -3,7 +3,7 @@
 #set( $vars = {} )
 #set( $dummy = $vars.put("url", "${folder.url}preview/${esc.url($pic.name)}.html") )
 #set( $dummy = $vars.put("img", "${folder.url}preview/${esc.url($pic.name)}") )
-#set( $dim = $layout.previewSize($pic.size,$pic.angle) )
+#set( $dim = $layout.previewSize($pic.size) )
 <html class="preview">
     <head>
         <title>${pic.descriptionOrName}</title>
