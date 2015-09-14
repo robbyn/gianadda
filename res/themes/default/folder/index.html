@@ -81,9 +81,21 @@
         #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&language=fr&libraries=geometry"></script>
         <script type="text/javascript">
+            function setupAdjust(div, map, bounds) {
+                var oldWidth = div.offsetWidth, oldHeight = div.offsetHeight;
+                setInterval(function() {
+                    var width = div.offsetWidth, height = div.offsetHeight;
+                    if (width != oldWidth || height != oldHeight) {
+                        oldWidth = width;
+                        oldHeight = height;
+                        google.maps.event.trigger(map, 'resize');
+                        map.fitBounds(bounds);
+                 }
+                }, 100);
+            }
             window.onload = function() {
                 var paths, path, tracks, track, markers, marker, bounds, pt,
-                        i, j, mapOptions, map, builder;
+                        i, j, mapOptions, div, map, builder;
                 paths = [
                 #foreach( $track in $tracks )
                     google.maps.geometry.encoding.decodePath("$esc.javascript($track.encoded)"),
@@ -138,8 +150,8 @@
                     center: bounds.getCenter(),
                     mapTypeId: google.maps.MapTypeId.TERRAIN
                 };
-                map = new google.maps.Map(document.getElementById("map"),
-                        mapOptions);
+                div = document.getElementById("map");
+                map = new google.maps.Map(div, mapOptions);
                 for (i = 0; i < tracks.length; ++i) {
                     track = tracks[i];
                     track.setMap(map);
@@ -152,6 +164,7 @@
                     });
                 }
                 map.fitBounds(bounds);
+                setupAdjust(div, map, bounds);
             }
         </script>
         #end

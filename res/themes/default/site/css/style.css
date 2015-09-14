@@ -79,19 +79,16 @@ body>div {
     font-weight: bold;
 }
 .map {
-    margin: 0 auto;
-    width: 600px;
+    width: 100%;
     height: 600px;
 }
 @media all and (max-width: 640px) {
     .map {
-        width: 400px;
         height: 400px;
     }
 }
 @media all and (max-width: 450px) {
     .map {
-        width: 240px;
         height: 240px;
     }
 }
