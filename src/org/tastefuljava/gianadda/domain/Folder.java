@@ -13,6 +13,7 @@ public class Folder {
     private Date dateTime;
     private Date pubDate;
     private String title;
+    private String analytics;
     private String link;
     private String description;
     private String body;
@@ -74,6 +75,14 @@ public class Folder {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getAnalytics() {
+        return analytics;
+    }
+
+    public void setAnalytics(String analytics) {
+        this.analytics = analytics;
     }
 
     public String getLink() {
@@ -147,6 +156,11 @@ public class Folder {
         String esc = Util.urlEncode(name);
         return isRoot() || getParent().isRoot()
                 ? esc : getParent().getUrlPath() + "/" + esc;
+    }
+
+    public String getAnalyticsId() {
+        return analytics != null ? analytics
+                : parent != null ? parent.getAnalyticsId() : null;
     }
 
     public Folder getSubfolder(String name) {

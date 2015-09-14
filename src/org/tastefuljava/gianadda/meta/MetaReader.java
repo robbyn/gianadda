@@ -121,6 +121,9 @@ public class MetaReader {
                 case "link":
                     folder.setLink(buf.toString().trim());
                     break;
+                case "analytics":
+                    folder.setAnalytics(buf.toString().trim());
+                    break;
                 case "pubDate":
                     folder.setPubDate(
                             Util.parseXsdDateTime(buf.toString().trim()));
