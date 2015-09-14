@@ -96,6 +96,8 @@
             window.onload = function() {
                 var paths, path, tracks, track, markers, marker, bounds, pt,
                         i, j, mapOptions, div, map, builder;
+                var photoIcon = "${base}css/img/photo.png",
+                    trackIcon = "${base}css/img/footprint.png";
                 paths = [
                 #foreach( $track in $tracks )
                     google.maps.geometry.encoding.decodePath("$esc.javascript($track.encoded)"),
@@ -123,6 +125,7 @@
                 #foreach( $pic in $geopics )
                     {
                         position: new google.maps.LatLng($pic.gpsData.latitude,$pic.gpsData.longitude),
+                        icon: photoIcon,
                         info: new google.maps.InfoWindow({
                             content: '<a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" height="$math.round($thumbSize.height)" title="$esc.html($pic.name)"></a>',
                         }),
@@ -131,6 +134,7 @@
                 #foreach( $tr in $subtracks )
                     {
                         position: new google.maps.LatLng($tr.center.lat,$tr.center.lng),
+                        icon: trackIcon,
                         info: new google.maps.InfoWindow({
                             content: '<a href="${esc.url($tr.folder.name)}/index.html">${esc.html($tr.folder.title)}</a>',
                         }),
