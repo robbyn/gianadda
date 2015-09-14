@@ -1,0 +1,1 @@
+ALTER TABLE pictures ADD ANGLE INT;

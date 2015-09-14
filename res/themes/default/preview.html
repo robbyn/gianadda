@@ -1,10 +1,22 @@
 <!DOCTYPE html>
+#set( $services = ["facebook","twitter","gplus","pinterest","linkedin","email"] )
+#set( $vars = {} )
+#set( $dummy = $vars.put("url", "${folder.url}preview/${esc.url($pic.name)}.html") )
+#set( $dummy = $vars.put("img", "${folder.url}preview/${esc.url($pic.name)}") )
+#set( $dim = $layout.previewSize($pic.size,$pic.angle) )
 <html class="preview">
     <head>
         <title>${pic.descriptionOrName}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="image_src" href="${pic.name}">
+        <meta property="og:title" content="${esc.html($pic.descriptionOrName)}" />
+        <meta property="og:url" content="${folder.url}preview/${esc.url($pic.name)}.html" />
+        <meta property="og:image" content="${folder.url}preview/${esc.url($pic.name)}" />
+        <meta property="og:image:width" content="$math.floor($dim.width)" />
+        <meta property="og:image:height" content="$math.floor($dim.height)" />
+        <meta property="og:type" content="website" />
+        <meta property="og:updated_time" content="$share.timestamp" />
+        <link rel="image_src" href="${folder.url}preview/${esc.url($pic.name)}">
         <link rel="stylesheet" href="${base}css/normalize.css">
         <link rel="stylesheet" href="${base}css/style.css">
     </head>
@@ -42,6 +54,11 @@
                         #end
                     </figcaption>
                 </figure>
+            </div>
+            <div class="share">
+            #foreach( $sv in $services )
+                <a href="$share.makeUrl($sv,$vars)" class="share-btn icon-${sv}" target="_blank"></a>
+            #end
             </div>
         </div>
     </body>

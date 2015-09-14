@@ -83,6 +83,7 @@ public class TemplateEngine {
         });
         context.put("date", new ComparisonDateTool());
         context.put("math", new MathTool());
+        context.put("share", new ShareTool());
         return context;
     }
 }

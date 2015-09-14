@@ -12,6 +12,7 @@ public class Picture {
     private Date dateTime;
     private int width;
     private int height;
+    private Integer angle;
     private GpsData gpsData;
     private String description;
     private String artist;
@@ -65,6 +66,14 @@ public class Picture {
         return new Dimension(width, height);
     }
 
+    public int getAngle() {
+        return angle == null ? 0 : angle;
+    }
+
+    public void setAngle(int angle) {
+        this.angle = angle;
+    }
+
     public GpsData getGpsData() {
         return gpsData;
     }
@@ -107,6 +116,14 @@ public class Picture {
 
     public File getFile(File root) {
         return new File(getFolder().getFile(root), name);
+    }
+
+    public String getUrl() {
+        String url = getFolder().getUrl();
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
+        return url + Util.urlEncode(name) + "/";
     }
 
     public void insert() {

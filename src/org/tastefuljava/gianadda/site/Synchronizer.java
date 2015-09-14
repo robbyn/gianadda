@@ -155,6 +155,7 @@ public class Synchronizer {
         parms.put("conf", new ConfigurationTool(conf));
         parms.put("fmt", new FormatTool(conf));
         parms.put("folders", new FolderTool(conf));
+        parms.put("layout", new LayoutTool(conf));
         return parms;
     }
 
@@ -533,6 +534,7 @@ public class Synchronizer {
         int height = img.getHeight();
         pic.setWidth(width);
         pic.setHeight(height);
+        pic.setAngle(angle);
         img = generateImage(pic, img, angle, ImageType.PREVIEW,
                 StretchMode.FIT);        
         generateImage(pic, img, 0, ImageType.THUMB, StretchMode.FIT);

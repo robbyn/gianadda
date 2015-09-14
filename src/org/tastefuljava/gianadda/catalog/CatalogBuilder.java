@@ -26,7 +26,7 @@ class CatalogBuilder {
     private static final String DEFAULT_FILE = "default-conf.properties";
     private static final String CONF_FILE = "catalog-conf.properties";
     private static final String PROP_FORMAT_VERSION = "format-version";
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private final File dir;
     private final Configuration link;

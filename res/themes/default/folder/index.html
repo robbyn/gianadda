@@ -19,6 +19,9 @@
         #set( $dummy = $subtracks.add($tr) )
     #end
 #end
+#set( $services = ["facebook","twitter","gplus","linkedin","email"] )
+#set( $vars = {} )
+#set( $dummy = $vars.put("url", $folder.url) )
 <html class="index">
     <head>
         <title>$esc.html($folder.title)</title>
@@ -79,6 +82,11 @@
                 </div>
             </div>
             #end
+            <div class="share">
+            #foreach( $sv in $services )
+                <a href="$share.makeUrl($sv,$vars)" class="share-btn icon-${sv}" target="_blank"></a>
+            #end
+            </div>
         </div>
 #if( $folder.analyticsId )
 <script>
