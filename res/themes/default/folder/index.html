@@ -56,8 +56,8 @@
                         #set($height = $math.round($thumbSize.height))
                         #set($width = $pic.width * $thumbSize.height / $pic.height)
                         #set($width = $math.round($width))
-                        <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.name)"></a>
-                        <figcaption>$esc.html($pic.name)</figcaption>
+                        <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.descriptionOrName)"></a>
+                        <figcaption>$esc.html($pic.descriptionOrName)</figcaption>
                     </figure>
                     #end
                 </nav>
@@ -74,7 +74,9 @@
             #end
             #if( $folder.body )
             <div class="body">
+                <div class="content">
                 $folder.body
+                </div>
             </div>
             #end
         </div>

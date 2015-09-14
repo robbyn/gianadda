@@ -159,9 +159,11 @@ header span {
     display: none;
 }
 .body {
-    max-width: 40em;
-    margin: 0.5em auto;
-    text-align: left;
     background-color: #fff6d6;
+}
+.body .content {
+    max-width: 40em;
+    margin: 0 auto;
+    text-align: left;
     padding: 0.5em;
 }
