@@ -51,24 +51,55 @@
             </div>
         </header>
         <div class="wrap">
-            <div>
-                #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
-                <div class="map" id="map"></div>
-                #end
-                #if( !$pictures.empty )
-                <nav class="thumbs">
-                    #foreach( $pic in $pictures )
-                    <figure id="pic$pic.id">
-                        #set($height = $math.round($thumbSize.height))
-                        #set($width = $pic.width * $thumbSize.height / $pic.height)
-                        #set($width = $math.round($width))
-                        <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.descriptionOrName)"></a>
-                        <figcaption>$esc.html($pic.descriptionOrName)</figcaption>
-                    </figure>
-                    #end
-                </nav>
-                #end
+            #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
+            <div class="map" id="map"></div>
+            #end
+            #foreach( $track in $tracks )
+            <div class="profile">
+                <svg viewBox="0 0 800 150" class="chart">$profile.svg($track.points,800,150)</svg>
+                #set( $sum = $profile.summary($track.points) )
+                #set( $maps = $profile.swissMaps($track.points) )
+                <table cellspacing="4" cellpadding="0" class="summary">
+                    <tbody>
+                        <tr>
+                            <th>Elevation min/max:</th>
+                            <td>${fmt.formatNumber($sum.minElevation,'#,##0')}m</td>
+                            <td>${fmt.formatNumber($sum.maxElevation,'#,##0')}m</td>
+                        </tr>
+                        <tr>
+                            <th>Ascent/descent:</th>
+                            <td>+${fmt.formatNumber($sum.ascent,'#,##0')}m</td>
+                            <td>-${fmt.formatNumber($sum.descent,'#,##0')}m</td>
+                        </tr>
+                        <tr>
+                            <th>Distance:</th>
+                            <td>${fmt.formatNumber($sum.distance,'#,##0')}m</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th>Maps:</th>
+                            <td class="maps" colspan="2">
+#set( $first = true )
+#foreach ( $map in $maps )#if( $first )#set( $first = false )#else, #{end}$map#end
+                            </td>
+                        </tr>
+                     </tbody>
+                </table>
             </div>
+            #end
+            #if( !$pictures.empty )
+            <nav class="thumbs">
+                #foreach( $pic in $pictures )
+                <figure id="pic$pic.id">
+                    #set($height = $math.round($thumbSize.height))
+                    #set($width = $pic.width * $thumbSize.height / $pic.height)
+                    #set($width = $math.round($width))
+                    <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.descriptionOrName)"></a>
+                    <figcaption>$esc.html($pic.descriptionOrName)</figcaption>
+                </figure>
+                #end
+            </nav>
+            #end
             #if( !$subfolders.empty )
             <nav class="folders">
                 <ul>
@@ -87,7 +118,7 @@
             #end
             <div class="share">
             #foreach( $sv in $services )
-                <a href="$share.makeUrl($sv,$vars)" class="share-btn icon-${sv}" target="_blank"></a>
+                <a href="$share.makeUrl($sv,$vars)" class="icon-${sv}" target="_blank"></a>
             #end
             </div>
         </div>
@@ -176,7 +207,8 @@
                 mapOptions = {
                     zoom: 8,
                     center: bounds.getCenter(),
-                    mapTypeId: google.maps.MapTypeId.TERRAIN
+                    mapTypeId: google.maps.MapTypeId.TERRAIN,
+                    scrollwheel: false
                 };
                 div = document.getElementById("map");
                 map = new google.maps.Map(div, mapOptions);

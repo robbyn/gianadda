@@ -188,6 +188,7 @@ public class Util {
     public static DecimalFormat getDecimalFormat(String pattern) {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator('\'');
         DecimalFormat format = new DecimalFormat(pattern);
         format.setDecimalFormatSymbols(symbols);
         return format;

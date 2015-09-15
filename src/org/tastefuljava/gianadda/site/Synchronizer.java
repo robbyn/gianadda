@@ -156,6 +156,7 @@ public class Synchronizer {
         parms.put("fmt", new FormatTool(conf));
         parms.put("folders", new FolderTool(conf));
         parms.put("layout", new LayoutTool(conf));
+        parms.put("profile", new ProfileTool(conf));
         return parms;
     }
 

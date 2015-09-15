@@ -175,10 +175,50 @@ header span {
 .share {
     padding: 0.5em;
 }
-.share-btn {
+.share>a {
     margin: 0 0.125em;
     padding: 0.25em;
     border-radius: 0.125em;
     font-size: 32px;
     display: inline-block;
+}
+.profile {
+    background-color: white;
+    padding: 0.5em;
+}
+.profile .chart {
+    width: 800px;
+}
+.profile .summary {
+    width: 400px;
+    margin: 0 auto;
+}
+.profile .summary th {
+    text-align: left;
+    font-weight: normal;
+    font-style: italic;
+}
+.profile .summary td {
+    text-align: right;
+    font-weight: bold;
+    font-style: normal;
+}
+@media all and (max-width: 850px) {
+    .profile .chart {
+        width: 600px;
+    }
+}
+@media all and (max-width: 640px) {
+    .profile .chart {
+        width: 400px;
+    }
+}
+@media all and (max-width: 450px) {
+    .profile .chart {
+        width: 240px;
+    }
+    .profile .summary {
+        width: 240px;
+        font-size: 75%;
+    }
 }
