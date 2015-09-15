@@ -20,6 +20,7 @@ body {
 }
 a,a:visited {
     text-decoration: none;
+    color: #265C7F;
 }
 .wrap {
     margin: 32px 0 0 0;
@@ -157,6 +158,10 @@ header .icon-arrow-left {
 }
 header span {
     display: none;
+}
+footer {
+    padding: 0.5em 0.5em 2.5em 0.5em;
+    text-align: center;
 }
 .body {
     background-color: #fff6d6;
