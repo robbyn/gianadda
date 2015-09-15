@@ -76,6 +76,7 @@
                             <td>${fmt.formatNumber($sum.distance,'#,##0')}m</td>
                             <td></td>
                         </tr>
+#if( not $maps.empty )
                         <tr>
                             <th>Maps:</th>
                             <td class="maps" colspan="2">
@@ -83,6 +84,7 @@
 #foreach ( $map in $maps )#if( $first )#set( $first = false )#else, #{end}$map#end
                             </td>
                         </tr>
+#end
                      </tbody>
                 </table>
             </div>

@@ -55,7 +55,10 @@ public class ProfileTool {
     public String[] swissMaps(TrackPoint pts[]) {
         Set<String> maps = new HashSet<>();
         for (TrackPoint pt: pts) {
-            maps.add(swissMap(pt));
+            String map = swissMap(pt);
+            if (map != null) {
+                maps.add(map);
+            }
         }
         String result[] = maps.toArray(new String[maps.size()]);
         Arrays.sort(result);
@@ -64,8 +67,12 @@ public class ProfileTool {
 
     public String swissMap(TrackPoint point) {
         Mn03Point pt = new Mn03Point(point);
-        int num = 1000 + 20*(int)Math.floor((302000-pt.getY())/12000)
-                + (int)Math.floor((pt.getX()-480000)/17500);
+        int row = (int)Math.floor((302000-pt.getY())/12000);
+        int col = (int)Math.floor((pt.getX()-480000)/17500);
+        if (row < 0 || row > 18 || col < 0 || col > 19) {
+            return null;
+        }
+        int num = 1000 + 20*row + col;
         return "CN" + num;
     }
 
