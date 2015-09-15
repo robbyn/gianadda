@@ -20,7 +20,6 @@ body {
 }
 a,a:visited {
     text-decoration: none;
-    color: #265C7F;
 }
 .wrap {
     margin: 32px 0 0 0;
@@ -162,6 +161,9 @@ header span {
 footer {
     padding: 0.5em 0.5em 2.5em 0.5em;
     text-align: center;
+}
+footer a, footer a:visited {
+    color: #265C7F;
 }
 .body {
     background-color: #fff6d6;
