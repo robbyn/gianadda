@@ -28,6 +28,7 @@ import org.tastefuljava.gianadda.util.Configuration;
 
 public class ProfileTool {
     private final Configuration conf;
+    private int lastId;
 
     public ProfileTool(Configuration conf) {
         this.conf = conf;
@@ -39,7 +40,10 @@ public class ProfileTool {
         SVGGraphics2D g = new SVGGraphics2D(width, height);
         chart.draw(g, new Rectangle(0, 0, width, height));
         try (StringWriter out = new StringWriter()) {
-            out.write(g.getSVGDocument());
+            // HACK: SVG injection to set the viewBox attribute
+            int id = ++lastId;
+            out.write(g.getSVGElement("chart"
+                    + id + "\" viewBox=\"0 0 " + width + " " + height));
             return out.toString();
         }
     }

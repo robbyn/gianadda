@@ -190,6 +190,10 @@ header span {
     width: 800px;
     margin: 0 auto;
 }
+.profile .chart svg {
+    width: 100%;
+    height: 18.75%;
+}
 .profile .summary {
     width: 400px;
     margin: 0 auto;
