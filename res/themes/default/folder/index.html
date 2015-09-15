@@ -19,7 +19,7 @@
         #set( $dummy = $subtracks.add($tr) )
     #end
 #end
-#set( $services = ["facebook","twitter","gplus","linkedin","email"] )
+#set( $services = ["facebook","twitter","gplus","linkedin","mail"] )
 #set( $vars = {} )
 #set( $dummy = $vars.put("url", $folder.url) )
 <html class="index">
@@ -37,16 +37,16 @@
         <header>
             <div class="left-btns">
                 #if($prev)
-                <a class="prev-btn" href="../$esc.url($prev)/index.html"><span>$prev</span></a>
+                <a class="icon-arrow-left" href="../$esc.url($prev)/index.html" title="$esc.html($prev)"></a>
                 #end
                 #if($folder.parent)
-                <a class="up-btn" href="${base}${folder.parent.path}index.html"><span>${folder.parent.name}</span></a>
+                <a class="icon-arrow-up" href="${base}${folder.parent.path}index.html" title="$esc.html($folder.parent.name)"></a>
                 #end
             </div>
             <h1>$esc.html($folder.title)</h1>
             <div class="right-btns">
                 #if($next)
-                <a class="next-btn" href="../$esc.url($next)/index.html"><span>$next</span></a>
+                <a class="icon-arrow-right" href="../$esc.url($next)/index.html" title="$esc.html($next)"></a>
                 #end
             </div>
         </header>

@@ -1,4 +1,5 @@
-@import "fontello.css";
+@import "font/fontello.css";
+@import "share-colors.css";
 
 #set( $thumbSize = $conf.dims['thumb-size'] )
 #set( $previewSize = $conf.dims['preview-size'] )
@@ -139,26 +140,20 @@ header .right-btns {
     height: 32px;
     display: block;
 }
-header .prev-btn {
+header a {
     margin: 0;
     width: 32px;
     height: 32px;
-    background: url('img/arrow-left.svg') no-repeat center center;
     display: inline-block;
+    color: white;
+    font-size: 150%;
+    line-height: 32px;
+    border-radius: 5px;
 }
-header .next-btn {
-    margin: 0;
-    width: 32px;
-    height: 32px;
-    background: url('img/arrow-right.svg') no-repeat center center;
-    display: inline-block;
+header a:hover {
+    background: #7FCCFF;
 }
-header .up-btn {
-    margin: 0;
-    width: 32px;
-    height: 32px;
-    background: url('img/arrow-up.svg') no-repeat center center;
-    display: inline-block;
+header .icon-arrow-left {
 }
 header span {
     display: none;
