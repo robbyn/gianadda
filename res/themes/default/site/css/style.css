@@ -172,9 +172,11 @@ header span {
 }
 .share>a {
     margin: 0 0.125em;
-    padding: 0.25em;
-    border-radius: 0.125em;
-    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    font-size: 150%;
+    line-height: 32px;
     display: inline-block;
 }
 .profile {
