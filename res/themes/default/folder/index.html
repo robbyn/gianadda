@@ -56,7 +56,7 @@
             #end
             #foreach( $track in $tracks )
             <div class="profile">
-                <svg viewBox="0 0 800 150" class="chart">$profile.svg($track.points,800,150)</svg>
+                <div class="chart">$profile.svg($track.points,800,150)</div>
                 #set( $sum = $profile.summary($track.points) )
                 #set( $maps = $profile.swissMaps($track.points) )
                 <table cellspacing="4" cellpadding="0" class="summary">

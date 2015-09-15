@@ -188,6 +188,7 @@ header span {
 }
 .profile .chart {
     width: 800px;
+    margin: 0 auto;
 }
 .profile .summary {
     width: 400px;
