@@ -13,7 +13,8 @@ public class GMapEncoder {
         return encodePoints(track, 0, track.length);
     }
 
-    public static String encodePoints(TrackPoint[] track, int start, int count) {
+    public static String encodePoints(TrackPoint[] track, int start,
+            int count) {
         StringBuilder buf = new StringBuilder();
         if (count > 0) {
             int end = start+count;
