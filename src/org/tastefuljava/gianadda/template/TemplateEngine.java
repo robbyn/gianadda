@@ -46,9 +46,9 @@ public class TemplateEngine {
             Writer out) {
         VelocityContext context = createContext(params, engineContext);
         if (outFile != null) {
-            context.put("output.file", outFile.getAbsolutePath());
-            context.put("output.dir",
-                    outFile.getParentFile().getAbsoluteFile());
+            context.put("outputFile", outFile.getAbsolutePath());
+            context.put("outputDir",
+                    outFile.getParentFile().getAbsolutePath());
         }
         engine.mergeTemplate(template, "UTF-8", context, out);
     }

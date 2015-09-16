@@ -153,6 +153,7 @@ public class Synchronizer {
     private static Map<String,Object> createParams(Configuration conf) {
         Map<String,Object> parms = new HashMap<>();
         parms.put("conf", new ConfigurationTool(conf));
+        parms.put("geo", new GeoTool(conf));
         parms.put("fmt", new FormatTool(conf));
         parms.put("folders", new FolderTool(conf));
         parms.put("layout", new LayoutTool(conf));

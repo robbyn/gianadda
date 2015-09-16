@@ -79,17 +79,21 @@ public class EarthGeometry {
         prev = track[start];
         int k = 0;
         result[k++] = prev;
-        for (int i = start+1; i < end-1; ++i) {
+        int i = start+1;
+        while (i < end-1 && k < count) {
             TrackPoint pt = track[i];
             double d = distance(prev, pt);
             dist += d;
-            if (Math.abs(dist-step) < halfStep) {
+            while (dist >= step && k < count) {
                 result[k++] = pt;
                 dist -= step;
             }
             prev = pt;
+            ++i;
         }
-        result[count-1] = track[end-1];
+        while (k < count) {
+            result[k++] = track[end-1];
+        }
         return result;
     }
 
