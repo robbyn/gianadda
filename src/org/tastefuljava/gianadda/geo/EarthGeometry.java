@@ -1,5 +1,7 @@
 package org.tastefuljava.gianadda.geo;
 
+import java.util.Arrays;
+
 public class EarthGeometry {
     private static final double R = 6371030.0;
     private static final double A = 6378137.0;
@@ -47,6 +49,47 @@ public class EarthGeometry {
                 ++k;
             }
         }
+        return result;
+    }
+
+    public static TrackPoint[] reduce(TrackPoint[] track, int count) {
+        return reduce(track, 0, track.length, count);
+    }
+
+    public static TrackPoint[] reduce(TrackPoint[] track, int start, int end,
+            int count) {
+        if (end < start) {
+            throw new IllegalArgumentException("Invalid start/end arguments");
+        } else if (end <= start+1 || count <= 1) {
+            return new TrackPoint[0];
+        } else if (count > end-start) {
+            return Arrays.copyOf(track, end-start);
+        }
+        double total = 0;
+        TrackPoint prev = track[start];
+        for (int i = start+1; i < end; ++i) {
+            TrackPoint pt = track[i];
+            total += distance(prev, pt);
+            prev = pt;
+        }
+        TrackPoint[] result = new TrackPoint[count];
+        double dist = 0;
+        double step = total/(count-1);
+        double halfStep = step/2.0;
+        prev = track[start];
+        int k = 0;
+        result[k++] = prev;
+        for (int i = start+1; i < end-1; ++i) {
+            TrackPoint pt = track[i];
+            double d = distance(prev, pt);
+            dist += d;
+            if (Math.abs(dist-step) < halfStep) {
+                result[k++] = pt;
+                dist -= step;
+            }
+            prev = pt;
+        }
+        result[count-1] = track[end-1];
         return result;
     }
 
