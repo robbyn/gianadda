@@ -38,18 +38,24 @@ public class TemplateEngine {
             throws IOException {
         try (OutputStream stream = new FileOutputStream(outFile);
                 Writer out = new OutputStreamWriter(stream, "UTF-8")) {
-            process(template, params, out);
+            process(template, params, outFile, out);
         }
     }
 
-    public void process(String template, Map<String,?> params, Writer out) {
+    public void process(String template, Map<String,?> params, File outFile,
+            Writer out) {
         VelocityContext context = createContext(params, engineContext);
+        if (outFile != null) {
+            context.put("output.file", outFile.getAbsolutePath());
+            context.put("output.dir",
+                    outFile.getParentFile().getAbsoluteFile());
+        }
         engine.mergeTemplate(template, "UTF-8", context, out);
     }
 
     public String process(String template, Map<String,?> params) {
         StringWriter out = new StringWriter();
-        process(template, params, out);
+        process(template, params, null, out);
         return out.toString();
     }
 
