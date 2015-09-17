@@ -46,7 +46,8 @@ public class Main {
     private String createTheme = null;
     private String changeTheme = null;
     private final Set<Flag> flags = EnumSet.noneOf(Flag.class);
-    private String googleApiKey = null;
+    private String googleBrowserKey = null;
+    private String googleServerKey = null;
 
     public static void main(String[] args) {
         try {
@@ -90,8 +91,11 @@ public class Main {
                         case "--tolerance":
                             st = 3;
                             break;
-                        case "--google-api-key":
+                        case "--google-browser-key":
                             st = 4;
+                            break;
+                        case "--google-server-key":
+                            st = 5;
                             break;
                         case "-?":
                         case "-h":
@@ -181,7 +185,11 @@ public class Main {
                     flags.add(Flag.SIMPLIFY);
                     break;
                 case 4:
-                    googleApiKey = arg;
+                    googleBrowserKey = arg;
+                    st = 0;
+                    break;
+                case 5:
+                    googleServerKey = arg;
                     st = 0;
                     break;
                 default:
@@ -232,8 +240,11 @@ public class Main {
                 if (flags.contains(Flag.SIMPLIFY)) {
                     props.put("tolerance", Double.toString(tolerance));
                 }
-                if (googleApiKey != null) {
-                    props.put("google.api.key", googleApiKey);
+                if (googleBrowserKey != null) {
+                    props.put("google.browser.key", googleBrowserKey);
+                }
+                if (googleServerKey != null) {
+                    props.put("google.server.key", googleServerKey);
                 }
                 builder.synchronize(props);
             }

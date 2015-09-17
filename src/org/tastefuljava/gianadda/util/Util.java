@@ -31,6 +31,7 @@ public class Util {
             "([+-]?[0-9]{4})-(1[0-2]|0[1-9])-([0-9]{2})"
             + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]+))?"
             + "(?:([Zz])|([+-][0-9]{2}:[0-9]{2}))?");
+    private static final char[] HEX = "0123456789abcdef".toCharArray();
 
     public static int hashDouble(double val) {
         long bits = Double.doubleToLongBits(val);
@@ -194,7 +195,7 @@ public class Util {
         return format;
     }
 
-    public static final String urlEncode(String s) {
+    public static String urlEncode(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8").replaceAll("\\+", "%20");
         } catch (UnsupportedEncodingException ex) {
@@ -202,5 +203,14 @@ public class Util {
             LOG.log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex.getMessage());
         }
+    }
+
+    public static String hex(int value, int digits) {
+        char[] chars = new char[digits];
+        for (int i = digits; --i >= 0; ) {
+            chars[i] = HEX[value & 0xF];
+            value >>>= 4;
+        }
+        return new String(chars);
     }
 }
