@@ -13,6 +13,8 @@ import org.tastefuljava.gianadda.util.Util;
 public class StaticMap {
     private final QueryBuilder qry = new QueryBuilder(
             "https://maps.googleapis.com/maps/api/staticmap");
+    private LatLngBounds.Builder visibleBoundsBuilder;
+
 
     public static enum MapType {
         ROADMAP("roadmap"), SATELLITE("satellite"), TERRAIN("terrain"),
@@ -72,20 +74,31 @@ public class StaticMap {
         return this;
     }
 
-    public StaticMap addPath(Color color, int weight, TrackPoint[] pts) {
+    public StaticMap addPath(Color color, int weight, TrackPoint... pts) {
         qry.rawParam("path", "color:0x" + hex(color)
                 + "|weight:" + weight
                 + "|enc:"+GMapEncoder.encodePoints(pts));
         return this;
     }
 
+    public StaticMap setVisible(LatLng... pts) {
+        if (visibleBoundsBuilder == null) {
+            visibleBoundsBuilder = new LatLngBounds.Builder();
+        }
+        for (LatLng pt: pts) {
+            visibleBoundsBuilder.include(pt);
+        }
+        return this;
+    }
+
     @Override
     public String toString() {
+        appendVisibleBounds();
         return qry.toString();
     }
 
     public URL toURL() throws MalformedURLException {
-        return new URL(qry.toString());
+        return new URL(toString());
     }
 
     public void saveToFile(File file) throws IOException {
@@ -99,5 +112,21 @@ public class StaticMap {
                 + Util.hex(color.getGreen(), 2)
                 + Util.hex(color.getBlue(), 2)
                 + Util.hex(color.getAlpha(), 2);
+    }
+
+    private void appendVisibleBounds() {
+        if (visibleBoundsBuilder != null) {
+            if (visibleBoundsBuilder.isValid()) {
+                LatLngBounds bounds = visibleBoundsBuilder.build();
+                qry.rawParam("visible", pt2str(bounds.getNorthEast())
+                        + '|' + pt2str(bounds.getSouthWest()));
+            }
+            visibleBoundsBuilder = null;
+        }
+    }
+
+    private String pt2str(LatLng pt) {
+        return Util.formatNumber(pt.getLat(), "0.######")
+                + ',' + Util.formatNumber(pt.getLng(), "0.######");
     }
 }

@@ -3,12 +3,8 @@ package org.tastefuljava.gianadda.site;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import org.tastefuljava.gianadda.domain.Track;
 import org.tastefuljava.gianadda.geo.EarthGeometry;
-import org.tastefuljava.gianadda.geo.GMapEncoder;
 import org.tastefuljava.gianadda.geo.LatLng;
 import org.tastefuljava.gianadda.geo.LatLngBounds;
 import org.tastefuljava.gianadda.geo.StaticMap;
@@ -16,8 +12,6 @@ import org.tastefuljava.gianadda.geo.StaticMap.Format;
 import org.tastefuljava.gianadda.geo.StaticMap.MapType;
 import org.tastefuljava.gianadda.geo.TrackPoint;
 import org.tastefuljava.gianadda.util.Configuration;
-import org.tastefuljava.gianadda.util.Files;
-import org.tastefuljava.gianadda.util.QueryBuilder;
 
 public class GeoTool {
     private final Configuration conf;
@@ -34,8 +28,8 @@ public class GeoTool {
         return LatLngBounds.build(points);
     }
 
-    public boolean writeMapFile(String fileName, Iterable<Track> tracks)
-            throws IOException {
+    public boolean writeMapFile(String fileName, Iterable<Track> tracks,
+            Iterable<Track> subtracks) throws IOException {
         String key = conf.getString("google.browser.key", null);
         if (key == null) {
             return false;
@@ -48,6 +42,9 @@ public class GeoTool {
         for (Track track: tracks) {
             TrackPoint[] pts = EarthGeometry.reduce(track.getPoints(), 50);
             map.addPath(new Color(255,0,0,128), 5, pts);
+        }
+        for (Track track: subtracks) {
+            map.setVisible(track.getPoints());
         }
         map.saveToFile(new File(fileName));
         return true;

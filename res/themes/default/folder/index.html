@@ -23,8 +23,8 @@
 #set( $vars = {} )
 #set( $dummy = $vars.put("url", $folder.url) )
 #set( $hasmap = false )
-#if( not $tracks.empty )
-#set( $hasmap = $geo.writeMapFile("${outputDir}/map.png", $tracks) )
+#if( not $tracks.empty or not $subtracks.empty )
+#set( $hasmap = $geo.writeMapFile("${outputDir}/map.png", $tracks, $subtracks) )
 #end
 <html class="index">
     <head>
@@ -110,7 +110,7 @@
                     #set($height = $math.round($thumbSize.height))
                     #set($width = $pic.width * $thumbSize.height / $pic.height)
                     #set($width = $math.round($width))
-                    <a href="preview/${esc.url($pic.name)}.html"><img src="thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.descriptionOrName)"></a>
+                    <a href="${folder.url}preview/${esc.url($pic.name)}.html"><img src="${folder.url}thumb/$esc.url($pic.name)" width="$width" height="$height" title="$esc.html($pic.descriptionOrName)"></a>
                     <figcaption>$esc.html($pic.descriptionOrName)</figcaption>
                 </figure>
                 #end
