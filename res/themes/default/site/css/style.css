@@ -148,7 +148,7 @@ header a {
     color: white;
     font-size: 150%;
     line-height: 32px;
-    border-radius: 5px;
+    border-radius: 16px;
 }
 header a:hover {
     background: #7FCCFF;
