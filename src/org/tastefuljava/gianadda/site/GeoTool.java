@@ -35,7 +35,7 @@ public class GeoTool {
         if (key != null) {
             QueryBuilder qry = new QueryBuilder(
                     "https://maps.googleapis.com/maps/api/staticmap");
-            qry.param("size", "640x640");
+            qry.param("size", "320x320");
             for (Track track: tracks) {
                 TrackPoint[] pts = EarthGeometry.reduce(track.getPoints(), 50);
                 qry.rawParam("path", "color:0xFF000080"
