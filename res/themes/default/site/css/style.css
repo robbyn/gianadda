@@ -232,3 +232,22 @@ footer a, footer a:visited {
         font-size: 75%;
     }
 }
+#menu {
+    position: fixed;
+    top: 32px;
+    right: 0;
+    background: #0099ff;
+    z-index: 2000;
+}
+#menu ul {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+#menu ul li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    text-indent: 0;
+    color: white;
+}

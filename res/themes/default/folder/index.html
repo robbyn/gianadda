@@ -46,6 +46,8 @@
         #if($folder.isRoot())
         <link rel="alternate" type="application/rss+xml" href="${base}feed.rss" />
         #end
+        <script src="${base}js/jquery.js"></script>
+        <script src="${base}js/script.js"></script>
     </head>
     <body>
         <header>
@@ -62,14 +64,35 @@
                 #if($next)
                 <a class="icon-arrow-right" href="../$esc.url($next)/" title="$esc.html($next)"></a>
                 #end
+                <a class="icon-menu" href="#menu" title="Menu"></a>
             </div>
         </header>
+        <nav id="menu" style="display: none;">
+            <ul>
+            #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
+            <li><a href="#map">Map</a></li>
+            #end
+            #if( not $tracks.empty )
+            <li><a href="#profile">Profile</a></li>
+            #end
+            #if( not $pictures.empty )
+            <li><a href="#thumbs">Photos</a></li>
+            #end
+            #if( not $pictures.empty )
+            <li><a href="#thumbs">Photos</a></li>
+            #end
+            #if( $folder.body )
+            <li><a href="#thumbs">Text</a></li>
+            #end
+            </ul>
+        </nav>
         <div class="wrap">
             #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
             <div class="map" id="map"></div>
             #end
+            #if( not $tracks.empty )
+            <div class="profile" id="profile">
             #foreach( $track in $tracks )
-            <div class="profile">
                 <div class="chart">$profile.svg($track.points,800,150)</div>
                 #set( $sum = $profile.summary($track.points) )
                 #set( $maps = $profile.swissMaps($track.points) )
@@ -101,10 +124,11 @@
 #end
                      </tbody>
                 </table>
+            #end
             </div>
             #end
             #if( !$pictures.empty )
-            <nav class="thumbs">
+            <nav class="thumbs" id="thumbs">
                 #foreach( $pic in $pictures )
                 <figure id="pic$pic.id">
                     #set($height = $math.round($thumbSize.height))
@@ -126,7 +150,7 @@
             </nav>
             #end
             #if( $folder.body )
-            <div class="body">
+            <div class="body" id="body">
                 <div class="content">
                 $folder.body
                 </div>
