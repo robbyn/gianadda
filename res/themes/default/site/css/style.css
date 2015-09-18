@@ -1,11 +1,12 @@
 @import "font/fontello.css";
+@import "font/fira.css";
 @import "share-colors.css";
 
 #set( $thumbSize = $conf.dims['thumb-size'] )
 #set( $previewSize = $conf.dims['preview-size'] )
 
 * {
-    font-family: "Helvetica, Arial, sans";
+    font-family: "Fira Sans";
 }
 html {
     position: relative;
