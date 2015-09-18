@@ -81,8 +81,11 @@
             #if( not $pictures.empty )
             <li><a href="#thumbs">Photos</a></li>
             #end
+            #if( not $subfolders.empty )
+            <li><a href="#folders">Folders</a></li>
+            #end
             #if( $folder.body )
-            <li><a href="#thumbs">Text</a></li>
+            <li><a href="#body">Text</a></li>
             #end
             </ul>
         </nav>
@@ -141,7 +144,7 @@
             </nav>
             #end
             #if( !$subfolders.empty )
-            <nav class="folders">
+            <nav class="folders" id="folders">
                 <ul>
                 #foreach( $sub in $subfolders )
                 <li id="fld$sub.id"><a href="$esc.url($sub.name)/">$esc.html($sub.title)</a></li>

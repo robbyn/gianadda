@@ -121,25 +121,22 @@ header h1 {
     white-space: nowrap;
     overflow: hidden;
 }
-header .left-btns {
+header .left-btns, header .right-btns {
     position: absolute;
-    left: 0;
+    z-index: 2001;
     top: 50%;
     margin-top: -16px;
     padding: 0;
     width: auto;
     height: 32px;
     display: block;
+    background: #0099ff;
+}
+header .left-btns {
+    left: 0.5em;
 }
 header .right-btns {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    margin-top: -16px;
-    padding: 0;
-    width: auto;
-    height: 32px;
-    display: block;
+    right: 0.5em;
 }
 header a {
     margin: 0;
@@ -149,7 +146,7 @@ header a {
     color: white;
     font-size: 150%;
     line-height: 32px;
-    border-radius: 16px;
+    border-radius: 5px;
 }
 header a:hover {
     background: #7FCCFF;
@@ -249,5 +246,10 @@ footer a, footer a:visited {
     margin: 0;
     padding: 0;
     text-indent: 0;
+    border-top: 1px solid white;
+}
+#menu ul li a {
     color: white;
+    display: block;
+    padding: 0.25em 2em;
 }
