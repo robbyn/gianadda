@@ -70,23 +70,21 @@
         <nav id="menu" style="display: none;">
             <ul>
             #if( not $geopics.empty or not $tracks.empty or not $subtracks.empty )
-            <li><a href="#map">Map</a></li>
+            <li><a class="icon-globe" href="#map">Map</a></li>
             #end
             #if( not $tracks.empty )
-            <li><a href="#profile">Profile</a></li>
+            <li><a class="icon-profile" href="#profile">Profile</a></li>
             #end
             #if( not $pictures.empty )
-            <li><a href="#thumbs">Photos</a></li>
-            #end
-            #if( not $pictures.empty )
-            <li><a href="#thumbs">Photos</a></li>
+            <li><a class="icon-picture" href="#thumbs">Photos</a></li>
             #end
             #if( not $subfolders.empty )
-            <li><a href="#folders">Folders</a></li>
+            <li><a class="icon-folder" href="#folders">Folders</a></li>
             #end
             #if( $folder.body )
-            <li><a href="#body">Text</a></li>
+            <li><a class="icon-text" href="#body">Text</a></li>
             #end
+            <li><a class="icon-share" href="#share">Share</a></li>
             </ul>
         </nav>
         <div class="wrap">
@@ -159,7 +157,7 @@
                 </div>
             </div>
             #end
-            <div class="share">
+            <div class="share" id="share">
             #foreach( $sv in $services )
                 <a href="$share.makeUrl($sv,$vars)" class="icon-${sv}" target="_blank"></a>
             #end

@@ -3,10 +3,10 @@ $(function() {
     $("a[href='#menu']").on("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $("#menu").slideDown(500);
+        $("#menu").slideDown(200);
     });
     $("body").on("click", function() {
-        $("#menu").slideUp(500);
+        $("#menu").slideUp(200);
     });
     $("a[href^='#']").on("click", function(e) {
         e.preventDefault();

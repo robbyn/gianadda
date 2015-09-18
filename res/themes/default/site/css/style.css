@@ -151,8 +151,6 @@ header a {
 header a:hover {
     background: #7FCCFF;
 }
-header .icon-arrow-left {
-}
 header span {
     display: none;
 }
@@ -241,15 +239,21 @@ footer a, footer a:visited {
     margin: 0;
     padding: 0;
 }
-#menu ul li {
+#menu li {
     display: block;
     margin: 0;
     padding: 0;
     text-indent: 0;
     border-top: 1px solid white;
 }
-#menu ul li a {
+#menu li:first-of-type {
+    border-top: none;
+}
+#menu a {
     color: white;
     display: block;
-    padding: 0.25em 2em;
+    padding: 0.25em 1em;
+}
+#menu a:hover {
+    background: #7FCCFF;
 }
