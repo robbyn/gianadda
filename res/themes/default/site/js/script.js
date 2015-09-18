@@ -3,7 +3,7 @@ $(function() {
     $("a[href='#menu']").on("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
-        $("#menu").slideDown(200);
+        $("#menu").slideToggle(200);
     });
     $("body").on("click", function() {
         $("#menu").slideUp(200);
