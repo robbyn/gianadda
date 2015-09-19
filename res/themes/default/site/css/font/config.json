@@ -20,7 +20,7 @@
     },
     {
       "uid": "c95735c17a10af81448c7fed98a04546",
-      "css": "folder",
+      "css": "folder-open",
       "code": 59411,
       "src": "fontawesome"
     },
@@ -85,6 +85,12 @@
       "src": "fontawesome"
     },
     {
+      "uid": "5e0a374728ffa8d0ae1f331a8f648231",
+      "css": "github",
+      "code": 59416,
+      "src": "fontawesome"
+    },
+    {
       "uid": "b8d0c7d76e87b94882329a88e8e43d3d",
       "css": "gplus",
       "code": 59401,
@@ -106,6 +112,12 @@
       "uid": "9121e3eb89863f67c8bda378eea01a93",
       "css": "reddit",
       "code": 59405,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e1597911f34fea0a188ae51fe4a2d9a9",
+      "css": "stackoverflow",
+      "code": 59417,
       "src": "fontawesome"
     },
     {
