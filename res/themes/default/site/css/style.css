@@ -90,16 +90,6 @@ body>div {
     height: calc(100vh - 32px);
     max-height: 70vw;
 }
-/*@media all and (max-width: 640px) {
-    .map {
-        height: 400px;
-    }
-}
-@media all and (max-width: 450px) {
-    .map {
-        height: 240px;
-    }
-}*/
 header {
     position: fixed;
     background: #0099ff;
