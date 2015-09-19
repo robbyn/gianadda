@@ -87,9 +87,10 @@ body>div {
 }
 .map {
     width: 100%;
-    height: 600px;
+    height: calc(100vh - 32px);
+    max-height: 70vw;
 }
-@media all and (max-width: 640px) {
+/*@media all and (max-width: 640px) {
     .map {
         height: 400px;
     }
@@ -98,7 +99,7 @@ body>div {
     .map {
         height: 240px;
     }
-}
+}*/
 header {
     position: fixed;
     background: #0099ff;
