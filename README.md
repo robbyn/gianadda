@@ -1,6 +1,6 @@
 Gianadda
 ========
 
-Yet another gallery generator.
+A static gallery generator for hikers and bikers
 
-For more information, see the [Wiki pages](https://github.com/robbyn/gianadda/wiki/)
+For more information, see the [Project pages](http://gianadda.perry.productions/)
