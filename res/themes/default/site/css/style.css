@@ -87,7 +87,7 @@ body>div {
 }
 .map {
     width: 100%;
-    height: calc(100vh - 32px);
+    height: calc(100vh - 32px); /* viewport height minus header height */
     max-height: 70vw;
 }
 header {
