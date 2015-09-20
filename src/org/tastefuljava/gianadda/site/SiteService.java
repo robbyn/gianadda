@@ -22,7 +22,6 @@ public class SiteService implements Closeable {
 
     private final GalleryDirs dirs;
     private Catalog catalog;
-    private Configuration conf;
 
     public SiteService(File dir) {
         this.dirs = new GalleryDirs(dir);
@@ -54,10 +53,6 @@ public class SiteService implements Closeable {
         }
     }
 
-    public Configuration getConf() {
-        return conf;
-    }
-
     public void changeTheme(String theme) throws IOException {
         LOG.log(Level.INFO, "Change theme of gallery {0} to {1}",
                 new Object[] {dirs.getBaseDir(), theme});
@@ -87,7 +82,7 @@ public class SiteService implements Closeable {
             throws IOException {
         LOG.log(Level.INFO, "Synchronize gallery {0}", dirs.getBaseDir());
         try (CatalogSession sess = openSession()) {
-            Configuration cfg = new Configuration(props, conf);
+            Configuration cfg = new Configuration(props);
             Synchronizer syn = new Synchronizer(cfg, sess, dirs);
             syn.synchronize();
         }
