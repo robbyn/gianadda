@@ -191,7 +191,6 @@ public class Synchronizer {
         }
     }
 
-
     private Pattern getConfPattern(String name, boolean cs) {
         String s = conf.getString(name, null);
         if (s == null) {
