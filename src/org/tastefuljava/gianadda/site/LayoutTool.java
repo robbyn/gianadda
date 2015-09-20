@@ -16,7 +16,15 @@ public class LayoutTool {
     }
 
     public Dimension previewSize(Dimension size) {
-        Dimension dim = ImageType.PREVIEW.getSizeFrom(conf);
+        return pictureSize(size, ImageType.PREVIEW);
+    }
+
+    public Dimension thumbSize(Dimension size) {
+        return pictureSize(size, ImageType.THUMB);
+    }
+
+    private Dimension pictureSize(Dimension size, ImageType type) {
+        Dimension dim = type.getSizeFrom(conf);
         Rectangle src = new Rectangle(0, 0,
                 size.width, size.height);
         Rectangle dst = new Rectangle(0, 0, dim.width, dim.height);
