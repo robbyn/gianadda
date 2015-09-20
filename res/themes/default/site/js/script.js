@@ -1,4 +1,3 @@
-
 $(function() {
     $("a[href='#menu']").on("click", function(e) {
         e.preventDefault();
