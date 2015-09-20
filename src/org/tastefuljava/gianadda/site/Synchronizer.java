@@ -478,8 +478,8 @@ public class Synchronizer {
         ImageInputStream in = new FileImageInputStream(file);
         try {
             String ext = Files.extension(file);
-            if (ext != null && (ext.equalsIgnoreCase("jpg")
-                    || ext.equalsIgnoreCase("jpeg"))) {
+            if (ext != null && (ext.equalsIgnoreCase(".jpg")
+                    || ext.equalsIgnoreCase(".jpeg"))) {
                 in.mark();
                 try {
                     exif = Exif.fromJPEG((DataInput)in);
