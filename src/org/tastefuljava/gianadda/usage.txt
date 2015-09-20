@@ -50,13 +50,6 @@ Options:
         Forces the use of the elevation service even when the track points
         already have elevations.
 
-    -g|--geotag
-        Use the tacks of a folder to compute the location of the pictures, based
-        on their date/time.
-
-    -G|--force-geotag
-        Force geotagging even when pictures already have GPS Data.
-
     -v|--verbose
         Display information messages. Without this flag, only warnings and
         errors are displayed.
