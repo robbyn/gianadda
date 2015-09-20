@@ -31,6 +31,15 @@ public class Files {
         // Private constructor to prevent instanciation
     }
 
+    public static String extension(String name) {
+        int pos = name.lastIndexOf('.');
+        return pos < 0 ? null : name.substring(pos);
+    }
+
+    public static String extension(File file) {
+        return extension(file.getName());
+    }
+
     public static String[] list(File dir, final Pattern pattern) {
         String[] result = dir.list(new FilenameFilter() {
             @Override

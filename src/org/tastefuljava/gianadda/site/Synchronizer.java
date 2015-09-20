@@ -477,14 +477,18 @@ public class Synchronizer {
         boolean ok = false;
         ImageInputStream in = new FileImageInputStream(file);
         try {
-            in.mark();
-            try {
-                exif = Exif.fromJPEG((DataInput)in);
-            } catch (IOException e) {
-                LOG.log(Level.WARNING,
-                        "Could not load EXIF data from {0}", file);
+            String ext = Files.extension(file);
+            if (ext != null && (ext.equalsIgnoreCase("jpg")
+                    || ext.equalsIgnoreCase("jpeg"))) {
+                in.mark();
+                try {
+                    exif = Exif.fromJPEG((DataInput)in);
+                } catch (IOException e) {
+                    LOG.log(Level.WARNING,
+                            "Could not load EXIF data from {0}", file);
+                }
+                in.reset();
             }
-            in.reset();
             img = ImageIO.read(in);
             ok = true;
         } finally {
