@@ -42,8 +42,8 @@ public class ProfileTool {
         try (StringWriter out = new StringWriter()) {
             // HACK: SVG injection to set the viewBox attribute
             int id = ++lastId;
-            out.write(g.getSVGElement("chart"
-                    + id + "\" viewBox=\"0 0 " + width + " " + height));
+            out.write(g.getSVGElement("chart" + id
+                    + "\" viewBox=\"0 0 " + width + " " + height));
             return out.toString();
         }
     }
