@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.util;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.geom.Dimension2D;
 import java.io.UnsupportedEncodingException;
@@ -11,6 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +35,23 @@ public class Util {
             + "[Tt]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:[.]([0-9]+))?"
             + "(?:([Zz])|([+-][0-9]{2}:[0-9]{2}))?");
     private static final char[] HEX = "0123456789abcdef".toCharArray();
+    private static final Map<String,Color> COLOR_MAP
+            = new HashMap<String,Color>() {{
+        put("BLACK",Color.BLACK);
+        put("BLUE",Color.BLUE);
+        put("CYAN",Color.CYAN);
+        put("DARK_GRAY",Color.DARK_GRAY);
+        put("GRAY",Color.GRAY);
+        put("GREEN",Color.GREEN);
+        put("LIGHT_GRAY",Color.LIGHT_GRAY);
+        put("MAGENTA",Color.MAGENTA);
+        put("ORANGE",Color.ORANGE);
+        put("PINK",Color.PINK);
+        put("RED",Color.RED);
+        put("WHITE",Color.WHITE);
+        put("YELLOW",Color.YELLOW);
+        put("TRANSPARENT",new Color(0,true));
+    }};
 
     public static int hashDouble(double val) {
         long bits = Double.doubleToLongBits(val);
@@ -212,5 +232,55 @@ public class Util {
             value >>>= 4;
         }
         return new String(chars);
+    }
+
+    public static int parseHex(String s) {
+        int value = 0;
+        for (char c: s.toCharArray()) {
+            value <<= 4;
+            if (c >= '0' && c <= '9') {
+                value += (c-'0');
+            } else if (c >= 'a' && c <= 'f') {
+                value += 10+(c-'a');
+            } else if (c >= 'A' && c <= 'F') {
+                value += 10+(c-'A');
+            } else {
+                throw new NumberFormatException("Invalid hex number: " + s);
+            }
+        }
+        return value;
+    }
+
+    public static Color parseColor(String s) {
+        Color c = COLOR_MAP.get(s.toUpperCase());
+        if (c != null) {
+            return c;
+        }
+        return parseHexColor(s.startsWith("#") ? s.substring(1) : s);
+    }
+
+    private static Color parseHexColor(String s) {
+        if (s.length() == 3 || s.length() == 4) {
+            s = doubleChars(s);
+        }
+        boolean alpha = s.length() == 8;
+        if (alpha) {
+            s = s.substring(6) + s.substring(0, 6);
+        } else if (s.length() != 6) {
+            throw new IllegalArgumentException("Invalid color " + s);
+        }
+        int val = parseHex(s);
+        return new Color(val, alpha);
+    }
+
+    private static String doubleChars(String s) {
+        char[] src = s.toCharArray();
+        char[] dst = new char[2*src.length];
+        int i = 0;
+        for (char c: src) {
+            dst[i++] = c;
+            dst[i++] = c;
+        }
+        return new String(dst);
     }
 }

@@ -1,7 +1,9 @@
 package org.tastefuljava.gianadda.site;
 
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DecimalFormat;
@@ -19,6 +21,7 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
+import org.jfree.ui.GradientPaintTransformer;
 import org.jfree.ui.RectangleInsets;
 import org.tastefuljava.gianadda.geo.EarthGeometry;
 import org.tastefuljava.gianadda.geo.Mn03Point;
@@ -105,10 +108,16 @@ public class ProfileTool {
         format.setDecimalFormatSymbols(syms);
         axis.setNumberFormatOverride(format);
         XYAreaRenderer renderer = (XYAreaRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.BLUE);
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setDomainGridlinePaint(Color.BLACK);
-        plot.setRangeGridlinePaint(Color.BLACK);
+        renderer.setSeriesPaint(0, conf.getColor("profile.color", Color.BLUE));
+        chart.setBackgroundPaint(
+                conf.getColor("profile.background", Color.WHITE));
+        plot.setBackgroundPaint(
+                conf.getColor("profile.background", Color.WHITE));
+        plot.setForegroundAlpha(1);
+        plot.setDomainGridlinePaint(
+                conf.getColor("profile.grid-color", Color.BLACK));
+        plot.setRangeGridlinePaint(
+                conf.getColor("profile.grid-color", Color.BLACK));
         plot.setInsets(RectangleInsets.ZERO_INSETS);
         plot.setOutlineVisible(false);
         return chart;

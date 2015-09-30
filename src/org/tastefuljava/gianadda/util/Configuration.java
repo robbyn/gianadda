@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.util;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,5 +66,10 @@ public class Configuration {
     public Dimension getDimension(String name, Dimension def) {
         String s = getString(name, null);
         return Util.isBlank(s) ? def : Util.parseDimension(s);
+    }
+
+    public Color getColor(String name, Color def) {
+        String s = getString(name, null);
+        return Util.isBlank(s) ? def : Util.parseColor(s);
     }
 }
