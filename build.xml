@@ -8,7 +8,10 @@
     <target name="-pre-jar">
         <echo level="info">Building default theme</echo>
         <zip destfile="build/classes/default.ggt">
-            <fileset dir="res/themes/default"/>
+            <fileset dir="../gianadda-default">
+                <exclude name="nbproject/**"/>
+                <exclude name="scss/**"/>
+            </fileset>
         </zip>
     </target>
 
