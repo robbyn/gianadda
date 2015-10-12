@@ -1,5 +1,6 @@
 package org.tastefuljava.gianadda.meta;
 
+import com.github.rjeschke.txtmark.Processor;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -62,6 +63,7 @@ public class MetaReader {
 
         private final Folder folder;
         private final StringBuilder buf = new StringBuilder();
+        private String type;
 
         public ParserHandler(Folder folder) {
             this.folder = folder;
@@ -106,6 +108,9 @@ public class MetaReader {
                 case "folder-meta":
                     folder.removeAllTags();
                     break;
+                case "content":
+                    type = attrs.getValue("type");
+                    break;
             }
         }
 
@@ -135,7 +140,7 @@ public class MetaReader {
                     folder.setDescription(buf.toString());
                     break;
                 case "content":
-                    folder.setBody(buf.toString());
+                    folder.setBody(content());
                     break;
             }
         }
@@ -144,6 +149,19 @@ public class MetaReader {
         public void characters(char[] ch, int start, int length)
                 throws SAXException {
             buf.append(ch, start, length);
+        }
+
+        private String content() {
+            String content = buf.toString();
+            if (type != null) {
+                switch (type) {
+                    case "text/markdown":
+                    case "text/x-markdown":
+                        content = Processor.process(content);
+                        break;
+                }
+            }
+            return content;
         }
     }
 }
