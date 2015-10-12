@@ -207,7 +207,7 @@ public class Synchronizer {
         boolean changed = MetaReader.check(meta, folder);
         if (changed) {
             folder.update();
-            sess.commit();            
+            sess.commit();
         }
         changed |= synTracks(folder, dir);
         changed |= syncPics(folder, dir);
