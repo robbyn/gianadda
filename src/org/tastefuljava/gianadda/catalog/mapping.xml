@@ -11,6 +11,7 @@
         <property name="pubDate" column="PUBDATE"/>
         <property name="title" column="TITLE"/>
         <property name="analytics" column="ANALYTICS"/>
+        <property name="disqus" column="DISQUS"/>
         <property name="link" column="LINK"/>
         <property name="description" column="DESCRIPTION"/>
         <property name="body" column="BODY"/>
@@ -41,15 +42,16 @@
         </query>
         <insert get-generated-keys="true">
             INSERT INTO folders(PARENT_ID,NAME,DATETIME,PUBDATE,TITLE,LINK,
-                ANALYTICS,DESCRIPTION,BODY)
+                ANALYTICS,DISQUS,DESCRIPTION,BODY)
             VALUES(${parent.id},${name},${dateTime},${pubDate},${title},${link},
-                ${analytics},${description},${body});
+                ${analytics},${disqus},${description},${body});
         </insert>
         <update>
             UPDATE folders
             SET PARENT_ID=${parent.id},NAME=${name},DATETIME=${dateTime},
                 PUBDATE=${pubDate},TITLE=${title},ANALYTICS=${analytics},
-                LINK=${link},DESCRIPTION=${description},BODY=${body}
+                DISQUS=${disqus},LINK=${link},DESCRIPTION=${description},
+                BODY=${body}
             WHERE ID=${id}
         </update>
         <delete>

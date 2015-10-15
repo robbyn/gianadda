@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT folder-meta (title,link?,analytics?,pubDate?,tag*,summary?,content?)>
+<!ELEMENT folder-meta (title,link?,analytics?,disqus?,pubDate?,tag*,summary?,content?)>
 <!ATTLIST folder-meta version CDATA #REQUIRED>
 
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT link (#PCDATA)>
 <!ELEMENT analytics (#PCDATA)>
+<!ELEMENT disqus (#PCDATA)>
 <!ELEMENT pubDate (#PCDATA)>
 <!ELEMENT tag (#PCDATA)>
 <!ELEMENT summary (#PCDATA)>

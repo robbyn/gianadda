@@ -14,6 +14,7 @@ public class Folder {
     private Date pubDate;
     private String title;
     private String analytics;
+    private String disqus;
     private String link;
     private String description;
     private String body;
@@ -83,6 +84,14 @@ public class Folder {
 
     public void setAnalytics(String analytics) {
         this.analytics = analytics;
+    }
+
+    public String getDisqus() {
+        return disqus;
+    }
+
+    public void setDisqus(String disqus) {
+        this.disqus = disqus;
     }
 
     public String getLink() {
@@ -161,6 +170,11 @@ public class Folder {
     public String getAnalyticsId() {
         return analytics != null ? analytics
                 : parent != null ? parent.getAnalyticsId() : null;
+    }
+
+    public String getDisqusId() {
+        return disqus != null ? disqus
+                : parent != null ? parent.getDisqusId() : null;
     }
 
     public Folder getSubfolder(String name) {
