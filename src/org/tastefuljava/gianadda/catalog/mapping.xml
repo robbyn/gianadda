@@ -35,6 +35,7 @@
         <query name="subfolders" parameters="parentId">
             SELECT * FROM folders
             WHERE PARENT_ID=${parentId}
+            ORDER BY NAME
         </query>
         <query name="latest" parameters="count">
             SELECT * FROM folders WHERE PUBDATE IS NOT NULL
@@ -101,6 +102,7 @@
         <query name="inFolder" parameters="folderId">
             SELECT * FROM pictures
             WHERE FOLDER_ID=${folderId}
+            ORDER BY NAME
         </query>
         <insert get-generated-keys="true">
             INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,ANGLE,
@@ -149,6 +151,7 @@
         <query name="inFolder" parameters="folderId">
             SELECT * FROM tracks
             WHERE FOLDER_ID=${folderId}
+            ORDER BY NAME
         </query>
         <insert get-generated-keys="true">
             INSERT INTO tracks(FOLDER_ID,NAME,DATETIME,SOUTH,WEST,NORTH,EAST,
@@ -184,6 +187,7 @@
         <query name="inFolder" parameters="folderId">
             SELECT tags.ID AS ID, tags.LABEL AS LABEL FROM tags, foldertags
             WHERE FOLDER_ID=${folderId} AND ID=TAG_ID
+            ORDER BY LABEL
         </query>
         <insert get-generated-keys="true">
             INSERT INTO tags(LABEL)
