@@ -75,7 +75,6 @@ public class EarthGeometry {
         TrackPoint[] result = new TrackPoint[count];
         double dist = 0;
         double step = total/(count-1);
-        double halfStep = step/2.0;
         prev = track[start];
         int k = 0;
         result[k++] = prev;
@@ -187,7 +186,7 @@ public class EarthGeometry {
                 keep[index] = true;
                 douglasPeucker(track, first, index, epsilon, keep);
                 douglasPeucker(track, index, last, epsilon, keep);
-            } else if (EarthGeometry.distance(startPt, endPt) > epsilon) {
+            } else if (distance(startPt, endPt) > epsilon) {
                 keep[last] = true;
             }
         }

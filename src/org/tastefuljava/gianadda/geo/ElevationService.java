@@ -44,18 +44,23 @@ public class ElevationService {
                 case "OK":
                     return;
                 case "OVER_QUERY_LIMIT":
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        LOG.log(Level.SEVERE, null, ex);
-                    }   break;
+                    sleep(1000L);
+                    break;
                 default:
                     throw new IOException("Error getting elevations: " + status);
             }
         }
         throw new IOException("Error getting elevations: too many retries");
     }
-        
+
+    private static void sleep(long delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException ex) {
+            LOG.log(Level.SEVERE, null, ex);
+        }
+    }
+
     private static String getElevations1(TrackPoint trkpts[], int start,
             int count) throws IOException {
         String enc = GMapEncoder.encodePoints(trkpts, start, count);
