@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public abstract class QuickMap<K,V> implements Map<K,V> {
-
     @Override
     public final int size() {
         throw new UnsupportedOperationException("Not supported yet.");
