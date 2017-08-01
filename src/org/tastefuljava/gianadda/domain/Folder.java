@@ -186,6 +186,12 @@ public class Folder {
         return null;
     }
 
+    public List<Folder> getDescendents() {
+        List<Folder> result = new ArrayList<>();
+        addDescendents(result);
+        return result;
+    }
+
     public List<Folder> getSubfolders() {
         return new ArrayList<>(folders);
     }
@@ -234,5 +240,14 @@ public class Folder {
 
     public void removeTag(Tag tag) {
         CurrentMapper.get().apply(this, "removeTag", tag);
+    }
+
+    private void addDescendents(List<Folder> result) {
+        for (Folder child: folders) {
+            if (!result.contains(child)) {
+                result.add(child);
+                child.addDescendents(result);
+            }
+        }
     }
 }
