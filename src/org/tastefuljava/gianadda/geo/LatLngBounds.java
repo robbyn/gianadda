@@ -171,6 +171,11 @@ public class LatLngBounds {
             return new LatLngBounds(this);
         }
 
+        public void include(LatLngBounds bounds) {
+            include(bounds.getNorthEast());
+            include(bounds.getSouthWest());
+        }
+
         public void include(LatLng pt) {
             privateInclude(pt.getLat(), pt.getLng());
         }

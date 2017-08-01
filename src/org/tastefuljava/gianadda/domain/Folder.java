@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.tastefuljava.gianadda.geo.LatLng;
+import org.tastefuljava.gianadda.geo.LatLngBounds;
 import org.tastefuljava.gianadda.util.Util;
 
 public class Folder {
@@ -186,12 +188,6 @@ public class Folder {
         return null;
     }
 
-    public List<Folder> getDescendents() {
-        List<Folder> result = new ArrayList<>();
-        addDescendents(result);
-        return result;
-    }
-
     public List<Folder> getSubfolders() {
         return new ArrayList<>(folders);
     }
@@ -226,6 +222,29 @@ public class Folder {
         return new ArrayList<>(tags);
     }
 
+    public LatLngBounds getBounds() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Picture pic: pictures) {
+            LatLng loc = pic.getLocation();
+            if (loc != null) {
+                builder.include(loc);
+            }
+        }
+        for (Track track: tracks) {
+            builder.include(track.getBounds());
+        }
+        if (builder.isValid()) {
+            return builder.build();
+        }
+        for (Folder folder: folders) {
+            LatLngBounds bounds = folder.getBounds();
+            if (bounds != null) {
+                builder.include(bounds);
+            }
+        }
+        return builder.isValid() ? builder.build() : null;
+    }
+
     public void removeAllTags() {
         CurrentMapper.get().apply(this, "removeAllTags");
     }
@@ -240,14 +259,5 @@ public class Folder {
 
     public void removeTag(Tag tag) {
         CurrentMapper.get().apply(this, "removeTag", tag);
-    }
-
-    private void addDescendents(List<Folder> result) {
-        for (Folder child: folders) {
-            if (!result.contains(child)) {
-                result.add(child);
-                child.addDescendents(result);
-            }
-        }
     }
 }

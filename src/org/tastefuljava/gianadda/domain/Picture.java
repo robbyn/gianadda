@@ -3,6 +3,7 @@ package org.tastefuljava.gianadda.domain;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.Date;
+import org.tastefuljava.gianadda.geo.LatLng;
 import org.tastefuljava.gianadda.util.Util;
 
 public class Picture {
@@ -124,6 +125,10 @@ public class Picture {
             url += "/";
         }
         return url + Util.urlEncode(name) + "/";
+    }
+
+    public LatLng getLocation() {
+        return gpsData == null ? null : gpsData.getLocation();
     }
 
     public void insert() {

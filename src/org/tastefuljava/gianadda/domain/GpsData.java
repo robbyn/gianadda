@@ -1,5 +1,7 @@
 package org.tastefuljava.gianadda.domain;
 
+import org.tastefuljava.gianadda.geo.LatLng;
+
 public class GpsData {
     private double latitude;
     private double longitude;
@@ -27,5 +29,9 @@ public class GpsData {
 
     public void setAltitude(Double altitude) {
         this.altitude = altitude;
+    }
+
+    public LatLng getLocation() {
+        return new LatLng(latitude, longitude);
     }
 }
