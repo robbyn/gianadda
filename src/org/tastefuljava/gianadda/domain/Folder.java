@@ -163,6 +163,12 @@ public class Folder {
         }
     }
 
+    public String getUrlPath(Folder origin) {
+        String esc = Util.urlEncode(name);
+        return isRoot() || getParent() == origin
+                ? esc : getParent().getUrlPath(origin) + "/" + esc;
+    }
+
     public String getUrlPath() {
         String esc = Util.urlEncode(name);
         return isRoot() || getParent().isRoot()
@@ -214,6 +220,14 @@ public class Folder {
         return null;
     }
 
+    public List<Track> getSubtracks(int maxLevel) {
+        List<Track> result = new ArrayList<>();
+        for (Folder subfolder: folders) {
+            subfolder.addTracksRecursive(maxLevel, result);
+        }
+        return result;
+    }
+
     public List<Track> getTracks() {
         return new ArrayList<>(tracks);
     }
@@ -259,5 +273,14 @@ public class Folder {
 
     public void removeTag(Tag tag) {
         CurrentMapper.get().apply(this, "removeTag", tag);
+    }
+
+    private void addTracksRecursive(int maxLevel, List<Track> result) {
+        result.addAll(tracks);
+        if (maxLevel > 0) {
+            for (Folder subfolder: folders) {
+                subfolder.addTracksRecursive(maxLevel-1, result);
+            }
+        }
     }
 }
