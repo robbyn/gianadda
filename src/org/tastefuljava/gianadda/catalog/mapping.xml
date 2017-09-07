@@ -79,6 +79,7 @@
         <reference name="folder" column="FOLDER_ID"/>
         <property name="name" column="NAME"/>
         <property name="dateTime" column="DATETIME"/>
+        <property name="fileSize" column="FILE_SIZE"/>
         <property name="width" column="WIDTH"/>
         <property name="height" column="HEIGHT"/>
         <property name="angle" column="ANGLE"/>

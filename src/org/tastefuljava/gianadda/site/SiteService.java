@@ -180,19 +180,29 @@ public class SiteService implements Closeable {
         try (CatalogSession sess = openSession()) {
             Folder folder = Folder.getRoot("/");
             if (folder != null) {
-                initializeFileSize(folder, sess);
-                sess.commit();
+                if (initializeFileSize(folder)) {
+                    sess.commit();
+                }
             }
         }
     }
 
-    private void initializeFileSize(Folder folder, CatalogSession sess) {
+    private boolean initializeFileSize(Folder folder) {
+        boolean changed = false;
         for (Picture pic: folder.getPictures()) {
             File file = pic.getFile(dirs.getBaseDir());
-            if (file.isFile()) {
+            if (file.isFile() && file.length() != pic.getFileSize()) {
+                LOG.log(Level.INFO, "Initialize file size: {0}", pic.getPath());
                 pic.setFileSize(file.length());
                 pic.update();
+                changed = true;
             }
         }
+        for (Folder child: folder.getSubfolders()) {
+            if (initializeFileSize(child)) {
+                changed = true;
+            }
+        }
+        return changed;
     }
 }
