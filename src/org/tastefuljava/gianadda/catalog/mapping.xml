@@ -106,19 +106,20 @@
             ORDER BY NAME
         </query>
         <insert get-generated-keys="true">
-            INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,WIDTH,HEIGHT,ANGLE,
-                LATITUDE,LONGITUDE,ALTITUDE,DESCRIPTION,ARTIST,COPYRIGHT)
-            VALUES(${folder.id},${name},${dateTime},${width},${height},${angle},
-                ${gpsData.latitude},${gpsData.longitude},${gpsData.altitude},
-                ${description},${artist},${copyright});
+            INSERT INTO pictures(FOLDER_ID,NAME,DATETIME,FILE_SIZE,WIDTH,HEIGHT,
+                ANGLE,LATITUDE,LONGITUDE,ALTITUDE,DESCRIPTION,ARTIST,COPYRIGHT)
+            VALUES(${folder.id},${name},${dateTime},${fileSize},${width},
+                ${height},${angle},${gpsData.latitude},${gpsData.longitude},
+                ${gpsData.altitude},${description},${artist},${copyright});
         </insert>
         <update>
             UPDATE pictures
             SET FOLDER_ID=${folder.id},NAME=${name},DATETIME=${dateTime},
-                WIDTH=${width},HEIGHT=${height},ANGLE=${angle},
-                LATITUDE=${gpsData.latitude},LONGITUDE=${gpsData.longitude},
-                ALTITUDE=${gpsData.altitude},DESCRIPTION=${description},
-                ARTIST=${artist},COPYRIGHT=${copyright}
+                FILE_SIZE=${fileSize},WIDTH=${width},HEIGHT=${height},
+                ANGLE=${angle},LATITUDE=${gpsData.latitude},
+                LONGITUDE=${gpsData.longitude},ALTITUDE=${gpsData.altitude},
+                DESCRIPTION=${description},ARTIST=${artist},
+                COPYRIGHT=${copyright}
             WHERE ID=${id}
         </update>
         <delete>
