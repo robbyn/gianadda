@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.tastefuljava.gianadda.catalog.Catalog;
 import org.tastefuljava.gianadda.catalog.CatalogSession;
+import org.tastefuljava.gianadda.domain.Folder;
+import org.tastefuljava.gianadda.domain.Picture;
 import org.tastefuljava.gianadda.util.Configuration;
 import org.tastefuljava.gianadda.util.Files;
 
@@ -30,6 +32,9 @@ public class SiteService implements Closeable {
     public void open() throws IOException {
         LOG.log(Level.INFO, "Open gallery {0}", dirs.getBaseDir());
         catalog = Catalog.open(dirs.getCatalogDir(), null);
+        if (catalog.getOriginalVersion() < 8) {
+            initializeFileSize();
+        }
     }
 
     public void create(String theme) throws IOException {
@@ -168,5 +173,26 @@ public class SiteService implements Closeable {
             return false;
         }
         return true;
+    }
+
+    private void initializeFileSize() {
+        LOG.log(Level.INFO, "Initialize picture file size");
+        try (CatalogSession sess = openSession()) {
+            Folder folder = Folder.getRoot("/");
+            if (folder != null) {
+                initializeFileSize(folder, sess);
+                sess.commit();
+            }
+        }
+    }
+
+    private void initializeFileSize(Folder folder, CatalogSession sess) {
+        for (Picture pic: folder.getPictures()) {
+            File file = pic.getFile(dirs.getBaseDir());
+            if (file.isFile()) {
+                pic.setFileSize(file.length());
+                pic.update();
+            }
+        }
     }
 }

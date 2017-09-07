@@ -14,15 +14,17 @@ public class Catalog implements Closeable {
     private final File dir;
     private final Configuration conf;
     private final Mapper mapper;
+    private final int originalVersion;
 
     public static Catalog open(File dir, Configuration link) throws IOException {
         return new CatalogBuilder(dir, link).open();
     }
 
-    Catalog(File dir, Configuration conf, Mapper mapper) {
+    Catalog(File dir, Configuration conf, Mapper mapper, int originalVersion) {
         this.dir = dir;
         this.conf = conf;
         this.mapper = mapper;
+        this.originalVersion = originalVersion;
     }
 
     @Override
@@ -36,6 +38,10 @@ public class Catalog implements Closeable {
 
     public Configuration getConf() {
         return conf;
+    }
+
+    public int getOriginalVersion() {
+        return originalVersion;
     }
 
     public CatalogSession openSession()

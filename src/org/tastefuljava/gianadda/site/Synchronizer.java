@@ -231,7 +231,6 @@ public class Synchronizer {
             String name = picNames[i];
             boolean picChanged = false;
             File file = new File(dir, name);
-            Date timeStamp = new Date(file.lastModified());
             Picture pic = folder.getPicture(name);
             if (pic == null) {
                 pic = new Picture();
@@ -244,7 +243,7 @@ public class Synchronizer {
                 pic.insert();
                 sess.commit();
                 picChanged = true;
-            } else if (!timeStamp.equals(pic.getDateTime())) {
+            } else if (picHasChanged(file, pic)) {
                 LOG.log(Level.INFO, "Picture has changed: {0}", pic.getPath());
                 if (!tryProcessPic(pic, file)) {
                     continue;
@@ -274,6 +273,20 @@ public class Synchronizer {
             sess.commit();
         }
         return changed;
+    }
+
+    private static boolean picHasChanged(File file, Picture pic) {
+        Date timestamp = pic.getDateTime();
+        if (timestamp == null) {
+            return true;
+        }
+        if (file.lastModified() != timestamp.getTime()) {
+            return true;
+        } else if (file.length() != pic.getFileSize()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean synTracks(Folder folder,
@@ -535,6 +548,7 @@ public class Synchronizer {
             angle = getAngle(root);
         }
         pic.setDateTime(timestamp);
+        pic.setFileSize(file.length());
         switch (angle) {
             case 0:
             case 180:

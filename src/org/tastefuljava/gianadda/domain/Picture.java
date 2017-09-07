@@ -11,6 +11,7 @@ public class Picture {
     private Folder folder;
     private String name;
     private Date dateTime;
+    private long fileSize;
     private int width;
     private int height;
     private Integer angle;
@@ -45,6 +46,14 @@ public class Picture {
 
     public void setDateTime(Date dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 
     public int getWidth() {

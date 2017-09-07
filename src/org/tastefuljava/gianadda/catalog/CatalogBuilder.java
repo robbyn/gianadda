@@ -26,7 +26,7 @@ class CatalogBuilder {
     private static final String DEFAULT_FILE = "default-conf.properties";
     private static final String CONF_FILE = "catalog-conf.properties";
     private static final String PROP_FORMAT_VERSION = "format-version";
-    private static final int CURRENT_VERSION = 7;
+    private static final int CURRENT_VERSION = 8;
 
     private final File dir;
     private final Configuration link;
@@ -42,7 +42,8 @@ class CatalogBuilder {
         loadProps();
         props.put("jdbc.url", jdbcURL());
         saveProps();
-        if (getFormatVersion() == 0) {
+        int originalVersion = getFormatVersion();
+        if (originalVersion == 0) {
             createDb();
         } else {
             upgradeDb();
@@ -51,7 +52,7 @@ class CatalogBuilder {
         MappingFileReader reader = new MappingFileReader();
         reader.load(CatalogBuilder.class.getResource("mapping.xml"));
         Mapper mapper = reader.getMapper();
-        return new Catalog(dir, conf, mapper);
+        return new Catalog(dir, conf, mapper, originalVersion);
     }
 
     private static InputStream getResourceAsStream(String name) {
